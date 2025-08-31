@@ -4,17 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3181f2f1-3932-4293-9313-326727c45049" name="Changes" comment="index.html, styles.css, app.py">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/favicon.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/logo.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/partneri/logo-1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/partneri/logo-3.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/partneri/logo-4.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/partneri/logo-5.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/partneri/logo-6.png" afterDir="false" />
+    <list default="true" id="3181f2f1-3932-4293-9313-326727c45049" name="Changes" comment="banner + sponzori">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/static/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/styles.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
     </list>
@@ -88,11 +79,20 @@
       <option name="project" value="LOCAL" />
       <updated>1756627108794</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="banner + sponzori">
+      <option name="closed" value="true" />
+      <created>1756641331977</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1756641331977</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="index.html, styles.css, app.py" />
-    <option name="LAST_COMMIT_MESSAGE" value="index.html, styles.css, app.py" />
+    <MESSAGE value="banner + sponzori" />
+    <option name="LAST_COMMIT_MESSAGE" value="banner + sponzori" />
   </component>
 </project>

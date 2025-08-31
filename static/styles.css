@@ -123,3 +123,50 @@ footer a:hover{ opacity:1; }
   opacity: 1;
   filter: none; /* na hover zobrazí originálnu farbu značky */
 }
+
+/* ========== Footer ========== */
+.site-footer{
+  background:#fff;
+}
+
+.footer-brand span{ color:var(--brand); font-size:1.05rem; }
+.footer-h6{
+  color:var(--brand);
+  font-weight:700;
+  letter-spacing:.2px;
+  margin-bottom:.75rem;
+}
+
+.footer-links{ list-style:none; padding:0; margin:0; }
+.footer-links li{ margin:.4rem 0; }
+.footer-links a{
+  color:var(--brand);
+  text-decoration:none;
+  opacity:.85;
+}
+.footer-links a:hover{ opacity:1; text-decoration:underline; }
+
+/* newsletter */
+.footer-form .footer-input{
+  background:#f6f8fb;
+  border:1px solid var(--border);
+}
+.footer-form .footer-input:focus{
+  background:#fff;
+  box-shadow:none;
+  border-color:var(--brand);
+}
+
+/* bottom strip */
+.footer-bottom{
+  border-top:1px solid var(--border);
+  background:linear-gradient(180deg, rgba(18,39,52,0.03), rgba(18,39,52,0.02));
+  padding:.9rem 0;
+}
+.footer-bottom-link{
+  color:var(--brand);
+  text-decoration:none;
+  opacity:.8;
+  margin-left:.5rem;
+}
+.footer-bottom-link:hover{ opacity:1; text-decoration:underline; }
