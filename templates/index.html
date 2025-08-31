@@ -3,216 +3,158 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Sponzoring – Marketplace</title>
+    <title>sponpon – Marketplace</title>
 
-    <!-- Bootstrap 5.3 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <!-- Bootstrap Icons -->
+    <!-- CSS & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- Custom styles -->
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <link rel="icon" href="data:,">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
   </head>
 
   <body class="bg-body-tertiary">
-    <!-- ====== NAVBAR / HEADER ====== -->
-    <nav class="navbar navbar-expand-lg navbar-light sticky-top bg-white shadow-sm py-3">
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg sticky-top glass-nav py-3">
       <div class="container">
-        <!-- Logo -->
-        <a class="navbar-brand d-flex align-items-center gap-2" href="#">
-          <span class="brand-mark rounded-3"></span>
-          <strong class="fw-bold">SponsorLink</strong>
+        <a class="navbar-brand d-flex align-items-center" href="#">
+          <img src="{{ url_for('static', filename='logo.png') }}" alt="sponpon" class="brand-logo">
         </a>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
-                aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
           <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="mainNav">
-          <!-- Menu -->
           <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-3">
             <li class="nav-item"><a class="nav-link active" href="#">Marketplace</a></li>
             <li class="nav-item"><a class="nav-link" href="#how">Ako to funguje</a></li>
-            <li class="nav-item"><a class="nav-link" href="#pricing">Cenník</a></li>
             <li class="nav-item"><a class="nav-link" href="#faq">FAQ</a></li>
+            <li class="nav-item"><a class="nav-link" href="#why">Prečo my</a></li>
           </ul>
 
-          <!-- Selectory -->
-          <form class="d-flex align-items-center me-lg-3 gap-2 ms-auto" role="search">
-            <div class="input-group input-group-sm">
+          <form class="d-flex align-items-center me-lg-3 gap-2 ms-auto">
+            <div class="input-group input-group-sm selector">
               <span class="input-group-text bg-transparent"><i class="bi bi-geo-alt"></i></span>
               <select id="citySelect" class="form-select border-start-0">
-                {% for c in cities %}
-                  <option value="{{ c }}" {% if loop.first %}selected{% endif %}>{{ c }}</option>
-                {% endfor %}
+                {% for c in cities %}<option value="{{ c }}" {% if loop.first %}selected{% endif %}>{{ c }}</option>{% endfor %}
               </select>
             </div>
-
-            <div class="input-group input-group-sm">
+            <div class="input-group input-group-sm selector">
               <span class="input-group-text bg-transparent"><i class="bi bi-globe2"></i></span>
               <select id="countrySelect" class="form-select border-start-0">
-                {% for c in countries %}
-                  <option value="{{ c }}" {% if c == 'Slovensko' %}selected{% endif %}>{{ c }}</option>
-                {% endfor %}
+                {% for c in countries %}<option value="{{ c }}" {% if c=='Slovensko' %}selected{% endif %}>{{ c }}</option>{% endfor %}
               </select>
             </div>
           </form>
 
-          <!-- User chip -->
-          <div class="dropdown ms-lg-2">
-            <button class="btn btn-outline-secondary btn-sm rounded-pill d-flex align-items-center gap-2"
-                    type="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <img src="{{ url_for('static', filename='profileimages/profile.png') }}" alt="avatar"
-                   class="rounded-circle" width="28" height="28">
-              <span class="d-none d-sm-inline">Andrea</span>
-              <i class="bi bi-caret-down-fill small"></i>
-            </button>
-            <ul class="dropdown-menu dropdown-menu-end shadow-sm">
-              <li><a class="dropdown-item" href="#"><i class="bi bi-person"></i> Môj profil</a></li>
-              <li><a class="dropdown-item" href="#"><i class="bi bi-layout-text-sidebar-reverse"></i> Dashboard</a></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="#"><i class="bi bi-box-arrow-right"></i> Odhlásiť</a></li>
-            </ul>
+          <div class="d-none d-lg-flex gap-2">
+            <a href="#" class="btn btn-outline-brand btn-sm rounded-pill">Prihlásiť</a>
+            <a href="#" class="btn btn-brand btn-sm rounded-pill">Zaregistrovať sa</a>
           </div>
         </div>
       </div>
     </nav>
+    <div style="height:72px"></div>
 
-    <!-- ====== HERO ====== -->
+    <!-- HERO -->
     <section class="hero-section py-5">
       <div class="container">
         <div class="row align-items-center g-4">
           <div class="col-lg-7">
-            <h1 class="display-5 fw-bold lh-1 mb-3">
-              Prepojenie firiem so <span class="text-gradient">športom</span> bez zbytočného chaosu
+            <h1 class="hero-title fw-bold lh-1 mb-3">
+              Investuj do <span class="accent">športového portfólia</span> — my odporučíme, ty doladíš
             </h1>
             <p class="lead text-secondary">
-              Objav overené kluby a športovcov, porovnaj balíčky a spusti kampaň s jasnými metrikami a bezpečnými platbami.
+              Veľká firma zadá rozpočet a preferencie. My navrhneme diverzifikované portfólio
+              klubov a športovcov, ktoré si môžeš upraviť.
             </p>
-            <div class="d-flex gap-2">
-              <a href="#" class="btn btn-dark btn-lg rounded-3"><i class="bi bi-search"></i> Preskúmať marketplace</a>
-              <a href="#how" class="btn btn-outline-dark btn-lg rounded-3"><i class="bi bi-lightning-charge"></i> Ako to funguje</a>
+            <div class="d-flex flex-wrap gap-3">
+              <a href="#" class="btn btn-brand btn-lg rounded-3"><i class="bi bi-grid-3x3-gap"></i> Postaviť portfólio</a>
+              <a href="#how" class="btn btn-outline-brand btn-lg rounded-3"><i class="bi bi-lightning-charge"></i> Ako to funguje</a>
             </div>
             <div class="d-flex flex-wrap gap-2 mt-3">
-              <span class="chip"><i class="bi bi-shield-lock"></i> Escrow platby</span>
-              <span class="chip"><i class="bi bi-graph-up"></i> Živé metriky</span>
-              <span class="chip"><i class="bi bi-stars"></i> Kurátorské Top 5</span>
+              <span class="chip"><i class="bi bi-file-earmark-text"></i> Zmluvy & prerozdelenie</span>
+              <span class="chip"><i class="bi bi-activity"></i> Reporty a atribúcia</span>
+              <span class="chip"><i class="bi bi-people"></i> Budovanie komunity</span>
             </div>
           </div>
+
           <div class="col-lg-5">
             <div class="hero-card shadow-sm rounded-4 p-4 bg-white">
               <div class="d-flex align-items-center gap-3 mb-3">
-                <img src="{{ url_for('static', filename='profileimages/influencer.png') }}" class="rounded-circle" width="56" height="56" alt="placeholder">
+                <img src="{{ url_for('static', filename='profileimages/influencer.png') }}" class="rounded-circle border" width="64" height="64" alt="">
                 <div>
-                  <div class="fw-semibold">Ukážkový profil</div>
-                  <div class="text-secondary small">dosah, ER, demografia</div>
+                  <div class="fw-semibold">Ukážkový profil v portfóliu</div>
+                  <div class="text-secondary small">zápasy/streamy • obsah • metriky</div>
                 </div>
               </div>
-              <div class="progress-stacked">
-                <div class="progress" role="progressbar" aria-label="Reach" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100">
-                  <div class="progress-bar" style="width: 72%"></div>
-                </div>
-                <div class="progress" role="progressbar" aria-label="Engagement" aria-valuenow="54" aria-valuemin="0" aria-valuemax="100">
-                  <div class="progress-bar bg-secondary" style="width: 54%"></div>
-                </div>
+              <div class="progress mb-3" role="progressbar" aria-label="mock progress">
+                <div class="progress-bar" style="width: 78%"></div>
               </div>
-              <p class="small text-secondary mt-3 mb-0">Živé metriky zo sociálnych sietí v prehľadných reportoch.</p>
+              <p class="small text-secondary mb-0">
+                Dashboard pre firmy: najbližšie zápasy, streamy a živé metriky za všetky položky portfólia.
+              </p>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ====== PARTNERS ====== -->
-    <section class="py-3 bg-white border-top border-bottom">
+    <!-- PARTNERS (Simple Icons SVG – sivé -> farba na hover) -->
+    <section class="py-4 bg-white border-top border-bottom">
       <div class="container">
-        <div class="d-flex flex-wrap justify-content-center align-items-center gap-4 opacity-75">
-          {% for logo in partners %}
-            <img src="{{ url_for('static', filename=logo) }}" alt="partner logo" height="28">
+        <div class="d-flex flex-wrap justify-content-center align-items-center gap-4 partners-row">
+          {% for slug in partners %}
+            <img class="partner-icon" src="https://cdn.simpleicons.org/{{ slug }}" alt="{{ slug }} logo" height="34">
           {% endfor %}
         </div>
       </div>
     </section>
 
-    <!-- ====== HOW IT WORKS ====== -->
+    <!-- HOW IT WORKS -->
     <section id="how" class="py-5">
       <div class="container">
         <div class="text-center mb-4">
-          <h2 class="h4 fw-bold">Ako to funguje</h2>
-          <p class="text-secondary mb-0">Tri jednoduché kroky od shortlistu po meraný výsledok</p>
+          <h2 class="h4 fw-bold brand-color">Ako to funguje pre veľké firmy</h2>
+          <p class="text-secondary mb-0">Rozpočet → Návrh portfólia → Telefónne potvrdenie → Zmluvy → Dashboard</p>
         </div>
-        <div class="row g-4">
-          <div class="col-md-4">
-            <div class="step-card h-100 p-4 bg-white rounded-4 shadow-sm">
-              <div class="step-number">1</div>
-              <h3 class="h6 fw-bold mt-2">Vyplň onboarding</h3>
-              <p class="text-secondary small mb-0">Hodnoty značky, cieľovka a rozpočet. Dostaneš kurátorské Top 5 vhodných profilov.</p>
-            </div>
+
+        <div class="timeline-steps">
+          <div class="tstep">
+            <div class="tbadge"><span class="tnum">1</span><i class="bi bi-cash-stack"></i></div>
+            <h3 class="h5 fw-bold mt-3 mb-1 brand-color">Rozpočet & preferencie</h3>
+            <p class="text-secondary small mb-0">Rozsah, športy, väčšie vs. menšie profily, lokality.</p>
           </div>
-          <div class="col-md-4">
-            <div class="step-card h-100 p-4 bg-white rounded-4 shadow-sm">
-              <div class="step-number">2</div>
-              <h3 class="h6 fw-bold mt-2">Vyjednaj a objednaj</h3>
-              <p class="text-secondary small mb-0">Balíčky, ponuky a kontrakty na jednom mieste. Platby cez escrow pre bezpečie oboch strán.</p>
-            </div>
+          <div class="tconnector"><span></span></div>
+          <div class="tstep">
+            <div class="tbadge"><span class="tnum">2</span><i class="bi bi-layers"></i></div>
+            <h3 class="h5 fw-bold mt-3 mb-1 brand-color">Návrh portfólia</h3>
+            <p class="text-secondary small mb-0">Odporučíme diverzifikovaný mix. Firma si ho môže upraviť.</p>
           </div>
-          <div class="col-md-4">
-            <div class="step-card h-100 p-4 bg-white rounded-4 shadow-sm">
-              <div class="step-number">3</div>
-              <h3 class="h6 fw-bold mt-2">Report & atribúcia</h3>
-              <p class="text-secondary small mb-0">Živé metriky zo sociálnych sietí a mesačné PDF/CSV reporty s UTM výsledkami.</p>
-            </div>
+          <div class="tconnector"><span></span></div>
+          <div class="tstep">
+            <div class="tbadge"><span class="tnum">3</span><i class="bi bi-telephone-inbound"></i></div>
+            <h3 class="h5 fw-bold mt-3 mb-1 brand-color">Potvrdenie & zmluvy</h3>
+            <p class="text-secondary small mb-0">My voláme klubom/športovcom, potvrdíme a podpíšeme.</p>
+          </div>
+          <div class="tconnector"><span></span></div>
+          <div class="tstep">
+            <div class="tbadge"><span class="tnum">4</span><i class="bi bi-speedometer2"></i></div>
+            <h3 class="h5 fw-bold mt-3 mb-1 brand-color">Dashboard & reporty</h3>
+            <p class="text-secondary small mb-0">Zápasy/streamy, obsah, metriky, mesačné PDF/CSV.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ====== WHY US ====== -->
-    <section class="py-5">
-      <div class="container">
-        <div class="row g-4">
-          <div class="col-md-3">
-            <div class="feature-card p-4 bg-white rounded-4 h-100 shadow-sm">
-              <i class="bi bi-shield-lock fs-4"></i>
-              <h3 class="h6 fw-bold mt-2 mb-1">Bezpečné escrow</h3>
-              <p class="text-secondary small mb-0">Platba sa uvoľní až po doručení dohodnutých deliverables.</p>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="feature-card p-4 bg-white rounded-4 h-100 shadow-sm">
-              <i class="bi bi-graph-up fs-4"></i>
-              <h3 class="h6 fw-bold mt-2 mb-1">Overené metriky</h3>
-              <p class="text-secondary small mb-0">Dáta priamo z IG/FB/YouTube/TikTok API + atribúcia cez UTM.</p>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="feature-card p-4 bg-white rounded-4 h-100 shadow-sm">
-              <i class="bi bi-stars fs-4"></i>
-              <h3 class="h6 fw-bold mt-2 mb-1">Kurátorské Top 5</h3>
-              <p class="text-secondary small mb-0">Odporúčania podľa hodnôt, lokality a publika pre rýchly štart.</p>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="feature-card p-4 bg-white rounded-4 h-100 shadow-sm">
-              <i class="bi bi-cash-coin fs-4"></i>
-              <h3 class="h6 fw-bold mt-2 mb-1">Transparentné ceny</h3>
-              <p class="text-secondary small mb-0">Balíčky s cenou „od“, jasné podmienky a rýchla fakturácia.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ====== SECTION: KLUBY ====== -->
+    <!-- LISTINGS: KLUBY -->
     <section class="py-4">
       <div class="container">
         <div class="d-flex align-items-baseline justify-content-between mb-3">
-          <h2 class="h4 fw-bold mb-0">Kluby</h2>
-          <a href="#" class="text-decoration-none">Zobraziť všetky <i class="bi bi-arrow-right"></i></a>
+          <h2 class="h4 fw-bold mb-0 brand-color">Kluby – ukážka</h2>
+          <span class="text-secondary small">Detailné informácie sú dostupné po prihlásení</span>
         </div>
-
         <div class="row g-4">
           {% for card in clubs %}
           <div class="col-12 col-sm-6 col-lg-4">
@@ -223,36 +165,21 @@
               <div class="card-body">
                 <div class="d-flex align-items-center justify-content-between mb-2">
                   <div class="d-flex align-items-center gap-2">
-                    <img class="rounded-circle border" src="{{ url_for('static', filename=card.avatar) }}" width="40" height="40" alt="avatar">
+                    <img class="rounded-circle border" src="{{ url_for('static', filename=card.avatar) }}" width="40" height="40" alt="">
                     <div>
-                      <div class="fw-semibold d-flex align-items-center gap-1">
+                      <div class="fw-semibold d-flex align-items-center gap-2 brand-color">
                         {{ card.title }}
-                        {% if card.verified %}<i class="bi bi-patch-check-fill text-primary-emphasis" title="Overené"></i>{% endif %}
+                        <span class="badge bg-light text-dark border">{{ card.sport }}</span>
+                        {% if card.verified %}<i class="bi bi-patch-check-fill verified-gradient"></i>{% endif %}
                       </div>
-                      <div class="text-secondary small"><i class="bi bi-geo"></i> {{ card.location }}</div>
+                      <div class="text-secondary small"><i class="bi bi-geo-alt"></i> {{ card.location }}</div>
                     </div>
                   </div>
-                  <div class="text-end small text-secondary">
-                    od <span class="fw-semibold text-dark">€{{ card.price_from }}</span>
-                  </div>
+                  <div class="text-end small text-secondary">od <span class="fw-semibold brand-color">€{{ card.price_from }}</span></div>
                 </div>
-
                 <p class="card-text small text-secondary mb-3">{{ card.desc }}</p>
-
-                <div class="d-flex flex-wrap gap-2 mb-3">
-                  {% for t in card.tags %}
-                    <span class="badge text-bg-light rounded-pill">{{ t }}</span>
-                  {% endfor %}
-                </div>
-
-                <div class="d-flex align-items-center justify-content-between small text-secondary mb-3">
-                  <span><i class="bi bi-people"></i> Dosah: <strong class="text-dark">{{ card.reach }}</strong></span>
-                  <span><i class="bi bi-activity"></i> ER: <strong class="text-dark">{{ card.er }}%</strong></span>
-                </div>
-
-                <div class="d-flex gap-2">
-                  <a href="#" class="btn btn-dark btn-sm rounded-3 flex-fill"><i class="bi bi-eye"></i> Pozrieť profil</a>
-                  <a href="#" class="btn btn-outline-dark btn-sm rounded-3 flex-fill"><i class="bi bi-envelope-plus"></i> Požiadať o ponuku</a>
+                <div class="d-flex flex-wrap gap-2">
+                  {% for t in card.tags %}<span class="badge text-bg-light rounded-pill">{{ t }}</span>{% endfor %}
                 </div>
               </div>
             </div>
@@ -262,14 +189,13 @@
       </div>
     </section>
 
-    <!-- ====== SECTION: ŠPORTOVCI & INFLUENCERI ====== -->
+    <!-- LISTINGS: INFLUENCERS -->
     <section class="py-4">
       <div class="container">
         <div class="d-flex align-items-baseline justify-content-between mb-3">
-          <h2 class="h4 fw-bold mb-0">Športovci & Influenceri</h2>
-          <a href="#" class="text-decoration-none">Zobraziť všetkých <i class="bi bi-arrow-right"></i></a>
+          <h2 class="h4 fw-bold mb-0 brand-color">Športovci & Influenceri – ukážka</h2>
+          <span class="text-secondary small">Detailné informácie sú dostupné po prihlásení</span>
         </div>
-
         <div class="row g-4">
           {% for card in influencers %}
           <div class="col-12 col-sm-6 col-lg-4">
@@ -280,36 +206,21 @@
               <div class="card-body">
                 <div class="d-flex align-items-center justify-content-between mb-2">
                   <div class="d-flex align-items-center gap-2">
-                    <img class="rounded-circle border" src="{{ url_for('static', filename=card.avatar) }}" width="40" height="40" alt="avatar">
+                    <img class="rounded-circle border" src="{{ url_for('static', filename=card.avatar) }}" width="40" height="40" alt="">
                     <div>
-                      <div class="fw-semibold d-flex align-items-center gap-1">
+                      <div class="fw-semibold d-flex align-items-center gap-2 brand-color">
                         {{ card.title }}
-                        {% if card.verified %}<i class="bi bi-patch-check-fill text-primary-emphasis" title="Overené"></i>{% endif %}
+                        <span class="badge bg-light text-dark border">{{ card.sport }}</span>
+                        {% if card.verified %}<i class="bi bi-patch-check-fill verified-gradient"></i>{% endif %}
                       </div>
-                      <div class="text-secondary small"><i class="bi bi-geo"></i> {{ card.location }}</div>
+                      <div class="text-secondary small"><i class="bi bi-geo-alt"></i> {{ card.location }}</div>
                     </div>
                   </div>
-                  <div class="text-end small text-secondary">
-                    od <span class="fw-semibold text-dark">€{{ card.price_from }}</span>
-                  </div>
+                  <div class="text-end small text-secondary">od <span class="fw-semibold brand-color">€{{ card.price_from }}</span></div>
                 </div>
-
                 <p class="card-text small text-secondary mb-3">{{ card.desc }}</p>
-
-                <div class="d-flex flex-wrap gap-2 mb-3">
-                  {% for t in card.tags %}
-                    <span class="badge text-bg-light rounded-pill">{{ t }}</span>
-                  {% endfor %}
-                </div>
-
-                <div class="d-flex align-items-center justify-content-between small text-secondary mb-3">
-                  <span><i class="bi bi-people"></i> Sledujúci: <strong class="text-dark">{{ card.reach }}</strong></span>
-                  <span><i class="bi bi-activity"></i> ER: <strong class="text-dark">{{ card.er }}%</strong></span>
-                </div>
-
-                <div class="d-flex gap-2">
-                  <a href="#" class="btn btn-dark btn-sm rounded-3 flex-fill"><i class="bi bi-eye"></i> Pozrieť profil</a>
-                  <a href="#" class="btn btn-outline-dark btn-sm rounded-3 flex-fill"><i class="bi bi-envelope-plus"></i> Požiadať o ponuku</a>
+                <div class="d-flex flex-wrap gap-2">
+                  {% for t in card.tags %}<span class="badge text-bg-light rounded-pill">{{ t }}</span>{% endfor %}
                 </div>
               </div>
             </div>
@@ -319,44 +230,19 @@
       </div>
     </section>
 
-    <!-- ====== CASE STUDIES / REFERENCES ====== -->
-    <section class="py-5 bg-white border-top">
-      <div class="container">
-        <div class="text-center mb-4">
-          <h2 class="h4 fw-bold">Case studies a referencie</h2>
-          <p class="text-secondary mb-0">Reálne výsledky, ktoré vieš obhájiť pred manažmentom</p>
-        </div>
-        <div class="row g-4">
-          {% for cs in cases %}
-          <div class="col-md-4">
-            <div class="card h-100 shadow-sm rounded-4 border-0">
-              <div class="card-body p-4">
-                <div class="d-flex align-items-center gap-3 mb-2">
-                  <img src="{{ url_for('static', filename=cs.logo) }}" alt="logo" width="36" height="36">
-                  <div class="fw-semibold">{{ cs.title }}</div>
-                </div>
-                <div class="badge bg-dark-subtle text-dark rounded-pill mb-2">{{ cs.result }}</div>
-                <p class="text-secondary small mb-0">{{ cs.desc }}</p>
-              </div>
-            </div>
-          </div>
-          {% endfor %}
-        </div>
-      </div>
-    </section>
-
-    <!-- ====== FAQ ====== -->
+    <!-- FAQ -->
     <section id="faq" class="py-5">
       <div class="container">
         <div class="text-center mb-4">
-          <h2 class="h4 fw-bold">FAQ</h2>
-          <p class="text-secondary mb-0">Najčastejšie otázky o platbách, reportoch a spolupráci</p>
+          <h2 class="h4 fw-bold brand-color">FAQ</h2>
+          <p class="text-secondary mb-0">Platby, portfóliá a reporty</p>
         </div>
-        <div class="accordion rounded-4 shadow-sm" id="faqAccordion">
+        <div class="accordion rounded-4 shadow-sm faq-acc" id="faqAccordion">
           {% for item in faq %}
           <div class="accordion-item">
             <h2 class="accordion-header">
-              <button class="accordion-button {% if not loop.first %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#faq{{ loop.index }}">
+              <button class="accordion-button {% if not loop.first %}collapsed{% endif %}" type="button"
+                      data-bs-toggle="collapse" data-bs-target="#faq{{ loop.index }}">
                 {{ item.q }}
               </button>
             </h2>
@@ -369,42 +255,75 @@
       </div>
     </section>
 
-    <!-- ====== CTA BAR ====== -->
-    <section class="py-4 bg-dark text-white">
+    <!-- CTA -->
+    <section class="py-4 brand-strip text-white">
       <div class="container d-flex flex-column flex-md-row align-items-center justify-content-between gap-3">
-        <div class="fw-semibold">Pripravená spustiť prvú kampaň?</div>
+        <div class="fw-semibold">Pripravená investovať do portfólia? Začni návrhom na mieru.</div>
         <div class="d-flex gap-2">
-          <a href="#" class="btn btn-light btn-lg rounded-3"><i class="bi bi-rocket-takeoff"></i> Začať teraz</a>
+          <a href="#" class="btn btn-light btn-lg rounded-3"><i class="bi bi-rocket-takeoff"></i> Navrhnúť portfólio</a>
           <a href="#how" class="btn btn-outline-light btn-lg rounded-3"><i class="bi bi-question-circle"></i> Zistiť viac</a>
         </div>
       </div>
     </section>
 
-    <!-- ====== FOOTER ====== -->
-    <footer id="pricing" class="border-top py-4 bg-white">
-      <div class="container d-flex flex-column flex-sm-row justify-content-between align-items-center gap-3">
-        <div class="text-secondary small">© {{ year }} SponsorLink. Všetky práva vyhradené.</div>
-        <ul class="list-inline small mb-0">
-          <li class="list-inline-item"><a class="text-decoration-none" href="#">GDPR</a></li>
-          <li class="list-inline-item"><a class="text-decoration-none" href="#">Podmienky</a></li>
-          <li class="list-inline-item"><a class="text-decoration-none" href="#">Kontakt</a></li>
-        </ul>
+    <!-- PREČO MY (úplne dole) -->
+    <section id="why" class="py-5 bg-white border-top">
+      <div class="container">
+        <h2 class="h4 fw-bold brand-color mb-4">Prečo my</h2>
+        <div class="row g-4">
+          <div class="col-md-3">
+            <div class="feature-card p-4 bg-white rounded-4 h-100 shadow-sm">
+              <i class="bi bi-layers fs-4 brand-color"></i>
+              <h3 class="h6 fw-bold mt-2 mb-1 brand-color">Diverzifikované portfóliá</h3>
+              <p class="text-secondary small mb-0">Vybalansovaný mix klubov a športovcov podľa cieľov.</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="feature-card p-4 bg-white rounded-4 h-100 shadow-sm">
+              <i class="bi bi-shield-lock fs-4 brand-color"></i>
+              <h3 class="h6 fw-bold mt-2 mb-1 brand-color">Bezpečné procesy</h3>
+              <p class="text-secondary small mb-0">Zmluvy, potvrdenia a transparentné prerozdelenie financií.</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="feature-card p-4 bg-white rounded-4 h-100 shadow-sm">
+              <i class="bi bi-graph-up fs-4 brand-color"></i>
+              <h3 class="h6 fw-bold mt-2 mb-1 brand-color">Overené metriky</h3>
+              <p class="text-secondary small mb-0">Oficiálne API, UTM atribúcia, mesačné reporty.</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="feature-card p-4 bg-white rounded-4 h-100 shadow-sm">
+              <i class="bi bi-emoji-smile fs-4 brand-color"></i>
+              <h3 class="h6 fw-bold mt-2 mb-1 brand-color">Fandíme spolu</h3>
+              <p class="text-secondary small mb-0">Biznis prehľad aj fanúšikovský zážitok v jednom.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="py-4 bg-white border-top">
+      <div class="container">
+        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-3">
+          <div class="text-secondary small">© {{ year }} sponpon. Všetky práva vyhradené.</div>
+          <ul class="list-inline small mb-0">
+            <li class="list-inline-item"><a class="text-decoration-none" href="#">GDPR</a></li>
+            <li class="list-inline-item"><a class="text-decoration-none" href="#">Podmienky</a></li>
+            <li class="list-inline-item"><a class="text-decoration-none" href="#">Kontakt</a></li>
+          </ul>
+        </div>
       </div>
     </footer>
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-            crossorigin="anonymous"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script>
-      // Persist city/country in localStorage (simple UX touch)
+      // persist selectors
       const citySel = document.getElementById('citySelect');
       const countrySel = document.getElementById('countrySelect');
-
       citySel.value = localStorage.getItem('selectedCity') || citySel.value;
       countrySel.value = localStorage.getItem('selectedCountry') || countrySel.value;
-
       citySel.addEventListener('change', () => localStorage.setItem('selectedCity', citySel.value));
       countrySel.addEventListener('change', () => localStorage.setItem('selectedCountry', countrySel.value));
     </script>

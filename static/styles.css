@@ -1,77 +1,125 @@
-/* --- Base --- */
+/* ===== Brand palette ===== */
 :root{
-  --brand: #111;
-  --accent: #7c4dff;
-  --border: rgba(17,17,17,.08);
+  --brand:#122734;                /* hlavná tmavá */
+  --accent1:#8a5cf6;              /* fialový akcent */
+  --border:rgba(18,39,52,.12);
+  --soft:#f5f7fb;
+
+  /* len pre akcent/verified ikony */
+  --grad1:#d75a7b; --grad2:#9096c6; --grad3:#2c9dae;
 }
-.text-gradient{
-  background: linear-gradient(90deg, #111 0%, #7c4dff 100%);
+
+/* ===== Utilities ===== */
+.brand-color{ color:var(--brand); }
+.verified-gradient{
+  background:linear-gradient(90deg,var(--grad1),var(--grad2),var(--grad3));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+}
+
+.hero-title{
+  font-size: clamp(32px, 4.2vw, 56px); /* smaller, like your mock */
+  letter-spacing:-0.01em;
+  color:#111418;
+  line-height:1.15;
+  margin-bottom:1rem;
+}
+
+.accent{
+  background-image: linear-gradient(
+    90deg,
+    #111418 0%,    /* dark/black */
+    #1f1a2e 25%,   /* very dark violet */
+    #3c2c6e 55%,   /* deep violet */
+    #774bfb 100%   /* final purple */
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
-.brand-mark{
-  width: 28px;
-  height: 28px;
-  background: linear-gradient(135deg, #111, #7c4dff);
-  display: inline-block;
-  border-radius: .75rem;
-}
 
-/* Hero */
 .hero-section{
-  background: radial-gradient(1200px 400px at 10% 10%, rgba(124,77,255,0.06), transparent 60%),
-              radial-gradient(1200px 400px at 90% 20%, rgba(17,17,17,0.06), transparent 60%);
+  margin-top: -70px !important; /* nechávaš, aby to sedelo pod header */
+  padding-top: 6rem !important; /* viac priestoru hore */
+  padding-bottom: 6rem !important; /* viac priestoru dole */
 }
 
-/* Chips */
-.chip{
-  padding:.4rem .7rem;
-  border:1px solid var(--border);
-  border-radius:999px;
-  background:#fff;
-  font-size:.85rem;
-  display:inline-flex;
-  align-items:center; gap:.4rem;
+
+/* Buttons */
+.btn-brand{ color:#fff; border:1px solid var(--brand); background:var(--brand); }
+.btn-brand:hover{ filter:brightness(.93); color:#fff; }
+.btn-outline-brand{ border:1px solid var(--brand); color:var(--brand); }
+.btn-outline-brand:hover{ background:var(--brand); color:#fff; }
+
+/* Navbar */
+.glass-nav{ background:rgba(255,255,255,.8); backdrop-filter:saturate(160%) blur(10px); border-bottom:1px solid var(--border); }
+.navbar .nav-link{ color:var(--brand); opacity:.9; }
+.navbar .nav-link.active,.navbar .nav-link:hover{ opacity:1; }
+.brand-logo{ height:34px; width:auto; object-fit:contain; }
+
+/* Selectors */
+.selector .input-group-text{ background:transparent; border-right:0; color:var(--brand); }
+.selector .form-select{ border-left:0; color:var(--brand); }
+.navbar .form-select{ padding-right:2rem; }
+
+/* Hero background + chips */
+.hero-section{
+  background:
+    radial-gradient(1200px 380px at 0% 0%, rgba(138,92,246,.10), transparent 60%),
+    radial-gradient(1200px 380px at 100% 10%, rgba(18,39,52,.05), transparent 60%);
+}
+.chip{ padding:.5rem .75rem; border:1px solid var(--border); border-radius:999px; background:#fff; font-size:.92rem; color:var(--brand); display:inline-flex; align-items:center; gap:.5rem; }
+.hero-card .progress{ height:.6rem; background:#eef1f5; }
+.hero-card .progress-bar{ background:var(--brand); }
+
+/* Partners – sivé -> farba na hover */
+.partners-row .partner-icon{
+  filter:grayscale(100%) brightness(.55);
+  opacity:.65;
+  transition:filter .25s ease, opacity .25s ease, transform .25s ease;
+}
+.partners-row .partner-icon:hover{
+  filter:none; opacity:1; transform:translateY(-2px);
 }
 
-/* Cards */
-.listing-card img.object-fit-cover{
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.shadow-hover{
-  transition: transform .25s ease, box-shadow .25s ease;
-}
-.shadow-hover:hover{
-  transform: translateY(-4px);
-  box-shadow: 0 12px 36px rgba(16,24,40,.12);
-}
-.badge{
-  border: 1px solid rgba(0,0,0,.06);
-}
+/* Listings */
+.listing-card{ background:#fff; border-radius:1rem; border:1px solid var(--border); overflow:hidden; }
+.listing-card img.object-fit-cover{ width:100%; height:100%; object-fit:cover; }
+.shadow-hover{ transition:transform .25s ease, box-shadow .25s ease; }
+.shadow-hover:hover{ transform:translateY(-4px); box-shadow:0 14px 40px rgba(18,39,52,.12); }
+.badge{ border:1px solid var(--border); }
 
-/* How steps */
-.step-card .step-number{
-  width: 36px; height: 36px;
-  display:inline-flex; align-items:center; justify-content:center;
-  border-radius: .75rem;
-  background: #f3f1ff;
-  color:#4b34d1;
-  font-weight:700;
-}
+/* Timeline */
+.timeline-steps{ display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:nowrap; }
+.tstep{ flex:1 1 0; text-align:center; padding:0 6px; }
+.tbadge{ width:84px; height:84px; margin:0 auto; border-radius:22px; background:#fff; border:1px solid var(--border);
+  display:flex; align-items:center; justify-content:center; position:relative; box-shadow:0 10px 30px rgba(16,24,40,.08); color:var(--brand); }
+.tnum{ position:absolute; top:-12px; left:-12px; width:34px; height:34px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-weight:700;
+  background:#ede8ff; color:#6a55ff; border:1px solid rgba(106,85,255,.25); }
+.tconnector{ width:120px; min-width:120px; height:5px; display:flex; align-items:center; justify-content:center; }
+.tconnector span{ width:100%; height:5px; border-radius:999px; background:linear-gradient(90deg,#c9c6ff,#e8e9ff); }
+@media (max-width: 991.98px){ .timeline-steps{ flex-wrap:wrap; } .tconnector{ width:100%; min-width:100%; margin:10px 0; } }
 
-/* Feature cards */
-.feature-card i{ color:#222; }
+/* FAQ */
+.faq-acc .accordion-item{ border:0; }
+.faq-acc .accordion-button{ background:#eef3ff; border:0; box-shadow:none; color:#1f2b3a; }
+.faq-acc .accordion-button.collapsed{ background:#fff; color:var(--brand); border-top:1px solid var(--border); }
+.faq-acc .accordion-body{ background:#fff; border-top:1px solid var(--border); }
+
+/* Feature cards (Prečo my) */
 .feature-card{ border:1px solid var(--border); }
 
-/* Footer links */
-footer a{ color: #111; opacity: .8; }
-footer a:hover{ opacity: 1; }
+/* CTA & Footer */
+.brand-strip{ background:var(--brand); }
+footer a{ color:var(--brand); opacity:.85; }
+footer a:hover{ opacity:1; }
 
-/* Small tweaks */
-.navbar .form-select{
-  padding-right: 2rem;
+.partner-icon {
+  height: 32px;
+  opacity: 0.7;
+  filter: grayscale(100%) brightness(0) invert(50%);
+  transition: all 0.3s ease;
 }
-.progress-stacked .progress{ height: .5rem; }
 
+.partner-icon:hover {
+  opacity: 1;
+  filter: none; /* na hover zobrazí originálnu farbu značky */
+}
