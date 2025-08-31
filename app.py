@@ -18,7 +18,7 @@ COUNTRIES = [
 def cover(name): return f"covers/{name}"
 def avatar(name): return f"profileimages/{name}"
 
-# --- Demo karty (iba ukážky na homepage) ---
+# --- Demo listingy (ukážky) ---
 CLUB_CARDS = [
     {
         "title": "HKM Nová Dubnica",
@@ -91,16 +91,14 @@ INFLUENCER_CARDS = [
     }
 ]
 
-# --- Partneri: 20 značiek cez Simple Icons (CDN SVG) ---
+# --- Partneri (Simple Icons slugs) ---
 PARTNER_SLUGS = [
     "visa",
     "adidas", "nike", "puma", "underarmour",
     "redbull", "logitech",
     "cisco", "hp", "asus", "acer",
-    "nvidia",     "airbnb", "newbalance", "fila",
-    "apple", "dell", "thenorthface", "panasonic",
+    "nvidia", "airbnb", "newbalance", "fila"
 ]
-
 
 FAQ = [
     {"q": "Ako funguje portfólio pre veľké firmy?",
