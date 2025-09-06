@@ -49,6 +49,17 @@
   </div>
 </section>
 
+<!-- ===================== PARTNERS ===================== -->
+<section class="py-4 bg-white border-top border-bottom">
+  <div class="container">
+    <div class="d-flex flex-wrap justify-content-center align-items-center gap-4 partners-row">
+      {% for slug in partners %}
+        <img class="partner-icon" src="https://cdn.simpleicons.org/{{ slug }}" alt="{{ slug }} logo" height="34">
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
 <!-- ===================== PLATFORM HIGHLIGHTS ===================== -->
 <section class="platform-grid-section py-5">
   <div class="container">
@@ -134,16 +145,6 @@
   </div>
 </section>
 
-<!-- ===================== PARTNERS ===================== -->
-<section class="py-4 bg-white border-top border-bottom">
-  <div class="container">
-    <div class="d-flex flex-wrap justify-content-center align-items-center gap-4 partners-row">
-      {% for slug in partners %}
-        <img class="partner-icon" src="https://cdn.simpleicons.org/{{ slug }}" alt="{{ slug }} logo" height="34">
-      {% endfor %}
-    </div>
-  </div>
-</section>
 
 <!-- ===================== LISTINGS: KLUBY ===================== -->
 <section class="py-5">
