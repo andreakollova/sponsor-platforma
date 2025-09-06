@@ -1,23 +1,32 @@
 /* ============== Platform Highlights (light Supabase-style) ============== */
 .platform-grid-section { position: relative; }
 
-.platform-grid{
+/* Dva samostatné rady – hore 3 (ľavá XL), pod tým 4 */
+.platform-row{
   display:grid;
   grid-template-columns:repeat(12,minmax(0,1fr));
   gap:18px;
+  margin-bottom:18px;
 }
 
-/* Karty */
+/* TOP ROW: XL = 6, ostatné = 3 + 3  -> 12 */
+.platform-row--top  .ph-card{ grid-column:span 3; }
+.platform-row--top  .ph-card--xl{ grid-column:span 6; min-height:360px; }
+
+/* BOTTOM ROW: 4 × 3 -> 12 */
+.platform-row--bottom .ph-card{ grid-column:span 3; }
+
+/* Karty + efekty */
 .ph-card{
-  grid-column:span 4;
   position:relative;
   background:#fff;
   border:1px solid var(--border);
   border-radius:18px;
   padding:22px 22px 20px;
   overflow:hidden;
-  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease, background .18s ease;
   box-shadow:0 8px 18px rgba(10,20,30,.04);
+  min-height:220px;
 }
 .ph-card:hover{
   transform:translateY(-4px);
@@ -27,19 +36,30 @@
 .ph-card::after{
   content:"";
   position:absolute; inset:-1px;
-  background:radial-gradient(1200px 200px at 20% -20%, rgba(119,75,251,.12), transparent 55%);
+  background:radial-gradient(1000px 200px at 20% -20%, rgba(119,75,251,.12), transparent 55%);
   opacity:0; pointer-events:none; transition:opacity .25s ease;
 }
 .ph-card:hover::after{ opacity:1; }
 
-/* XL dlaždica */
-.ph-card--xl{
-  grid-column:span 8;
-  grid-row:span 2;
-  padding:26px 26px 24px;
+/* XL dekor (mesh + corner glow) */
+.ph-card--xl .ph-mesh{
+  position:absolute; inset:0; pointer-events:none;
+  background:
+    radial-gradient(1000px 300px at 95% 110%, rgba(119,75,251,.08), transparent 60%),
+    repeating-linear-gradient(0deg, rgba(17,17,17,.035) 0 1px, transparent 1px 28px),
+    repeating-linear-gradient(90deg, rgba(17,17,17,.035) 0 1px, transparent 1px 28px);
+  mask-image:radial-gradient(120% 100% at 100% 100%, black 40%, transparent 100%);
+  opacity:.55;
 }
+.ph-corner{
+  position:absolute; width:160px; height:160px; filter:blur(40px);
+  background:radial-gradient(closest-side, rgba(119,75,251,.18), transparent 65%);
+  pointer-events:none; opacity:.7;
+}
+.ph-corner--tr{ top:-50px; right:-40px; }
+.ph-corner--bl{ bottom:-50px; left:-40px; }
 
-/* Hlavička */
+/* Hlavička karty */
 .ph-icon-wrap{
   width:48px; height:48px; border-radius:14px;
   display:grid; place-items:center;
@@ -47,37 +67,29 @@
   margin-bottom:12px;
 }
 .ph-icon{ font-size:22px; color:var(--brand); }
-
 .ph-title{ font-size:1.1rem; font-weight:700; color:#0e1116; margin:2px 0 6px; }
 .ph-text{ color:#4b5563; margin:0 0 10px; }
-
 .ph-list{ padding-left:0; margin:0; list-style:none; display:grid; gap:6px; }
 .ph-list.small{ font-size:.92rem; }
 .ph-list i{ color:#22c55e; margin-right:.35rem; }
 
-/* Light mesh dekor pre XL */
-.ph-mesh{
-  position:absolute; inset:0; pointer-events:none; opacity:.5;
-  background:
-    radial-gradient(1000px 300px at 95% 110%, rgba(119,75,251,.08), transparent 60%),
-    linear-gradient(transparent 0 0),
-    repeating-linear-gradient(0deg, rgba(17,17,17,.035) 0 1px, transparent 1px 28px),
-    repeating-linear-gradient(90deg, rgba(17,17,17,.035) 0 1px, transparent 1px 28px);
-  mask-image:radial-gradient(120% 100% at 100% 100%, black 40%, transparent 100%);
-}
-
-/* Responsive rozloženie podobné Supabase */
+/* Responsívne rozloženie s rovnakým “feel” */
 @media (max-width:1200px){
-  .platform-grid{ grid-template-columns:repeat(8,minmax(0,1fr)); }
-  .ph-card{ grid-column:span 4; }
-  .ph-card--xl{ grid-column:span 8; grid-row:span 2; }
+  .platform-row{ grid-template-columns:repeat(12,minmax(0,1fr)); }
+  .platform-row--top  .ph-card--xl{ grid-column:span 6; min-height:340px; }
+  .platform-row--top  .ph-card{ grid-column:span 3; }
+  .platform-row--bottom .ph-card{ grid-column:span 3; }
 }
 @media (max-width:992px){
-  .platform-grid{ grid-template-columns:repeat(6,minmax(0,1fr)); }
-  .ph-card{ grid-column:span 3; }
-  .ph-card--xl{ grid-column:span 6; grid-row:span 2; }
+  /* 6 stĺpcov: XL na celú šírku, zvyšné dve vedľa seba (3+3) */
+  .platform-row{ grid-template-columns:repeat(6,minmax(0,1fr)); }
+  .platform-row--top  .ph-card--xl{ grid-column:span 6; min-height:320px; }
+  .platform-row--top  .ph-card{ grid-column:span 3; }
+  .platform-row--bottom .ph-card{ grid-column:span 3; } /* 2 v riadku */
 }
 @media (max-width:768px){
-  .platform-grid{ grid-template-columns:1fr; gap:14px; }
-  .ph-card, .ph-card--xl{ grid-column:1 / -1; grid-row:auto; }
+  .platform-row{ grid-template-columns:1fr; gap:14px; }
+  .platform-row--top  .ph-card,
+  .platform-row--top  .ph-card--xl,
+  .platform-row--bottom .ph-card{ grid-column:1 / -1; min-height:auto; }
 }
