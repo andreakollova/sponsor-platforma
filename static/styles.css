@@ -1,11 +1,18 @@
 /* ========= Root palette ========= */
 :root{
-  --brand: #122734;      /* hlavná */
-  --brand-2: #774bfb;    /* akcent (koniec gradientu) */
+  --brand: #122734;
+  --brand-2: #774bfb;
   --border:#e6e9ee;
+  --btn-radius: 999px;
+
+  /* jemnejšie váhy nadpisov */
+  --w-hero: 600;
+  --w-title: 600;
 }
 
-body{ font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif; }
+body{
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+}
 
 /* ========= Navbar ========= */
 .glass-nav{
@@ -15,9 +22,10 @@ body{ font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica
 }
 .brand-logo{ height:28px; width:auto; display:block; }
 
-/* ========= Buttons (zjednotené) ========= */
-.btn-xlg{ padding:.85rem 1.1rem; border-radius:14px; font-weight:600; }
-.btn-slim{ padding:.45rem .9rem; font-weight:600; }
+/* ========= Buttons ========= */
+.btn-xlg{ padding:.85rem 1.1rem; border-radius: var(--btn-radius); font-weight:600; }
+.btn-slim{ padding:.45rem .9rem;  border-radius: var(--btn-radius); font-weight:600; }
+
 .btn-brand{ background: var(--brand); color:#fff; border:1px solid var(--brand); }
 .btn-brand:hover{ filter:brightness(.95); color:#fff; }
 .btn-ghost-brand{ background:#fff; color:var(--brand); border:1px solid var(--brand); }
@@ -25,18 +33,28 @@ body{ font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica
 .btn-ghost{ background:#fff; color:#111418; border:1px solid var(--border); }
 .btn-ghost:hover{ background:#f8fafc; }
 
-/* ========= Hero ========= */
-.hero-section{ margin-top:-70px; padding:6.5rem 0 4.5rem; }
+.btn-brand,.btn-ghost-brand,.btn-ghost{ border-radius: var(--btn-radius) !important; }
+
+/* ========= HERO ========= */
+.hero-section{ margin-top:-70px; padding:6.5rem 0 4.5rem; overflow: visible; }
 .hero-title{
-  font-size: clamp(36px, 4.6vw, 64px);
+  /* menší nadpis */
+  font-size: clamp(34px, 4vw, 56px);
   letter-spacing:-0.02em;
   color:#0e1116;
   line-height:1.05;
   margin-bottom:1rem;
+  font-weight: var(--w-hero);
 }
 .accent{
   background-image: linear-gradient(90deg,#111418 0%, #2a2240 40%, #774bfb 100%);
   -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+}
+.hero-section .lead{
+  font-size: clamp(14px, 1.2vw, 18px);
+  font-weight: 400;
+  color: #374151;
+  line-height: 1.5;
 }
 .pill-row{ display:flex; flex-wrap:wrap; gap:.5rem; }
 .chip{
@@ -46,69 +64,60 @@ body{ font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica
   background:#fff; color:#374151; font-size:.9rem;
 }
 
-/* stage drží pevný layout, floats sú absolútne mimo karty */
-.hero-stage{
-  position:relative;
-  height:360px;           /* fix výšky kvôli stabilite */
-  display:flex; align-items:center; justify-content:center;
-}
-.hero-floats{ position:absolute; inset:0; pointer-events:none; z-index:2; }
-.hero-card{
-  position:relative;
-  z-index:3;
-  width:min(520px, 100%);
-  background:#ffffff;
-  border:1px solid var(--border);
-  border-radius:20px;
-  box-shadow:0 24px 60px rgba(3,10,20,.08);
-  padding:18px;
+/* === FULL PHOTO (no card look) ======================================= */
+.hero-media{
+  position: relative;
+  width: 100%;
+  max-width: 720px;              /* drží šírku v pravom stĺpci */
+  aspect-ratio: 16 / 9;
+  margin-inline: auto;
+  overflow: visible;             /* aby tagy mohli byť mimo */
+  isolation: isolate;            /* vlastný stacking context */
 }
 
-/* hero card content */
-.hc-head{ display:flex; align-items:center; gap:12px; margin-bottom:10px; }
-.hc-avatar{ width:64px; height:64px; border-radius:50%; border:1px solid var(--border); object-fit:cover; }
-.hc-title{ font-weight:700; color:#0e1116; }
-.hc-sub{ color:#6b7280; font-size:.9rem; }
-.hc-progress{ height:8px; background:#eef2f7; border-radius:999px; overflow:hidden; margin:10px 0 8px; }
-.hc-progress span{ display:block; height:100%; background:linear-gradient(90deg,#774bfb,#5b7cff); }
-.hc-desc{ color:#6b7280; font-size:.9rem; margin:0; }
-.hc-mini{ display:flex; gap:8px; margin-top:12px; }
-.hc-chip{
-  font-size:.8rem; color:#0e1116; background:#fff; border:1px solid var(--border);
-  padding:.3rem .6rem; border-radius:999px;
+/* tvrdý reset: žiadny rám, žiadny tieň, iba jemné zaoblenie */
+.hero-media > img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit: cover;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  border-radius: 26px;           /* len jemné zaoblenie */
+  clip-path: inset(0 round 26px);/* čistý rez hrán pre vločkové tagy */
 }
 
-/* floats — konzistentne rozmiestnené */
+/* === Floating avatars – pri rohoch, tesne mimo fotky ================== */
 .orbit-avatar{
-  position:absolute; width:44px; height:44px; border-radius:50%; border:2px solid #fff;
-  box-shadow:0 12px 28px rgba(0,0,0,.15); object-fit:cover; opacity:.98;
+  position:absolute;
+  width:48px; height:48px; border-radius:50%; border:2px solid #fff;
+  box-shadow:0 12px 28px rgba(0,0,0,.15);
+  object-fit:cover; pointer-events:none; z-index:3;
   animation: floatY 6s ease-in-out infinite, wiggle 10s ease-in-out infinite;
 }
-.oa-top{ top:-14px; left:18%; }
-.oa-bottom{ bottom:-16px; right:14%; animation-delay:1.2s; }
+.oa-tl{ top:0; left:0; transform:translate(-40%, -40%); }
+.oa-br{ bottom:0; right:0; transform:translate(40%, 40%); animation-delay:1.2s; }
 
-.group-avatars{ position:absolute; display:flex; align-items:center; gap:0; animation: drift 9s ease-in-out infinite; }
-.group-avatars img{ width:36px; height:36px; border-radius:50%; border:2px solid #fff; box-shadow:0 10px 20px rgba(0,0,0,.12); }
-.group-avatars img + img{ margin-left:-10px; }
-.stack-tag{ margin-left:8px; background:#fff; border:1px solid var(--border); border-radius:999px; padding:.2rem .55rem; font-size:.78rem; color:#0e1116; box-shadow:0 8px 20px rgba(0,0,0,.05); }
-.ga-rt{ top:-26px; right:-8px; }
-.ga-lb{ bottom:-28px; left:-10px; animation-delay:1s; }
-
+/* === Orbit chips – 3 kusy, striktne MIMO hrán obrázka ================= */
 .orbit-chip{
-  position:absolute; background:#fff; border:1px solid var(--border); border-radius:999px;
-  padding:.38rem .75rem; font-size:.82rem; color:#0e1116; box-shadow:0 10px 24px rgba(0,0,0,.06);
+  position:absolute; z-index:3; pointer-events:none;
+  background:#fff; border:1px solid var(--border); border-radius:999px;
+  padding:.42rem .8rem; font-size:.84rem; color:#0e1116;
+  box-shadow:0 10px 24px rgba(0,0,0,.06);
   animation:bob 7.5s ease-in-out infinite;
 }
 .orbit-chip i{ margin-right:.35rem; color:var(--brand-2); }
-.oc-top{ top:-18px; left:36%; }
-.oc-right{ top:26%; right:-90px; }
-.oc-left{ bottom:18%; left:-86px; }
 
-/* float animácie */
+/* ukotvenie tak, aby nešli do ľavého textového stĺpca */
+.oc-top  { top:0;    left:50%; transform:translate(-50%, -120%); }
+.oc-left { top:50%;  left:0;   transform:translate(-110%, -50%); }
+.oc-right{ top:50%;  right:0;  transform:translate(110%, -50%); }
+
+/* animácie */
 @keyframes floatY{ 0%{transform:translateY(0)} 50%{transform:translateY(-10px)} 100%{transform:translateY(0)} }
 @keyframes wiggle{ 0%{transform:rotate(0)} 50%{transform:rotate(.8deg)} 100%{transform:rotate(0)} }
 @keyframes bob{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
-@keyframes drift{ 0%{transform:translate(0,0)} 50%{transform:translate(4px,-8px)} 100%{transform:translate(0,0)} }
 
 /* ========= Listing cards ========= */
 .listing-card{
@@ -118,7 +127,7 @@ body{ font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica
 }
 .listing-card:hover{ transform:translateY(-4px); box-shadow:0 14px 32px rgba(0,0,0,.08); }
 .lc-avatar{ width:40px; height:40px; border-radius:50%; border:1px solid var(--border); object-fit:cover; }
-.lc-title{ font-weight:700; color:#0e1116; display:flex; align-items:center; gap:.4rem; flex-wrap:wrap; }
+.lc-title{ font-weight:var(--w-title); color:#0e1116; display:flex; align-items:center; gap:.4rem; flex-wrap:wrap; }
 
 .mini-kpis{ display:flex; flex-wrap:wrap; gap:.4rem .6rem; }
 .mini{
@@ -134,11 +143,6 @@ body{ font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica
 .tbadge{ width:76px; height:76px; display:grid; place-items:center; background:#fff; border:1px solid var(--border); border-radius:18px; box-shadow:0 6px 18px rgba(0,0,0,.05) inset; position:relative; margin:0 auto; }
 .tnum{ position:absolute; top:-12px; left:-12px; width:32px; height:32px; display:grid; place-items:center; border-radius:12px; background:#f5f0ff; color:#774bfb; font-weight:700; }
 .tconnector span{ display:block; height:4px; width:100px; background:linear-gradient(90deg,#e9e3ff,#dcd6ff); border-radius:999px; opacity:.8; }
-
-.verified-gradient{
-  background: linear-gradient(90deg, #d75a7b, #9096c6, #2c9dae);
-  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-}
 
 /* ========= Partners ========= */
 .partners-row .partner-icon{
@@ -183,19 +187,53 @@ body{ font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica
 .site-footer-dark .footer-bottom-link{ color:#e9eef5; opacity:.85; text-decoration:none; }
 .site-footer-dark .footer-bottom-link:hover{ opacity:1; text-decoration:underline; }
 
+/* ========= Typografia – jemnejšie váhy ========= */
+h1, h2, h3, h4, h5, h6{ font-weight: var(--w-title); }
+h1.fw-bold, h2.fw-bold, h3.fw-bold, h4.fw-bold, h5.fw-bold, h6.fw-bold,
+.h1.fw-bold, .h2.fw-bold, .h3.fw-bold, .h4.fw-bold, .h5.fw-bold, .h6.fw-bold{
+  font-weight: var(--w-title) !important;
+}
+
 /* ========= Responsive ========= */
 @media (max-width: 1200px){
-  .oc-right{ right:-60px; }
-  .oc-left{ left:-56px; }
+  .oc-left { transform:translate(-100%, -50%); }
+  .oc-right{ transform:translate(100%, -50%); }
+  .oc-top  { transform:translate(-50%, -110%); }
 }
 @media (max-width: 992px){
   .timeline-steps{ grid-template-columns:1fr; }
   .tconnector{ display:none; }
-  .hero-stage{ height:320px; }
-  /* menej rušivé prvky na mobile */
-  .oc-right,.oc-left{ display:none; }
+
+  /* menej rušivé prvky na mobile: horný tag + 1 avatar */
+  .oc-left,.oc-right{ display:none; }
+  .oa-br{ display:none; }
+  .hero-media{ aspect-ratio: 16 / 11; }
 }
 @media (max-width: 576px){
-  .hero-stage{ height:300px; }
   .btn-xlg{ width:100%; }
+}
+
+.hero-img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:26px;
+  background:transparent;
+  border:0;
+  box-shadow:none;
+  filter:none;
+}
+
+/* === HERO hard reset (kill any card look) === */
+.hero-media,
+.hero-media > *{
+  box-shadow: none !important;
+  background: transparent !important;
+  border: 0 !important;
+  filter: none !important;
+}
+.hero-media::before,
+.hero-media::after{
+  content: none !important;
 }

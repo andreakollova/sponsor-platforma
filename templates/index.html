@@ -61,14 +61,13 @@
     <section class="hero-section">
       <div class="container">
         <div class="row align-items-center g-lg-5 g-4">
-          <!-- Text -->
+          <!-- Left: copy -->
           <div class="col-lg-6">
             <h1 class="hero-title fw-bold mb-3">
-              Investuj do <span class="accent">športového portfólia</span> — my odporučíme, ty doladíš
+              Vaša značka pri <span class="accent">každom rozhodujúcom momente</span>
             </h1>
             <p class="lead text-secondary mb-4">
-              Zadáš rozpočet a preferencie. My navrhneme diverzifikované portfólio
-              klubov a športovcov, ktoré si môžeš upraviť.
+              Kontinuálna viditeľnosť naprieč športami – lokálny PR zásah + digitálny výkon v jednom portfóliu.
             </p>
 
             <div class="d-flex flex-wrap gap-2 mb-3">
@@ -87,65 +86,24 @@
             </div>
           </div>
 
-          <!-- Card + floating ecosystem (pevný layout) -->
+          <!-- Right: full photo (NO card) + floating tags/avatars outside -->
           <div class="col-lg-6">
-            <div class="hero-stage">
-              <!-- floating items OUTSIDE card (z-index nad) -->
-              <div class="hero-floats">
-                <!-- stack vpravo hore -->
-                <div class="stack group-avatars ga-rt">
-                  <img src="{{ url_for('static', filename='profileimages/profile.png') }}" alt="">
-                  <img src="{{ url_for('static', filename='profileimages/influencer.png') }}" alt="">
-                  <img src="{{ url_for('static', filename='profileimages/profile.png') }}" alt="">
-                  <span class="stack-tag">3 nové zápasy</span>
-                </div>
-                <!-- stack vľavo dole -->
-                <div class="stack group-avatars ga-lb">
-                  <img src="{{ url_for('static', filename='profileimages/influencer.png') }}" alt="">
-                  <img src="{{ url_for('static', filename='profileimages/profile.png') }}" alt="">
-                  <img src="{{ url_for('static', filename='profileimages/influencer.png') }}" alt="">
-                  <span class="stack-tag">IG spolupráce</span>
-                </div>
+            <figure class="hero-media">
+              <img class="hero-img" src="{{ url_for('static', filename='hero-photo.png') }}" alt="Športový vizuál" loading="eager">
 
-                <!-- chips -->
-                <div class="orbit-chip oc-top"><i class="bi bi-broadcast-pin"></i> Livestream</div>
-                <div class="orbit-chip oc-right"><i class="bi bi-badge-ad"></i> Logo na drese</div>
-                <div class="orbit-chip oc-left"><i class="bi bi-camera-reels"></i> IG Reels</div>
+              <div class="orbit-chip oc-top"><i class="bi bi-broadcast-pin"></i> Livestream</div>
+              <div class="orbit-chip oc-left"><i class="bi bi-badge-ad"></i> Logo na drese</div>
+              <div class="orbit-chip oc-right"><i class="bi bi-camera-reels"></i> IG Reels</div>
 
-                <!-- single avatars pre hĺbku -->
-                <img class="orbit-avatar oa-top" src="{{ url_for('static', filename='profileimages/profile.png') }}" alt="">
-                <img class="orbit-avatar oa-bottom" src="{{ url_for('static', filename='profileimages/influencer.png') }}" alt="">
-              </div>
-
-              <!-- samotná karta -->
-              <div class="hero-card">
-                <div class="hc-head">
-                  <img src="{{ url_for('static', filename='profileimages/influencer.png') }}" class="hc-avatar" alt="">
-                  <div class="hc-txt">
-                    <div class="hc-title">Ukážkový profil v portfóliu</div>
-                    <div class="hc-sub">zápasy/streamy • obsah • metriky</div>
-                  </div>
-                </div>
-                <div class="hc-progress">
-                  <span style="width:78%"></span>
-                </div>
-                <p class="hc-desc">
-                  Dashboard pre firmy: najbližšie zápasy, streamy a živé metriky za všetky položky portfólia.
-                </p>
-
-                <!-- mini karty funkcionalít vnútri karty, aby to držalo kompozíciu -->
-                <div class="hc-mini">
-                  <div class="hc-chip"><i class="bi bi-calendar2-event"></i> Program</div>
-                  <div class="hc-chip"><i class="bi bi-collection-play"></i> Obsah</div>
-                  <div class="hc-chip"><i class="bi bi-activity"></i> Metriky</div>
-                </div>
-              </div>
-            </div>
+              <img class="orbit-avatar oa-tl" src="{{ url_for('static', filename='profileimages/profile.png') }}" alt="">
+              <img class="orbit-avatar oa-br" src="{{ url_for('static', filename='profileimages/influencer.png') }}" alt="">
+            </figure>
           </div>
-          <!-- /right -->
         </div>
       </div>
     </section>
+
+
 
     <!-- PARTNERS -->
     <section class="py-4 bg-white border-top border-bottom">
