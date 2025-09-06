@@ -83,7 +83,7 @@ body{
 /* default: menší, držaný vpravo aby neliezol do textu */
 .hero-img{
   display:block;
-  width:90% !important;     /* uprav: 80–95% podľa chuti */
+  width:85% !important;     /* uprav: 80–95% podľa chuti */
   height:auto !important;
   margin-left:auto;         /* drž vpravo */
   transform:none !important;
@@ -231,4 +231,9 @@ h1.fw-bold,h2.fw-bold,h3.fw-bold,h4.fw-bold,h5.fw-bold,h6.fw-bold,
 }
 @media (max-width:576px){
   .btn-xlg{ width:100%; }
+}
+
+/* tighter top spacing for hero */
+.hero-section{
+  padding: 3rem 0 3.5rem;   /* bolo 4rem 0 3.5rem */
 }
