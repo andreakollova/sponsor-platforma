@@ -201,11 +201,11 @@ h1.fw-bold,h2.fw-bold,h3.fw-bold,h4.fw-bold,h5.fw-bold,h6.fw-bold,
   box-shadow:0 18px 44px rgba(10,20,30,.10);
 }
 
-/* Space for decorations so they never overlap text */
-.has-art-br{ padding-bottom:110px; }
-.has-art-tr{ padding-top:90px; }
+/* priestor pre dekorácie tak, aby sa netkli textu */
+.has-art-br{ padding-bottom:88px; } /* pre spodný roh */
+.has-art-tr{ padding-top:88px; }     /* pre horný roh */
 
-/* Header in card */
+/* Header v karte */
 .ph-icon-wrap{
   width:48px; height:48px; border-radius:14px;
   display:grid; place-items:center;
@@ -219,10 +219,16 @@ h1.fw-bold,h2.fw-bold,h3.fw-bold,h4.fw-bold,h5.fw-bold,h6.fw-bold,
 .ph-list.small{ font-size:.92rem; }
 .ph-list i{ color:#22c55e; margin-right:.35rem; }
 
-/* Decorative SVG anchors */
-.ph-art{ position:absolute; pointer-events:none; opacity:.9; }
-.ph-art.br{ right:14px; bottom:12px; }
-.ph-art.tr{ right:14px; top:12px; }
+/* Dekoratívne SVG – kompaktné rohové */
+.ph-art{
+  position:absolute; pointer-events:none;
+  opacity:.65;
+  width:110px; height:auto;
+}
+.ph-art.br{ right:12px; bottom:12px; }
+.ph-art.tr{ right:12px; top:12px; }
+
+/* (legacy) full-width štýl nechávame, ale nevyužíva sa */
 .ph-art.fullw{ left:14px; right:14px; bottom:12px; width:auto; }
 
 /* ============================================================
