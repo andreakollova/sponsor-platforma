@@ -3,11 +3,11 @@
 
 {% block content %}
 
-<!-- HERO -->
+<!-- ===================== HERO ===================== -->
 <section class="hero-section">
   <div class="container">
     <div class="row align-items-center g-lg-5 g-4">
-      <!-- Left copy -->
+
       <div class="col-lg-6">
         <h1 class="hero-title fw-bold mb-3">
           Vaša značka pri <span class="accent">každom rozhodujúcom momente</span>
@@ -32,7 +32,6 @@
         </div>
       </div>
 
-      <!-- Right: FULL photo (no card) + orbiting tags outside -->
       <div class="col-lg-6">
         <figure class="hero-media">
           <img class="hero-img" src="{{ url_for('static', filename='hero-photo.png') }}" alt="Športový vizuál" loading="eager">
@@ -45,11 +44,97 @@
           <div class="orbit-chip oc-bottom"><i class="bi bi-tiktok"></i> TikTok klipy</div>
         </figure>
       </div>
+
     </div>
   </div>
 </section>
 
-<!-- PARTNERS -->
+<!-- ===================== PLATFORM HIGHLIGHTS ===================== -->
+<section class="platform-grid-section py-5">
+  <div class="container">
+    <div class="text-center mb-4">
+      <h2 class="h4 fw-bold brand-color mb-2">Platforma, ktorá drží portfólio pokope</h2>
+      <p class="text-secondary mb-0">7 highlightov – svetlý “Supabase-feel”, len presne pre sponpon.</p>
+    </div>
+
+    <div class="platform-grid">
+      <!-- XL tile -->
+      <article class="ph-card ph-card--xl">
+        <div class="ph-icon-wrap"><i class="bi bi-columns-gap ph-icon"></i></div>
+        <h3 class="ph-title">Stavba portfólia</h3>
+        <p class="ph-text">Mix klubov & tvorcov podľa cieľov, rozpočtu a regiónov. Úpravy jedným klikom.</p>
+        <ul class="ph-list">
+          <li><i class="bi bi-check2"></i> automatický návrh + manuálne úpravy</li>
+          <li><i class="bi bi-check2"></i> vyváženie PR zásahu vs. výkon</li>
+          <li><i class="bi bi-check2"></i> kontrola duplicít a konfliktov</li>
+        </ul>
+        <div class="ph-mesh"></div>
+      </article>
+
+      <article class="ph-card">
+        <div class="ph-icon-wrap"><i class="bi bi-file-lock2 ph-icon"></i></div>
+        <h3 class="ph-title">Zmluvy & platby</h3>
+        <p class="ph-text">Telefonické potvrdenie, jednotné podmienky, bezpečné prerozdelenie.</p>
+        <ul class="ph-list small">
+          <li><i class="bi bi-check2"></i> jednotná zmluvná šablóna</li>
+          <li><i class="bi bi-check2"></i> rozpad rozpočtu po položkách</li>
+        </ul>
+      </article>
+
+      <article class="ph-card">
+        <div class="ph-icon-wrap"><i class="bi bi-graph-up-arrow ph-icon"></i></div>
+        <h3 class="ph-title">Reporty & atribúcia</h3>
+        <p class="ph-text">Výkon naprieč športami aj sieťami. PDF/CSV výstupy.</p>
+        <ul class="ph-list small">
+          <li><i class="bi bi-check2"></i> UTM a kódy kampaní</li>
+          <li><i class="bi bi-check2"></i> mesačné PDF/CSV</li>
+        </ul>
+      </article>
+
+      <article class="ph-card">
+        <div class="ph-icon-wrap"><i class="bi bi-broadcast-pin ph-icon"></i></div>
+        <h3 class="ph-title">Livestream & hala</h3>
+        <p class="ph-text">Logo na drese, LED boardy, spoty v streamoch – v jednom pláne.</p>
+        <ul class="ph-list small">
+          <li><i class="bi bi-check2"></i> inventár & termíny zápasov</li>
+          <li><i class="bi bi-check2"></i> kontrolné checklisty</li>
+        </ul>
+      </article>
+
+      <article class="ph-card">
+        <div class="ph-icon-wrap"><i class="bi bi-instagram ph-icon"></i></div>
+        <h3 class="ph-title">Tvorcovia & IG/TikTok</h3>
+        <p class="ph-text">Kreatívne balíčky pre športovcov aj influencrov s jasným výkonom.</p>
+        <ul class="ph-list small">
+          <li><i class="bi bi-check2"></i> Reels, Stories, TikTok klipy</li>
+          <li><i class="bi bi-check2"></i> brand-safety pravidlá</li>
+        </ul>
+      </article>
+
+      <article class="ph-card">
+        <div class="ph-icon-wrap"><i class="bi bi-people ph-icon"></i></div>
+        <h3 class="ph-title">Komunita & aktivácie</h3>
+        <p class="ph-text">Náborové dni, meet-&-greet, CSR. Jednoduché tasky pre kluby.</p>
+        <ul class="ph-list small">
+          <li><i class="bi bi-check2"></i> kalendár akcií</li>
+          <li><i class="bi bi-check2"></i> fotky & dôkazy v appke</li>
+        </ul>
+      </article>
+
+      <article class="ph-card">
+        <div class="ph-icon-wrap"><i class="bi bi-braces-asterisk ph-icon"></i></div>
+        <h3 class="ph-title">Dáta & exporty</h3>
+        <p class="ph-text">Exporty do CSV/Sheets. API pre interné BI.</p>
+        <ul class="ph-list small">
+          <li><i class="bi bi-check2"></i> CSV/JSON exporty</li>
+          <li><i class="bi bi-check2"></i> webhooky a tagovanie</li>
+        </ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== PARTNERS ===================== -->
 <section class="py-4 bg-white border-top border-bottom">
   <div class="container">
     <div class="d-flex flex-wrap justify-content-center align-items-center gap-4 partners-row">
@@ -60,7 +145,7 @@
   </div>
 </section>
 
-<!-- LISTINGS: KLUBY -->
+<!-- ===================== LISTINGS: KLUBY ===================== -->
 <section class="py-5">
   <div class="container">
     <div class="d-flex align-items-baseline justify-content-between mb-3">
@@ -103,7 +188,7 @@
   </div>
 </section>
 
-<!-- LISTINGS: INFLUENCERS -->
+<!-- ===================== LISTINGS: INFLUENCERS ===================== -->
 <section class="py-5 pt-0">
   <div class="container">
     <div class="d-flex align-items-baseline justify-content-between mb-3">
@@ -146,7 +231,7 @@
   </div>
 </section>
 
-<!-- HOW IT WORKS -->
+<!-- ===================== HOW ===================== -->
 <section id="how" class="py-5">
   <div class="container">
     <div class="text-center mb-4">
@@ -182,7 +267,7 @@
   </div>
 </section>
 
-<!-- FAQ -->
+<!-- ===================== FAQ ===================== -->
 <section id="faq" class="py-5">
   <div class="container">
     <div class="text-center mb-4">
