@@ -1,7 +1,7 @@
 /* ============== Platform Highlights (light Supabase-style) ============== */
 .platform-grid-section { position: relative; }
 
-/* Dva samostatné rady – hore 3 (ľavá XL), pod tým 4 */
+/* Dva rady – hore 3 (XL + 2), dole 4 */
 .platform-row{
   display:grid;
   grid-template-columns:repeat(12,minmax(0,1fr));
@@ -9,14 +9,14 @@
   margin-bottom:18px;
 }
 
-/* TOP ROW: XL = 6, ostatné = 3 + 3  -> 12 */
+/* TOP: XL=6, ďalšie =3+3 */
 .platform-row--top  .ph-card{ grid-column:span 3; }
 .platform-row--top  .ph-card--xl{ grid-column:span 6; min-height:360px; }
 
-/* BOTTOM ROW: 4 × 3 -> 12 */
+/* BOTTOM: 4 × 3 */
 .platform-row--bottom .ph-card{ grid-column:span 3; }
 
-/* Karty + efekty */
+/* Karty */
 .ph-card{
   position:relative;
   background:#fff;
@@ -41,7 +41,12 @@
 }
 .ph-card:hover::after{ opacity:1; }
 
-/* XL dekor (mesh + corner glow) */
+/* Priestor pre text, aby grafika nikdy neprekrývala obsah */
+.ph-body{ position:relative; z-index:2; }
+.ph-card.has-art-right .ph-body{ padding-right:180px; }
+.ph-card.has-art-bottom .ph-body{ padding-bottom:110px; }
+
+/* XL dekor – mesh a glowy rohy */
 .ph-card--xl .ph-mesh{
   position:absolute; inset:0; pointer-events:none;
   background:
@@ -59,7 +64,7 @@
 .ph-corner--tr{ top:-50px; right:-40px; }
 .ph-corner--bl{ bottom:-50px; left:-40px; }
 
-/* Hlavička karty */
+/* Hlavička */
 .ph-icon-wrap{
   width:48px; height:48px; border-radius:14px;
   display:grid; place-items:center;
@@ -73,23 +78,43 @@
 .ph-list.small{ font-size:.92rem; }
 .ph-list i{ color:#22c55e; margin-right:.35rem; }
 
-/* Responsívne rozloženie s rovnakým “feel” */
+/* Dekoratívne SVG – spoločné */
+.ph-art{
+  position:absolute;
+  width:220px; height:auto;
+  opacity:.9; pointer-events:none;
+  z-index:1;
+}
+/* pozície (nezávislé od konkrétnej grafiky) */
+.ph-pos-tr{ top:10px; right:12px; }
+.ph-pos-br{ right:12px; bottom:10px; }
+.ph-pos-bc{ left:50%; transform:translateX(-50%); bottom:10px; }
+
+/* jemné odlišné veľkosti */
+.ph-art--spark{ width:240px; opacity:.8; }
+.ph-art--flow{ width:240px; opacity:.85; }
+
+/* Responsívne */
 @media (max-width:1200px){
   .platform-row{ grid-template-columns:repeat(12,minmax(0,1fr)); }
   .platform-row--top  .ph-card--xl{ grid-column:span 6; min-height:340px; }
-  .platform-row--top  .ph-card{ grid-column:span 3; }
-  .platform-row--bottom .ph-card{ grid-column:span 3; }
+  .ph-card.has-art-right .ph-body{ padding-right:160px; }
+  .ph-card.has-art-bottom .ph-body{ padding-bottom:100px; }
 }
 @media (max-width:992px){
-  /* 6 stĺpcov: XL na celú šírku, zvyšné dve vedľa seba (3+3) */
   .platform-row{ grid-template-columns:repeat(6,minmax(0,1fr)); }
   .platform-row--top  .ph-card--xl{ grid-column:span 6; min-height:320px; }
-  .platform-row--top  .ph-card{ grid-column:span 3; }
-  .platform-row--bottom .ph-card{ grid-column:span 3; } /* 2 v riadku */
+  .ph-art{ width:200px; }
+  .ph-card.has-art-right .ph-body{ padding-right:140px; }
+  .ph-card.has-art-bottom .ph-body{ padding-bottom:90px; }
 }
 @media (max-width:768px){
   .platform-row{ grid-template-columns:1fr; gap:14px; }
   .platform-row--top  .ph-card,
   .platform-row--top  .ph-card--xl,
   .platform-row--bottom .ph-card{ grid-column:1 / -1; min-height:auto; }
+  /* na mobile nech je čisto – grafiku skryjeme */
+  .ph-art{ display:none; }
+  .ph-card.has-art-right .ph-body,
+  .ph-card.has-art-bottom .ph-body{ padding:0; }
 }
