@@ -3,7 +3,7 @@
 
 {% block content %}
 
-<!-- ===================== HERO (bez zmeny) ===================== -->
+<!-- ===================== HERO ===================== -->
 <section class="hero-section">
   <div class="container">
     <div class="row align-items-center g-lg-5 g-4">
@@ -35,6 +35,8 @@
       <div class="col-lg-6">
         <figure class="hero-media">
           <img class="hero-img" src="{{ url_for('static', filename='hero-photo.png') }}" alt="Športový vizuál" loading="eager">
+
+          <!-- orbit chips -->
           <div class="orbit-chip oc-top"><i class="bi bi-broadcast-pin"></i> Livestream</div>
           <div class="orbit-chip oc-left"><i class="bi bi-badge-ad"></i> Logo na drese</div>
           <div class="orbit-chip oc-right"><i class="bi bi-camera-reels"></i> IG Reels</div>
@@ -47,7 +49,7 @@
   </div>
 </section>
 
-<!-- ===================== PARTNERS (bez zmeny) ===================== -->
+<!-- ===================== PARTNERS ===================== -->
 <section class="py-4 bg-white border-top border-bottom">
   <div class="container">
     <div class="d-flex flex-wrap justify-content-center align-items-center gap-4 partners-row">
@@ -63,172 +65,147 @@
   <div class="container">
     <div class="text-center mb-4">
       <h2 class="h4 fw-bold brand-color mb-2">Platforma, ktorá drží portfólio pokope</h2>
-      <p class="text-secondary mb-0">7 highlightov – svetlý „Supabase-feel“, no ušité na sponpon.</p>
+      <p class="text-secondary mb-0">7 highlightov – svetlý „Supabase-feel“, vyskladané pre potreby veľkých firiem.</p>
     </div>
 
-    <!-- TOP ROW: 3 (XL + 2) -->
-    <div class="platform-row platform-row--top">
-
-      <!-- XL: Stavba portfólia -->
-      <article class="ph-card ph-card--xl">
-        <div class="ph-body">
-          <div class="ph-icon-wrap"><i class="bi bi-columns-gap ph-icon"></i></div>
-          <h3 class="ph-title">Stavba portfólia</h3>
-          <p class="ph-text">Mix klubov & tvorcov podľa cieľov, rozpočtu a regiónov. Úpravy jedným klikom, bez chaosu.</p>
-          <ul class="ph-list">
-            <li><i class="bi bi-check2"></i> automatický návrh + manuálne úpravy</li>
-            <li><i class="bi bi-check2"></i> balans PR zásahu vs. výkonnosť</li>
-            <li><i class="bi bi-check2"></i> kontrola duplicít, konfliktov a kolízií termínov</li>
-          </ul>
-        </div>
-        <!-- dekor -->
-        <div class="ph-mesh"></div>
-        <span class="ph-corner ph-corner--tr"></span>
-        <span class="ph-corner ph-corner--bl"></span>
-      </article>
-
-      <!-- Rozpočtové scenáre -->
-      <article class="ph-card has-art-right">
-        <div class="ph-body">
-          <div class="ph-icon-wrap"><i class="bi bi-pie-chart ph-icon"></i></div>
-          <h3 class="ph-title">Rozpočtové scenáre</h3>
-          <p class="ph-text">„What-if“ rozdelenie investície medzi ligy, regióny a formáty. Ulož profil firmy ako šablónu.</p>
-          <ul class="ph-list small">
-            <li><i class="bi bi-check2"></i> viac scenárov a ich porovnanie</li>
-            <li><i class="bi bi-check2"></i> cap na položku / segment</li>
-          </ul>
-        </div>
-        <!-- stĺpcový minichart -->
-        <svg class="ph-art ph-art--bars ph-pos-br" viewBox="0 0 220 110" aria-hidden="true">
+    <div class="platform-grid">
+      <!-- 1) VYHĽADÁVANIE – ŠIROKÁ (½) -->
+      <article class="ph-card span-6 has-art-br">
+        <div class="ph-icon-wrap"><i class="bi bi-search ph-icon"></i></div>
+        <h3 class="ph-title">Vyhľadávanie & matching</h3>
+        <p class="ph-text">Nájdite kluby a tvorcov podľa športu, regiónu, publika a cieľov kampane. Odporučíme najlepšie zhody.</p>
+        <ul class="ph-list">
+          <li><i class="bi bi-check2"></i> filtre: šport, región, demografia, formát</li>
+          <li><i class="bi bi-check2"></i> skóre zhody podľa cieľov</li>
+          <li><i class="bi bi-check2"></i> alternatívy pri kolíziách termínov</li>
+        </ul>
+        <!-- dekor – sieť bodov pozdĺž spodku -->
+        <svg class="ph-art br fullw" viewBox="0 0 360 90" aria-hidden="true">
           <defs>
-            <linearGradient id="barsGrad" x1="0" x2="0" y1="0" y2="1">
-              <stop offset="0" stop-color="rgba(119,75,251,.45)"/>
+            <linearGradient id="netGrad" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0" stop-color="rgba(119,75,251,.35)"/>
               <stop offset="1" stop-color="rgba(119,75,251,.05)"/>
             </linearGradient>
           </defs>
-          <rect x="10" y="40" width="24" height="60" rx="4" fill="url(#barsGrad)"/>
-          <rect x="48" y="25" width="24" height="75" rx="4" fill="url(#barsGrad)"/>
-          <rect x="86" y="55" width="24" height="45" rx="4" fill="url(#barsGrad)"/>
-          <rect x="124" y="33" width="24" height="67" rx="4" fill="url(#barsGrad)"/>
-          <rect x="162" y="60" width="24" height="40" rx="4" fill="url(#barsGrad)"/>
+          <circle cx="40" cy="60" r="6" fill="url(#netGrad)"/>
+          <circle cx="95" cy="42" r="6" fill="url(#netGrad)"/>
+          <circle cx="150" cy="65" r="6" fill="url(#netGrad)"/>
+          <circle cx="205" cy="40" r="6" fill="url(#netGrad)"/>
+          <circle cx="260" cy="58" r="6" fill="url(#netGrad)"/>
+          <circle cx="315" cy="45" r="6" fill="url(#netGrad)"/>
+          <polyline points="40,60 95,42 150,65 205,40 260,58 315,45"
+                    fill="none" stroke="rgba(119,75,251,.35)" stroke-width="2"/>
         </svg>
       </article>
 
-      <!-- Brand safety & compliance -->
-      <article class="ph-card has-art-right">
-        <div class="ph-body">
-          <div class="ph-icon-wrap"><i class="bi bi-shield-check ph-icon"></i></div>
-          <h3 class="ph-title">Brand safety & compliance</h3>
-          <p class="ph-text">Pravidlá vizuálov a copy, whitelist/blacklist, povinné disclaimery – jednotné pre všetkých.</p>
-          <ul class="ph-list small">
-            <li><i class="bi bi-check2"></i> kontrolné checklisty pri publikácii</li>
-            <li><i class="bi bi-check2"></i> audit log & dôkazy o plnení</li>
-          </ul>
-        </div>
-        <!-- pulzujúci štít -->
-        <svg class="ph-art ph-art--shield ph-pos-tr" viewBox="0 0 220 140" aria-hidden="true">
-          <path d="M110 10c30 18 60 12 60 12v44c0 38-39 60-60 64-21-4-60-26-60-64V22s30 6 60-12z"
-                fill="none" stroke="rgba(18,39,52,.18)" stroke-width="2"/>
-          <path d="M110 18c26 16 51 10 51 10v36c0 32-33 51-51 54-18-3-51-22-51-54V28s25 6 51-10z"
-                fill="none" stroke="rgba(119,75,251,.35)" stroke-width="2"/>
+      <!-- 2) PORTFÓLIO NA MIERU -->
+      <article class="ph-card span-3 has-art-tr">
+        <div class="ph-icon-wrap"><i class="bi bi-columns-gap ph-icon"></i></div>
+        <h3 class="ph-title">Portfólio na mieru</h3>
+        <p class="ph-text">Navrhneme mix klubov & tvorcov podľa rozpočtu. Úpravy jedným klikom, bez chaosu.</p>
+        <ul class="ph-list small">
+          <li><i class="bi bi-check2"></i> automatický návrh + manuálne úpravy</li>
+          <li><i class="bi bi-check2"></i> balans PR zásahu vs. výkon</li>
+          <li><i class="bi bi-check2"></i> kontrola duplicít a kolízií</li>
+        </ul>
+        <!-- pilulky hore vpravo -->
+        <svg class="ph-art tr" viewBox="0 0 220 90" aria-hidden="true">
+          <rect x="8" y="8" width="70" height="20" rx="10" fill="rgba(119,75,251,.15)"/>
+          <rect x="88" y="8" width="52" height="20" rx="10" fill="rgba(119,75,251,.10)"/>
+          <rect x="148" y="8" width="60" height="20" rx="10" fill="rgba(119,75,251,.15)"/>
+          <rect x="60" y="40" width="120" height="16" rx="8" fill="rgba(119,75,251,.12)"/>
         </svg>
       </article>
-    </div>
 
-    <!-- BOTTOM ROW: 4 -->
-    <div class="platform-row platform-row--bottom">
+      <!-- 3) VIDITEĽNOSŤ ZNAČKY -->
+      <article class="ph-card span-3 has-art-tr">
+        <div class="ph-icon-wrap"><i class="bi bi-badge-ad ph-icon"></i></div>
+        <h3 class="ph-title">Viditeľnosť značky</h3>
+        <p class="ph-text">Presne viete, kde bude logo — dresy, hala/štadión, livestreamy a sociálne siete.</p>
+        <ul class="ph-list small">
+          <li><i class="bi bi-check2"></i> inventár viditeľnosti na jednom mieste</li>
+          <li><i class="bi bi-check2"></i> náhľady & podmienky použitia</li>
+        </ul>
+        <!-- kruhová značka -->
+        <svg class="ph-art tr" viewBox="0 0 120 120" aria-hidden="true">
+          <circle cx="80" cy="40" r="22" fill="none" stroke="rgba(119,75,251,.35)" stroke-width="3"/>
+          <circle cx="80" cy="40" r="14" fill="none" stroke="rgba(119,75,251,.18)" stroke-width="3"/>
+          <rect x="10" y="74" width="100" height="10" rx="5" fill="rgba(119,75,251,.12)"/>
+        </svg>
+      </article>
 
-      <!-- Reporty & atribúcia -->
-      <article class="ph-card has-art-bottom">
-        <div class="ph-body">
-          <div class="ph-icon-wrap"><i class="bi bi-graph-up-arrow ph-icon"></i></div>
-          <h3 class="ph-title">Reporty & atribúcia</h3>
-          <p class="ph-text">Výkon naprieč športami aj sieťami. Auditovateľné PDF/CSV.</p>
-          <ul class="ph-list small">
-            <li><i class="bi bi-check2"></i> UTM / promo kódy, merateľné prekliky</li>
-            <li><i class="bi bi-check2"></i> mesačné PDF/CSV exporty</li>
-          </ul>
-        </div>
+      <!-- 4) VÝKON & METRIKY -->
+      <article class="ph-card span-3 has-art-br">
+        <div class="ph-icon-wrap"><i class="bi bi-graph-up-arrow ph-icon"></i></div>
+        <h3 class="ph-title">Výkon & metriky</h3>
+        <p class="ph-text">Reálny dosah, ER, prekliky a atribúcia naprieč športami aj sieťami. Exporty PDF/CSV.</p>
+        <ul class="ph-list small">
+          <li><i class="bi bi-check2"></i> UTM / promo kódy</li>
+          <li><i class="bi bi-check2"></i> mesačné PDF/CSV</li>
+        </ul>
         <!-- sparkline -->
-        <svg class="ph-art ph-art--spark ph-pos-bc" viewBox="0 0 240 120" aria-hidden="true">
+        <svg class="ph-art br" viewBox="0 0 240 120" aria-hidden="true">
           <polyline fill="none" stroke="rgba(119,75,251,.45)" stroke-width="2.5"
             points="0,90 30,70 60,82 90,52 120,60 150,35 180,42 210,20 240,28"/>
-          <linearGradient id="sparkFill" x1="0" y1="0" x2="0" y2="1">
+          <linearGradient id="sparkFill2" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0" stop-color="rgba(119,75,251,.18)"/>
             <stop offset="1" stop-color="rgba(119,75,251,0)"/>
           </linearGradient>
-          <polygon fill="url(#sparkFill)"
+          <polygon fill="url(#sparkFill2)"
             points="0,120 0,90 30,70 60,82 90,52 120,60 150,35 180,42 210,20 240,28 240,120"/>
         </svg>
       </article>
 
-      <!-- Plán & kalendáre -->
-      <article class="ph-card has-art-right">
-        <div class="ph-body">
-          <div class="ph-icon-wrap"><i class="bi bi-calendar3 ph-icon"></i></div>
-          <h3 class="ph-title">Plán & kalendáre</h3>
-          <p class="ph-text">Zápasy, eventy, publikácie. Zdieľané kalendáre, iCal/Outlook exporty, kolízie termínov.</p>
-          <ul class="ph-list small">
-            <li><i class="bi bi-check2"></i> centralizovaný harmonogram</li>
-            <li><i class="bi bi-check2"></i> upozornenia na konflikty</li>
-          </ul>
-        </div>
-        <!-- mini kalendár -->
-        <svg class="ph-art ph-art--calendar ph-pos-tr" viewBox="0 0 220 140" aria-hidden="true">
-          <rect x="10" y="24" width="200" height="106" rx="10" fill="none" stroke="rgba(18,39,52,.18)"/>
-          <line x1="10" y1="48" x2="210" y2="48" stroke="rgba(18,39,52,.18)"/>
-          {% for r in range(0,5) %}
-          <line x1="10" y1="{{ 48 + r*16 }}" x2="210" y2="{{ 48 + r*16 }}" stroke="rgba(18,39,52,.08)"/>
-          {% endfor %}
-          {% for c in range(0,6) %}
-          <line x1="{{ 10 + c*33.3 }}" y1="48" x2="{{ 10 + c*33.3 }}" y2="130" stroke="rgba(18,39,52,.08)"/>
-          {% endfor %}
-          <rect x="110" y="80" width="30" height="16" rx="4" fill="rgba(119,75,251,.25)"/>
-        </svg>
-      </article>
-
-      <!-- Schvaľovanie & governance -->
-      <article class="ph-card has-art-right">
-        <div class="ph-body">
-          <div class="ph-icon-wrap"><i class="bi bi-diagram-3 ph-icon"></i></div>
-          <h3 class="ph-title">Schvaľovanie & governance</h3>
-          <p class="ph-text">Workflow pre kampane a vizuály. Vlastné kroky podľa tímov a regionálnej štruktúry.</p>
-          <ul class="ph-list small">
-            <li><i class="bi bi-check2"></i> viacstupňové schválenia</li>
-            <li><i class="bi bi-check2"></i> SLA & notifikácie</li>
-          </ul>
-        </div>
-        <!-- flow -->
-        <svg class="ph-art ph-art--flow ph-pos-br" viewBox="0 0 240 120" aria-hidden="true">
-          <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
-            <polygon points="0 0, 8 4, 0 8" fill="rgba(119,75,251,.6)"/></marker></defs>
-          <rect x="10" y="12" width="54" height="24" rx="6" fill="rgba(18,39,52,.06)"/>
-          <rect x="92" y="48" width="54" height="24" rx="6" fill="rgba(18,39,52,.06)"/>
-          <rect x="170" y="84" width="54" height="24" rx="6" fill="rgba(18,39,52,.06)"/>
-          <line x1="64" y1="24" x2="92" y2="60" stroke="rgba(119,75,251,.6)" stroke-width="2" marker-end="url(#arrow)"/>
-          <line x1="146" y1="60" x2="170" y2="96" stroke="rgba(119,75,251,.6)" stroke-width="2" marker-end="url(#arrow)"/>
-        </svg>
-      </article>
-
-      <!-- Dáta & exporty (API) -->
-      <article class="ph-card has-art-right">
-        <div class="ph-body">
-          <div class="ph-icon-wrap"><i class="bi bi-braces-asterisk ph-icon"></i></div>
-          <h3 class="ph-title">Dáta & exporty (API)</h3>
-          <p class="ph-text">CSV/Sheets exporty, webhooky, jednoduché API pre tvoje BI a atribučné modely.</p>
-          <ul class="ph-list small">
-            <li><i class="bi bi-check2"></i> CSV/JSON exporty jedným klikom</li>
-            <li><i class="bi bi-check2"></i> tagovanie položiek pre interné BI</li>
-          </ul>
-        </div>
-        <!-- stack súborov -->
-        <svg class="ph-art ph-art--files ph-pos-br" viewBox="0 0 220 130" aria-hidden="true">
+      <!-- 5) FAKTUROVATEĽNÉ AKO MARKETING -->
+      <article class="ph-card span-3 has-art-br">
+        <div class="ph-icon-wrap"><i class="bi bi-receipt ph-icon"></i></div>
+        <h3 class="ph-title">Fakturovateľné ako marketing</h3>
+        <p class="ph-text">Výdavky sú daňovo uznateľné (marketing). Podklady pre účtovníctvo.</p>
+        <ul class="ph-list small">
+          <li><i class="bi bi-check2"></i> zjednotená fakturácia</li>
+          <li><i class="bi bi-check2"></i> doklady k rozpočtu</li>
+        </ul>
+        <!-- stoh dokladov -->
+        <svg class="ph-art br" viewBox="0 0 220 130" aria-hidden="true">
           <rect x="30" y="70" width="160" height="44" rx="8" fill="rgba(119,75,251,.08)" stroke="rgba(119,75,251,.25)"/>
           <rect x="40" y="48" width="140" height="44" rx="8" fill="rgba(119,75,251,.08)" stroke="rgba(119,75,251,.25)"/>
           <rect x="50" y="26" width="120" height="44" rx="8" fill="rgba(119,75,251,.12)" stroke="rgba(119,75,251,.35)"/>
         </svg>
       </article>
 
+      <!-- 6) ROZVOJ SLOVENSKÉHO ŠPORTU -->
+      <article class="ph-card span-3 has-art-br">
+        <div class="ph-icon-wrap"><i class="bi bi-hand-thumbs-up ph-icon"></i></div>
+        <h3 class="ph-title">Rozvoj slovenského športu</h3>
+        <p class="ph-text">Podpora mládeže a regionálnych klubov. Aktivity s komunitou.</p>
+        <ul class="ph-list small">
+          <li><i class="bi bi-check2"></i> lokálne aktivácie & CSR</li>
+          <li><i class="bi bi-check2"></i> PR dopad v regiónoch</li>
+        </ul>
+        <!-- srdce -->
+        <svg class="ph-art br" viewBox="0 0 120 100" aria-hidden="true">
+          <path d="M60 90 C20 60 10 40 25 25 C38 12 54 20 60 30 C66 20 82 12 95 25 C110 40 100 60 60 90 Z"
+                fill="rgba(119,75,251,.18)"/>
+        </svg>
+      </article>
+
+      <!-- 7) ZABEZPEČENIE PLNENIA DOHODY -->
+      <article class="ph-card span-3 has-art-tr">
+        <div class="ph-icon-wrap"><i class="bi bi-shield-check ph-icon"></i></div>
+        <h3 class="ph-title">Zabezpečenie plnenia dohody</h3>
+        <p class="ph-text">Checklisty, schvaľovania, audit log a dôkazy o plnení. Notifikácie & SLA.</p>
+        <ul class="ph-list small">
+          <li><i class="bi bi-check2"></i> viacstupňové schvaľovania</li>
+          <li><i class="bi bi-check2"></i> dôkazy & reporty pre audit</li>
+        </ul>
+        <!-- štít -->
+        <svg class="ph-art tr" viewBox="0 0 220 140" aria-hidden="true">
+          <path d="M110 10c30 18 60 12 60 12v44c0 38-39 60-60 64-21-4-60-26-60-64V22s30 6 60-12z"
+                fill="none" stroke="rgba(18,39,52,.18)" stroke-width="2"/>
+          <path d="M110 18c26 16 51 10 51 10v36c0 32-33 51-51 54-18-3-51-22-51-54V28s25 6 51-10z"
+                fill="none" stroke="rgba(119,75,251,.35)" stroke-width="2"/>
+        </svg>
+      </article>
     </div>
   </div>
 </section>
@@ -319,13 +296,14 @@
   </div>
 </section>
 
-<!-- ===================== HOW & FAQ (bez zmeny) ===================== -->
+<!-- ===================== HOW ===================== -->
 <section id="how" class="py-5">
   <div class="container">
     <div class="text-center mb-4">
       <h2 class="h4 fw-bold brand-color">Ako to funguje pre veľké firmy</h2>
       <p class="text-secondary mb-0">Rozpočet → Návrh portfólia → Telefónne potvrdenie → Zmluvy → Dashboard</p>
     </div>
+
     <div class="timeline-steps">
       <div class="tstep">
         <div class="tbadge"><span class="tnum">1</span><i class="bi bi-cash-stack"></i></div>
@@ -354,6 +332,7 @@
   </div>
 </section>
 
+<!-- ===================== FAQ ===================== -->
 <section id="faq" class="py-5">
   <div class="container">
     <div class="text-center mb-4">
