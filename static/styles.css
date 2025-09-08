@@ -32,9 +32,6 @@ body{
 .btn-ghost{ background:#fff; color:#111418; border:1px solid var(--border); }
 .btn-ghost:hover{ background:#f8fafc; }
 
-/* Smaller CTA variant used on listing cards */
-.btn-compact{ font-size:.9rem; padding:.34rem .7rem; border-radius:999px; }
-
 /* ============================================================
    HERO
 ============================================================ */
@@ -115,68 +112,67 @@ body{
   transition:transform .2s ease, box-shadow .2s ease;
   box-shadow:0 6px 18px rgba(0,0,0,.04);
 }
-.listing-card:hover{ transform:translateY(-4px); box-shadow:0 14px 32px rgba(0,0,0,.08); }
-.lc-avatar{ width:40px; height:40px; border-radius:50%; border:1px solid var(--border); object-fit:cover; }
 
-.lc-title-line{ margin-bottom:2px; }
-.lc-title{ font-weight:var(--w-title); color:#0e1116; font-size:1.05rem; }
-.lc-meta{ font-size:.9rem; }
+/* cover + sport pill */
+.cover-wrap{ position:relative; }
+.sport-pill{
+  position:absolute; right:12px; top:12px;
+  background:#fff; border:1px solid var(--border); color:#3b2a85;
+  padding:.28rem .6rem; border-radius:999px; font-size:.82rem; font-weight:600;
+  display:inline-flex; align-items:center; gap:.35rem;
+  box-shadow:0 8px 18px rgba(0,0,0,.06);
+}
+.sport-pill i{ color:#774bfb; }
 
-/* sport badge overlay on image (override ratio fill) */
-.sport-badge{
-  position:absolute;
-  top:10px; right:10px;
-  z-index:2;
-  display:inline-flex; align-items:center; gap:.4rem;
-  padding:.28rem .55rem;
-  font-size:.82rem; line-height:1;
-  border:1px solid #e9e3ff;
-  background:#f6f3ff;
-  color:#3b2a85;
-  border-radius:999px;
-  box-shadow:0 8px 18px rgba(17,17,26,.08);
-  pointer-events:none;
-}
-.ratio .sport-badge{
-  width:auto !important; height:auto !important; left:auto !important; bottom:auto !important;
-}
-.sport-badge i{ color:#6f54f8; }
+/* title line */
+.lc-avatar{ width:42px; height:42px; border-radius:50%; border:1px solid var(--border); object-fit:cover; }
+.lc-title-line{ display:flex; align-items:center; gap:.4rem; flex-wrap:wrap; }
+.lc-title-text{ font-weight:700; color:#0e1116; font-size:1.05rem; }
+.verified-icon{ color:#774bfb; font-size:1rem; }
 
-/* TAGS (chips with expandable "…") */
-.tag-row{
-  display:flex; flex-wrap:wrap; gap:8px;
-}
+/* tag chips + kebab */
+.tag-row{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:.6rem; }
 .tag-chip{
-  display:inline-flex; align-items:center;
-  padding:.32rem .58rem;
-  font-size:.84rem;
-  background:#f6f8fb; color:#0e1116;
-  border:1px solid var(--border);
-  border-radius:999px;
+  display:inline-flex; align-items:center; gap:.35rem;
+  padding:.38rem .6rem; border:1px solid var(--border); border-radius:999px;
+  font-size:.82rem; background:#fff; color:#0e1116;
 }
-.tag-fold > summary{
-  list-style:none; cursor:pointer;
-}
+
+/* three-dot disclosure (always visible) */
+.tag-fold{ display:inline-flex; align-items:center; }
+.tag-fold > summary{ list-style:none; cursor:pointer; }
 .tag-fold > summary::-webkit-details-marker{ display:none; }
-.tag-fold .more-tags{ display:none; gap:8px; flex-wrap:wrap; }
+.tag-kebab{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:28px; height:28px; border-radius:999px;
+  border:1px solid var(--border); background:#fff; color:#6b7280;
+  transition:background .2s ease, border-color .2s ease, color .2s ease, transform .12s ease;
+}
+.tag-kebab:hover{ background:#f6f8fb; }
+.tag-fold[open] .tag-kebab{ background:#f3f0ff; border-color:#e4ddff; color:#3b2a85; transform:rotate(90deg); }
+.tag-fold[aria-disabled="true"] .tag-kebab{ opacity:.45; cursor:not-allowed; pointer-events:none; }
+.tag-fold .more-tags{ display:none; gap:8px; flex-wrap:wrap; margin-left:0; }
 .tag-fold[open] .more-tags{ display:flex; }
 
-/* KPI chips + CTA bar */
-.kpi-bar{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
-.kpi-group{ display:flex; flex-wrap:wrap; gap:8px; flex:1 1 auto; min-width:220px; }
-.card-cta{ margin-left:auto; white-space:nowrap; }
-
-.kpi-chip{
-  display:inline-flex; align-items:center; gap:6px;
-  padding:.28rem .5rem;                 /* smaller */
-  font-size:.78rem;                     /* smaller */
-  border:1px solid var(--border);
-  background:#f8fafc;
-  color:#0e1116;
-  border-radius:999px; line-height:1; white-space:nowrap;
+/* stats row + view link */
+.stat-row{
+  display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
 }
-.kpi-chip i{ font-size:1rem; color:var(--brand-2); }
-.kpi-chip.kpi-strong{ background:#f3f0ff; border-color:#e4ddff; font-weight:600; }
+.stat-left{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.stat-chip{
+  display:inline-flex; align-items:center; gap:.35rem;
+  padding:.36rem .55rem; border:1px solid var(--border); border-radius:999px;
+  background:#fff; font-size:.82rem; color:#0e1116;
+}
+.stat-chip i{ color:#6b5afc; }
+
+.view-link{
+  display:inline-flex; align-items:center; justify-content:center;
+  padding:.36rem .7rem; border:1px solid var(--border);
+  border-radius:999px; background:#fff; font-weight:600; font-size:.84rem;
+  text-decoration:none; color:#0e1116;
+}
+.view-link:hover{ background:#f6f8fb; }
 
 /* ============================================================
    TIMELINE
@@ -263,11 +259,11 @@ h1.fw-bold,h2.fw-bold,h3.fw-bold,h4.fw-bold,h5.fw-bold,h6.fw-bold,
   box-shadow:0 18px 44px rgba(10,20,30,.10);
 }
 
-/* Reserve space for decorative SVGs */
-.has-art-br{ padding-bottom:88px; }
-.has-art-tr{ padding-top:88px; }
+/* priestor pre dekorácie tak, aby sa netkli textu */
+.has-art-br{ padding-bottom:88px; } /* pre spodný roh */
+.has-art-tr{ padding-top:88px; }     /* pre horný roh */
 
-/* Headers in highlights */
+/* Header v karte */
 .ph-icon-wrap{
   width:48px; height:48px; border-radius:14px;
   display:grid; place-items:center;
@@ -281,8 +277,12 @@ h1.fw-bold,h2.fw-bold,h3.fw-bold,h4.fw-bold,h5.fw-bold,h6.fw-bold,
 .ph-list.small{ font-size:.92rem; }
 .ph-list i{ color:#22c55e; margin-right:.35rem; }
 
-/* Decorative SVGs */
-.ph-art{ position:absolute; pointer-events:none; opacity:.65; width:110px; height:auto; }
+/* Dekoratívne SVG – kompaktné rohové */
+.ph-art{
+  position:absolute; pointer-events:none;
+  opacity:.65;
+  width:110px; height:auto;
+}
 .ph-art.br{ right:12px; bottom:12px; }
 .ph-art.tr{ right:12px; top:12px; }
 .ph-art.fullw{ left:14px; right:14px; bottom:12px; width:auto; }
@@ -316,7 +316,6 @@ h1.fw-bold,h2.fw-bold,h3.fw-bold,h4.fw-bold,h5.fw-bold,h6.fw-bold,
   .span-6, .span-3{ grid-column:1 / -1; }
   .has-art-br, .has-art-tr{ padding-top:16px; padding-bottom:16px; }
   .ph-art{ display:none; }
-  .card-cta{ width:100%; }
 }
 
 @media (max-width:576px){
@@ -327,8 +326,144 @@ h1.fw-bold,h2.fw-bold,h3.fw-bold,h4.fw-bold,h5.fw-bold,h6.fw-bold,
 /* ============================================================
    "Use one or all" – text only on white background
 ============================================================ */
-.integrated-band{ position:relative; background:transparent; border:0; box-shadow:none; padding:0; margin-top:16px; overflow:visible; }
+.integrated-band{
+  position:relative;
+  background:transparent;
+  border:0;
+  box-shadow:none;
+  padding:0;
+  margin-top:16px;
+  overflow:visible;
+}
 .integrated-band::after{ content:none; }
-.integrated-copy{ margin:0; letter-spacing:-0.01em; line-height:1.25; font-size:clamp(18px, 2vw, 22px); font-weight:600; color:#0e1116; }
+.integrated-copy{
+  margin:0;
+  letter-spacing:-0.01em;
+  line-height:1.25;
+  font-size:clamp(18px, 2vw, 22px);
+  font-weight:600;
+  color:#0e1116;
+}
 .integrated-copy .strong{ color:#0e1116; font-weight:700; }
 .integrated-copy .muted{ color:#6b7280; font-weight:500; }
+@media (max-width:768px){
+  .integrated-band{ margin-top:12px; }
+  .integrated-copy{ font-size:clamp(16px, 4.2vw, 22px); }
+}
+
+/* === Cover + sport pill (izolované) === */
+.sp-cover{ position:relative; isolation:isolate; }
+.sp-cover img{ display:block; width:100%; height:100%; }
+.sp-sport-pill{
+  position:absolute; right:12px; top:12px; z-index:2;
+  display:inline-flex; align-items:center; gap:.35rem;
+  padding:.28rem .6rem;
+  background:#fff; border:1px solid var(--border); border-radius:999px;
+  font-size:.82rem; font-weight:600; color:#3b2a85;
+  box-shadow:0 8px 18px rgba(0,0,0,.06);
+  width:auto; height:auto; /* odolné voči kolíziám */
+}
+.sp-sport-pill i{ color:var(--brand-2); }
+
+/* === Title line (meno + check) === */
+.sp-title-line{ display:flex; align-items:center; gap:.4rem; flex-wrap:wrap; }
+.sp-title-text{ font-weight:var(--w-title); color:#0e1116; font-size:1.05rem; }
+.sp-verified{ color:var(--brand-2); font-size:1rem; }
+
+/* === Tagy + tri zvislé bodky (len ak je >3 tagov) === */
+.sp-tag-row{ display:flex; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:.6rem; }
+.sp-tag{
+  display:inline-flex; align-items:center;
+  padding:.38rem .6rem; border:1px solid var(--border);
+  border-radius:999px; background:#fff; color:#0e1116; font-size:.82rem;
+}
+
+/* details/summary */
+.sp-tag-fold{ display:inline-flex; align-items:center; }
+.sp-tag-fold > summary{ list-style:none; cursor:pointer; display:inline-flex; }
+.sp-tag-fold > summary::-webkit-details-marker{ display:none; }
+.sp-tag-kebab{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:28px; height:28px; border-radius:999px;
+  border:1px solid var(--border); background:#fff; color:#6b7280;
+  transition:background .2s ease, border-color .2s ease, color .2s ease, transform .12s ease;
+}
+.sp-tag-kebab:hover{ background:#f6f8fb; }
+.sp-tag-fold[open] .sp-tag-kebab{ background:#f3f0ff; border-color:#e4ddff; color:#3b2a85; transform:rotate(90deg); }
+.sp-more-tags{ display:none; gap:8px; flex-wrap:wrap; }
+.sp-tag-fold[open] .sp-more-tags{ display:flex; }
+
+/* === Metriky + „Zobraziť“ v jednom riadku === */
+.sp-stat-row{ display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; }
+.sp-stat-left{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.sp-stat-chip{
+  display:inline-flex; align-items:center; gap:.35rem;
+  padding:.36rem .55rem; border:1px solid var(--border); border-radius:999px;
+  background:#fff; font-size:.82rem; color:#0e1116;
+}
+.sp-stat-chip i{ color:#6b5afc; }
+
+.sp-view-link{
+  display:inline-flex; align-items:center; justify-content:center;
+  padding:.36rem .7rem; border:1px solid var(--border);
+  border-radius:999px; background:#fff; font-weight:600; font-size:.84rem;
+  text-decoration:none; color:#0e1116;
+}
+.sp-view-link:hover{ background:#f6f8fb; }
+
+/* === Cover + sport pill (izolované) === */
+.sp-cover{ position:relative; isolation:isolate; }
+.sp-cover img{ display:block; width:100%; height:100%; }
+.sp-sport-pill{
+  position:absolute; right:12px; top:12px; z-index:2;
+  display:inline-flex; align-items:center; gap:.35rem;
+  padding:.28rem .6rem;
+  background:#fff; border:1px solid var(--border); border-radius:999px;
+  font-size:.82rem; font-weight:600; color:#3b2a85;
+  box-shadow:0 8px 18px rgba(0,0,0,.06);
+}
+.sp-sport-pill i{ color:var(--brand-2); }
+
+/* === Title line (meno + check) === */
+.sp-title-line{ display:flex; align-items:center; gap:.4rem; flex-wrap:wrap; }
+.sp-title-text{ font-weight:var(--w-title); color:#0e1116; font-size:1.05rem; }
+.sp-verified{ color:var(--brand-2); font-size:1rem; }
+
+/* === Tagy + tri zvislé bodky (len ak je >3 tagov) === */
+.sp-tag-row{ display:flex; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:.6rem; }
+.sp-tag{
+  display:inline-flex; align-items:center;
+  padding:.38rem .6rem; border:1px solid var(--border);
+  border-radius:999px; background:#fff; color:#0e1116; font-size:.82rem;
+}
+.sp-tag-fold{ display:inline-flex; align-items:center; }
+.sp-tag-fold > summary{ list-style:none; cursor:pointer; display:inline-flex; }
+.sp-tag-fold > summary::-webkit-details-marker{ display:none; }
+.sp-tag-kebab{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:28px; height:28px; border-radius:999px;
+  border:1px solid var(--border); background:#fff; color:#6b7280;
+  transition:background .2s ease, border-color .2s ease, color .2s ease, transform .12s ease;
+}
+.sp-tag-kebab:hover{ background:#f6f8fb; }
+.sp-tag-fold[open] .sp-tag-kebab{ background:#f3f0ff; border-color:#e4ddff; color:#3b2a85; transform:rotate(90deg); }
+.sp-more-tags{ display:none; gap:8px; flex-wrap:wrap; }
+.sp-tag-fold[open] .sp-more-tags{ display:flex; }
+
+/* === Metriky + „Zobraziť“ v jednom riadku === */
+.sp-stat-row{ display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; }
+.sp-stat-left{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.sp-stat-chip{
+  display:inline-flex; align-items:center; gap:.35rem;
+  padding:.36rem .55rem; border:1px solid var(--border); border-radius:999px;
+  background:#fff; font-size:.82rem; color:#0e1116;
+}
+.sp-stat-chip i{ color:#6b5afc; }
+.sp-view-link{
+  display:inline-flex; align-items:center; justify-content:center;
+  padding:.36rem .7rem; border:1px solid var(--border);
+  border-radius:999px; background:#fff; font-weight:600; font-size:.84rem;
+  text-decoration:none; color:#0e1116;
+}
+.sp-view-link:hover{ background:#f6f8fb; }
+

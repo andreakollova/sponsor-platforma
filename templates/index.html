@@ -67,7 +67,7 @@
     </div>
 
     <div class="platform-grid">
-      <!-- 1) VYHĽADÁVANIE – ŠIROKÁ (½) -->
+      <!-- 1) VYHĽADÁVANIE – ŠIROKÁ (½) s pôvodným širokým grafom -->
       <article class="ph-card span-6 has-art-br">
         <div class="ph-icon-wrap"><i class="bi bi-search ph-icon"></i></div>
         <h3 class="ph-title">Vyhľadávanie & matching</h3>
@@ -200,7 +200,6 @@
       </article>
     </div>
 
-    <!-- Use one or all – text only -->
     <div class="integrated-band">
       <p class="integrated-copy">
         <span class="strong">Use one or all.</span>
@@ -217,56 +216,65 @@
       <h2 class="h4 fw-bold mb-0 brand-color">Kluby – ukážka</h2>
       <span class="text-secondary small">Detailnejšie dáta zobrazíme po prihlásení</span>
     </div>
+
     <div class="row g-4">
       {% for card in clubs %}
       <div class="col-12 col-sm-6 col-lg-4">
         <div class="card listing-card h-100 rounded-4">
-          <div class="ratio ratio-16x9 rounded-top-4 overflow-hidden">
+
+          <!-- Cover with sport pill (isolované triedy) -->
+          <div class="sp-cover ratio ratio-16x9 rounded-top-4 overflow-hidden">
             <img src="{{ url_for('static', filename=card.cover) }}" class="object-fit-cover" alt="cover {{ card.title }}">
-            <div class="sport-badge"><i class="bi bi-flag"></i>{{ card.sport }}</div>
+            <span class="sp-sport-pill"><i class="bi bi-flag"></i> {{ card.sport }}</span>
           </div>
+
           <div class="card-body">
-            <div class="d-flex align-items-center gap-2 mb-2">
+            <!-- Title line -->
+            <div class="d-flex gap-2 align-items-start mb-2">
               <img class="lc-avatar" src="{{ url_for('static', filename=card.avatar) }}" alt="">
               <div class="flex-grow-1">
-                <div class="lc-title-line d-flex align-items-center gap-2 flex-wrap">
-                  <span class="lc-title">{{ card.title }}</span>
-                  {% if card.verified %}<i class="bi bi-patch-check-fill verified-gradient"></i>{% endif %}
+                <div class="sp-title-line">
+                  <span class="sp-title-text">{{ card.title }}</span>
+                  {% if card.verified %}<i class="bi bi-patch-check-fill sp-verified" title="Overené"></i>{% endif %}
                 </div>
-                <div class="lc-meta text-secondary"><i class="bi bi-geo-alt"></i> {{ card.location }}</div>
+                <div class="text-secondary small"><i class="bi bi-geo-alt"></i> {{ card.location }}</div>
               </div>
             </div>
 
-            <p class="text-secondary small mb-2">{{ card.desc }}</p>
+            <p class="text-secondary small mb-3">{{ card.desc }}</p>
 
-            <!-- TAGS: first 3 + expandable “…” -->
-            {% set max_tags = 3 %}
-            <div class="tag-row">
-              {% for t in card.tags[:max_tags] %}
-                <span class="tag-chip">{{ t }}</span>
+            {# TAGS – tri bodky len ak je viac než 3 tagy #}
+            {% set visible = card.tags[:3] %}
+            {% set hidden = card.tags[3:] %}
+            <div class="sp-tag-row">
+              {% for t in visible %}
+                <span class="sp-tag">{{ t }}</span>
               {% endfor %}
-              {% if card.tags|length > max_tags %}
-              <details class="tag-fold">
-                <summary class="tag-chip chip-more" aria-label="Zobraziť viac">…</summary>
-                <div class="more-tags">
-                  {% for t in card.tags[max_tags:] %}
-                    <span class="tag-chip">{{ t }}</span>
+              {% if hidden|length > 0 %}
+              <details class="sp-tag-fold">
+                <summary class="sp-tag-kebab" aria-label="Zobraziť ďalšie tagy" title="Zobraziť ďalšie tagy">
+                  <i class="bi bi-three-dots-vertical"></i>
+                </summary>
+                <div class="sp-more-tags">
+                  {% for t in hidden %}
+                    <span class="sp-tag">{{ t }}</span>
                   {% endfor %}
                 </div>
               </details>
               {% endif %}
             </div>
 
-            <!-- KPIs + CTA on one line -->
-            <div class="kpi-bar mt-2">
-              <div class="kpi-group">
-                <span class="kpi-chip"><i class="bi bi-broadcast"></i>{{ card.reach }}</span>
-                <span class="kpi-chip"><i class="bi bi-emoji-smile"></i>ER {{ '%.1f'|format(card.er) }}%</span>
-                <span class="kpi-chip kpi-strong"><i class="bi bi-cash-coin"></i>od €{{ card.price_from }}</span>
+            <!-- Stats + Zobraziť -->
+            <div class="sp-stat-row">
+              <div class="sp-stat-left">
+                <span class="sp-stat-chip"><i class="bi bi-broadcast"></i> {{ card.reach }}</span>
+                <span class="sp-stat-chip"><i class="bi bi-emoji-smile"></i> ER {{ '%.1f'|format(card.er) }}%</span>
+                <span class="sp-stat-chip"><i class="bi bi-cash-coin"></i> od €{{ card.price_from }}</span>
               </div>
-              <a href="#" class="btn btn-ghost-brand btn-compact card-cta">Zobraziť</a>
+              <a href="#" class="sp-view-link">Zobraziť</a>
             </div>
           </div>
+
         </div>
       </div>
       {% endfor %}
@@ -281,54 +289,61 @@
       <h2 class="h4 fw-bold mb-0 brand-color">Športovci & Influenceri – ukážka</h2>
       <span class="text-secondary small">Rýchly prehľad výkonu a cien</span>
     </div>
+
     <div class="row g-4">
       {% for card in influencers %}
       <div class="col-12 col-sm-6 col-lg-4">
         <div class="card listing-card h-100 rounded-4">
-          <div class="ratio ratio-16x9 rounded-top-4 overflow-hidden">
+
+          <div class="sp-cover ratio ratio-16x9 rounded-top-4 overflow-hidden">
             <img src="{{ url_for('static', filename=card.cover) }}" class="object-fit-cover" alt="cover {{ card.title }}">
-            <div class="sport-badge"><i class="bi bi-flag"></i>{{ card.sport }}</div>
+            <span class="sp-sport-pill"><i class="bi bi-person-video3"></i> {{ card.sport }}</span>
           </div>
+
           <div class="card-body">
-            <div class="d-flex align-items-center gap-2 mb-2">
+            <div class="d-flex gap-2 align-items-start mb-2">
               <img class="lc-avatar" src="{{ url_for('static', filename=card.avatar) }}" alt="">
               <div class="flex-grow-1">
-                <div class="lc-title-line d-flex align-items-center gap-2 flex-wrap">
-                  <span class="lc-title">{{ card.title }}</span>
-                  {% if card.verified %}<i class="bi bi-patch-check-fill verified-gradient"></i>{% endif %}
+                <div class="sp-title-line">
+                  <span class="sp-title-text">{{ card.title }}</span>
+                  {% if card.verified %}<i class="bi bi-patch-check-fill sp-verified" title="Overené"></i>{% endif %}
                 </div>
-                <div class="lc-meta text-secondary"><i class="bi bi-geo-alt"></i> {{ card.location }}</div>
+                <div class="text-secondary small"><i class="bi bi-geo-alt"></i> {{ card.location }}</div>
               </div>
             </div>
 
-            <p class="text-secondary small mb-2">{{ card.desc }}</p>
+            <p class="text-secondary small mb-3">{{ card.desc }}</p>
 
-            {% set max_tags = 3 %}
-            <div class="tag-row">
-              {% for t in card.tags[:max_tags] %}
-                <span class="tag-chip">{{ t }}</span>
+            {% set visible = card.tags[:3] %}
+            {% set hidden = card.tags[3:] %}
+            <div class="sp-tag-row">
+              {% for t in visible %}
+                <span class="sp-tag">{{ t }}</span>
               {% endfor %}
-              {% if card.tags|length > max_tags %}
-              <details class="tag-fold">
-                <summary class="tag-chip chip-more" aria-label="Zobraziť viac">…</summary>
-                <div class="more-tags">
-                  {% for t in card.tags[max_tags:] %}
-                    <span class="tag-chip">{{ t }}</span>
+              {% if hidden|length > 0 %}
+              <details class="sp-tag-fold">
+                <summary class="sp-tag-kebab" aria-label="Zobraziť ďalšie tagy" title="Zobraziť ďalšie tagy">
+                  <i class="bi bi-three-dots-vertical"></i>
+                </summary>
+                <div class="sp-more-tags">
+                  {% for t in hidden %}
+                    <span class="sp-tag">{{ t }}</span>
                   {% endfor %}
                 </div>
               </details>
               {% endif %}
             </div>
 
-            <div class="kpi-bar mt-2">
-              <div class="kpi-group">
-                <span class="kpi-chip"><i class="bi bi-people"></i>{{ card.reach }}</span>
-                <span class="kpi-chip"><i class="bi bi-emoji-smile"></i>ER {{ '%.1f'|format(card.er) }}%</span>
-                <span class="kpi-chip kpi-strong"><i class="bi bi-cash-coin"></i>od €{{ card.price_from }}</span>
+            <div class="sp-stat-row">
+              <div class="sp-stat-left">
+                <span class="sp-stat-chip"><i class="bi bi-people"></i> {{ card.reach }}</span>
+                <span class="sp-stat-chip"><i class="bi bi-emoji-smile"></i> ER {{ '%.1f'|format(card.er) }}%</span>
+                <span class="sp-stat-chip"><i class="bi bi-cash-coin"></i> od €{{ card.price_from }}</span>
               </div>
-              <a href="#" class="btn btn-ghost-brand btn-compact card-cta">Zobraziť</a>
+              <a href="#" class="sp-view-link">Zobraziť</a>
             </div>
           </div>
+
         </div>
       </div>
       {% endfor %}
@@ -396,3 +411,4 @@
 </section>
 
 {% endblock %}
+A
