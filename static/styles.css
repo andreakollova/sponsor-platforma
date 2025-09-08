@@ -268,3 +268,39 @@ h1.fw-bold,h2.fw-bold,h3.fw-bold,h4.fw-bold,h5.fw-bold,h6.fw-bold,
   .btn-xlg{ width:100%; }
   .hero-section{ padding:3rem 0 3rem; }
 }
+
+/* ============================================================
+   "Use one or all" – text only on white background
+============================================================ */
+.integrated-band{
+  position:relative;
+  background:transparent;
+  border:0;
+  box-shadow:none;
+  padding:0;
+  margin-top:16px;
+  overflow:visible;
+}
+.integrated-band::after{ content:none; }
+
+.integrated-copy{
+  margin:0;
+  letter-spacing:-0.01em;
+  line-height:1.25;
+  font-size:clamp(18px, 2vw, 22px); /* a bit smaller than before */
+  font-weight:600;                  /* slightly lighter overall */
+  color:#0e1116;                    /* default text color */
+}
+.integrated-copy .strong{
+  color:#0e1116;   /* "Use one or all." -> black */
+  font-weight:700;
+}
+.integrated-copy .muted{
+  color:#6b7280;   /* grey */
+  font-weight:500; /* lighter */
+}
+
+@media (max-width:768px){
+  .integrated-band{ margin-top:12px; }
+  .integrated-copy{ font-size:clamp(16px, 4.2vw, 22px); }
+}
