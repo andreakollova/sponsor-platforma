@@ -1,40 +1,8 @@
 /* ============================================================
-   GLOBAL / BASE
+   OVERRIDES k styles-base.css + DOPLNKY pre túto stránku
 ============================================================ */
-:root{
-  --brand:#122734;
-  --brand-2:#774bfb;
-  --border:#e6e9ee;
-  --btn-radius:999px;
-  --w-hero:600;
-  --w-title:600;
-}
 
-body{
-  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial,"Noto Sans","Liberation Sans",sans-serif;
-}
-
-/* Navbar */
-.glass-nav{
-  backdrop-filter:saturate(180%) blur(8px);
-  background:rgba(255,255,255,.85);
-  border-bottom:1px solid var(--border);
-}
-.brand-logo{ height:28px; width:auto; display:block; }
-
-/* Buttons */
-.btn-xlg{ padding:.85rem 1.1rem; border-radius:var(--btn-radius); font-weight:600; }
-.btn-slim{ padding:.45rem .9rem; border-radius:var(--btn-radius); font-weight:600; }
-.btn-brand{ background:var(--brand); color:#fff; border:1px solid var(--brand); }
-.btn-brand:hover{ filter:brightness(.95); color:#fff; }
-.btn-ghost-brand{ background:#fff; color:var(--brand); border:1px solid var(--brand); }
-.btn-ghost-brand:hover{ background:var(--brand); color:#fff; }
-.btn-ghost{ background:#fff; color:#111418; border:1px solid var(--border); }
-.btn-ghost:hover{ background:#f8fafc; }
-
-/* ============================================================
-   HERO
-============================================================ */
+/* HERO – väčší spacing než v base */
 .hero-section{
   margin-top:-70px;
   padding:4rem 0 3.5rem;
@@ -44,190 +12,116 @@ body{
   .hero-section{ padding:4.5rem 0 3.75rem; }
 }
 
-.hero-title{
-  font-size:clamp(34px,4vw,56px);
-  letter-spacing:-0.02em;
-  color:#0e1116;
-  line-height:1.05;
-  margin-bottom:1rem;
-  font-weight:var(--w-hero);
+/* Listing – avatar o trochu väčší než v base (40→42) */
+.lc-avatar{
+  width:42px; height:42px; border-radius:50%;
+  border:1px solid var(--border); object-fit:cover;
 }
-.accent{
-  background-image:linear-gradient(90deg,#111418 0%,#2a2240 40%,#774bfb 100%);
-  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-}
-.hero-section .lead{
-  font-size:clamp(14px,1.2vw,18px);
-  font-weight:400;
-  color:#374151;
-  line-height:1.5;
-}
-.pill-row{ display:flex; flex-wrap:wrap; gap:.5rem; }
-.chip{
-  padding:.48rem .7rem;
-  border:1px solid var(--border);
-  border-radius:999px;
-  background:#fff; color:#374151; font-size:.9rem;
-}
-
-/* Hero media */
-.hero-media{ position:relative; display:block; width:100%; overflow:visible; }
-.hero-img{
-  display:block; width:85% !important; height:auto !important; margin-left:auto;
-  object-fit:contain !important; object-position:center center;
-  background:transparent !important; border:0 !important; box-shadow:none !important; border-radius:0 !important;
-}
-.orbit-chip{
-  position:absolute; z-index:3; pointer-events:none;
-  background:#fff; border:1px solid var(--border); border-radius:999px;
-  padding:.42rem .8rem; font-size:.84rem; color:#0e1116;
-  box-shadow:0 10px 24px rgba(0,0,0,.06);
-  animation:bob 7.5s ease-in-out infinite;
-  white-space:nowrap;
-}
-.orbit-chip i{ margin-right:.35rem; color:var(--brand-2); }
-.oc-top{ top:0; left:50%; transform:translate(-50%,-80%); }
-.oc-tr{ top:12%; right:0; transform:translate(110%,-40%); }
-.oc-right{ top:50%; right:0; transform:translate(110%,-50%); }
-.oc-bottom{ bottom:0; left:50%; transform:translate(-50%,110%); }
-.oc-left{ bottom:16%; left:0; transform:translate(-90%,0); }
-@keyframes bob{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
 
 /* ============================================================
-   PARTNERS
+   COVER + SPORT PILL
 ============================================================ */
-.partners-row .partner-icon{
-  filter:grayscale(100%) brightness(0) invert(55%);
-  opacity:.7;
-  transition:filter .25s ease, opacity .25s ease, transform .25s ease;
-  max-width:160px;
-}
-.partners-row .partner-icon:hover{ filter:none; opacity:1; transform:translateY(-2px); }
-
-/* ============================================================
-   LISTING CARDS
-============================================================ */
-.listing-card{
-  border:1px solid var(--border);
-  transition:transform .2s ease, box-shadow .2s ease;
-  box-shadow:0 6px 18px rgba(0,0,0,.04);
-}
-
-/* cover + sport pill */
+/* backward-compat, ak by niekde ostalo .cover-wrap */
 .cover-wrap{ position:relative; }
+
+/* nové izolované triedy */
+.sp-cover{ position:relative; isolation:isolate; }
+.sp-cover img{ display:block; width:100%; height:100%; object-fit:cover; }
+
+/* FIX: Bootstrap .ratio dáva deťom 100% veľkosť – pill potrebujeme „content-size“ */
+.ratio > .sp-sport-pill,
+.ratio > .sport-pill{
+  position:absolute !important;
+  top:12px !important; right:12px !important;
+  left:auto !important; bottom:auto !important;
+  width:auto !important; height:auto !important;
+  z-index:3; white-space:nowrap;
+}
+
+/* Fialovo-biely „glass“ pill (viditeľný aj na tmavých fotkách) */
+.sp-sport-pill,
 .sport-pill{
-  position:absolute; right:12px; top:12px;
-  background:#fff; border:1px solid var(--border); color:#3b2a85;
-  padding:.28rem .6rem; border-radius:999px; font-size:.82rem; font-weight:600;
-  display:inline-flex; align-items:center; gap:.35rem;
-  box-shadow:0 8px 18px rgba(0,0,0,.06);
+  position:absolute; right:12px; top:12px; z-index:2;
+  display:inline-flex; align-items:center; gap:.4rem;
+  padding:.32rem .66rem; border-radius:999px; font-size:.82rem; font-weight:600;
+  background:
+    linear-gradient(135deg, rgba(119,75,251,.18), rgba(119,75,251,.08)),
+    rgba(255,255,255,.92);
+  border:1px solid #e6ddff;
+  color:#3b2a85;
+  box-shadow:
+    0 10px 22px rgba(0,0,0,.08),
+    0 2px 0 rgba(119,75,251,.06) inset;
+  backdrop-filter:saturate(120%) blur(2px);
 }
-.sport-pill i{ color:#774bfb; }
+.sp-sport-pill i,
+.sport-pill i{ color:#6e59f8; }
 
-/* title line */
-.lc-avatar{ width:42px; height:42px; border-radius:50%; border:1px solid var(--border); object-fit:cover; }
-.lc-title-line{ display:flex; align-items:center; gap:.4rem; flex-wrap:wrap; }
-.lc-title-text{ font-weight:700; color:#0e1116; font-size:1.05rem; }
-.verified-icon{ color:#774bfb; font-size:1rem; }
+/* ============================================================
+   TITLE LINE (meno + check pri mene)
+============================================================ */
+.sp-title-line{ display:flex; align-items:center; gap:.4rem; flex-wrap:wrap; }
+.sp-title-text{ font-weight:var(--w-title); color:#0e1116; font-size:1.05rem; }
+.sp-verified{ color:var(--brand-2); font-size:1rem; }
 
-/* tag chips + kebab */
-.tag-row{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:.6rem; }
-.tag-chip{
-  display:inline-flex; align-items:center; gap:.35rem;
-  padding:.38rem .6rem; border:1px solid var(--border); border-radius:999px;
-  font-size:.82rem; background:#fff; color:#0e1116;
+/* ============================================================
+   TAGY + „TRI BODKY“ (details/summary)
+============================================================ */
+.sp-tag-row{ display:flex; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:.6rem; }
+.sp-tag{
+  display:inline-flex; align-items:center;
+  padding:.38rem .6rem; border:1px solid var(--border);
+  border-radius:999px; background:#fff; color:#0e1116; font-size:.82rem;
 }
 
-/* three-dot disclosure (always visible) */
-.tag-fold{ display:inline-flex; align-items:center; }
-.tag-fold > summary{ list-style:none; cursor:pointer; }
-.tag-fold > summary::-webkit-details-marker{ display:none; }
-.tag-kebab{
+/* trojbodky */
+.sp-tag-fold{ display:inline-flex; align-items:center; }
+.sp-tag-fold > summary{ list-style:none; cursor:pointer; display:inline-flex; }
+.sp-tag-fold > summary::-webkit-details-marker{ display:none; }
+.sp-tag-kebab{
   display:inline-flex; align-items:center; justify-content:center;
   width:28px; height:28px; border-radius:999px;
   border:1px solid var(--border); background:#fff; color:#6b7280;
   transition:background .2s ease, border-color .2s ease, color .2s ease, transform .12s ease;
 }
-.tag-kebab:hover{ background:#f6f8fb; }
-.tag-fold[open] .tag-kebab{ background:#f3f0ff; border-color:#e4ddff; color:#3b2a85; transform:rotate(90deg); }
-.tag-fold[aria-disabled="true"] .tag-kebab{ opacity:.45; cursor:not-allowed; pointer-events:none; }
-.tag-fold .more-tags{ display:none; gap:8px; flex-wrap:wrap; margin-left:0; }
-.tag-fold[open] .more-tags{ display:flex; }
-
-/* stats row + view link */
-.stat-row{
-  display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
+.sp-tag-kebab:hover{ background:#f6f8fb; }
+.sp-tag-fold[open] .sp-tag-kebab{
+  background:#f3f0ff; border-color:#e4ddff; color:#3b2a85; transform:rotate(90deg);
 }
-.stat-left{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
-.stat-chip{
+.sp-more-tags{ display:none; gap:8px; flex-wrap:wrap; }
+.sp-tag-fold[open] .sp-more-tags{ display:flex; }
+
+/* ============================================================
+   METRIKY + LINK „Zobraziť“
+============================================================ */
+.sp-stat-row{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:10px; flex-wrap:wrap;
+}
+.sp-stat-left{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+
+.sp-stat-chip,
+.stat-chip{ /* alias k pôvodnému názvu, ak niekde ostal */
   display:inline-flex; align-items:center; gap:.35rem;
   padding:.36rem .55rem; border:1px solid var(--border); border-radius:999px;
   background:#fff; font-size:.82rem; color:#0e1116;
 }
+.sp-stat-chip i,
 .stat-chip i{ color:#6b5afc; }
 
-.view-link{
+.sp-view-link,
+.view-link{ /* alias k pôvodnému názvu */
   display:inline-flex; align-items:center; justify-content:center;
   padding:.36rem .7rem; border:1px solid var(--border);
   border-radius:999px; background:#fff; font-weight:600; font-size:.84rem;
   text-decoration:none; color:#0e1116;
 }
+.sp-view-link:hover,
 .view-link:hover{ background:#f6f8fb; }
 
 /* ============================================================
-   TIMELINE
-============================================================ */
-.timeline-steps{ display:grid; grid-template-columns:1fr auto 1fr auto 1fr auto 1fr; align-items:center; gap:12px; }
-.tstep{ text-align:center; }
-.tbadge{ width:76px; height:76px; display:grid; place-items:center; background:#fff; border:1px solid var(--border); border-radius:18px; box-shadow:0 6px 18px rgba(0,0,0,.05) inset; position:relative; margin:0 auto; }
-.tnum{ position:absolute; top:-12px; left:-12px; width:32px; height:32px; display:grid; place-items:center; border-radius:12px; background:#f5f0ff; color:#774bfb; font-weight:700; }
-.tconnector span{ display:block; height:4px; width:100px; background:linear-gradient(90deg,#e9e3ff,#dcd6ff); border-radius:999px; opacity:.8; }
-
-/* ============================================================
-   FAQ
-============================================================ */
-.faq-acc .accordion-button:focus{ box-shadow:none; }
-.faq-acc .accordion-button{ background:#fff; }
-.faq-acc .accordion-item{ border:1px solid var(--border); border-radius:14px; overflow:hidden; }
-.faq-acc .accordion-item + .accordion-item{ margin-top:8px; }
-
-/* ============================================================
-   FOOTER (dark)
-============================================================ */
-.footer-brand{ text-decoration:none; }
-.footer-logo{ height:32px; width:auto; display:block; filter:none!important; }
-.site-footer-dark{ background:#000; color:#e9eef5; border-top:none; }
-.site-footer-dark .footer-h6{ color:#fff; }
-.site-footer-dark .text-secondary{ color:rgba(255,255,255,.75)!important; }
-.site-footer-dark .footer-links{ list-style:none; padding:0; margin:0; }
-.site-footer-dark .footer-links li{ margin:.4rem 0; }
-.site-footer-dark .footer-links a{ color:#e9eef5; opacity:.9; text-decoration:none; }
-.site-footer-dark .footer-links a:hover{ opacity:1; text-decoration:underline; }
-.site-footer-dark .badge.bg-light{
-  background:rgba(255,255,255,.08)!important; color:#fff!important; border-color:rgba(255,255,255,.18)!important;
-}
-.site-footer-dark .footer-form .footer-input{
-  background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.18); color:#fff;
-}
-.site-footer-dark .footer-form .footer-input::placeholder{ color:rgba(255,255,255,.6); }
-.site-footer-dark .footer-form .footer-input:focus{ background:#0d0d0d; border-color:#fff; box-shadow:none; }
-.site-footer-dark .btn-brand{ background:#fff; color:#000; border-color:#fff; }
-.site-footer-dark .btn-brand:hover{ filter:brightness(.92); }
-.site-footer-dark .footer-bottom{ border-top:1px solid rgba(255,255,255,.12); background:rgba(0,0,0,.12); }
-.site-footer-dark .footer-bottom-link{ color:#e9eef5; opacity:.85; text-decoration:none; }
-
-/* ============================================================
-   TYPO
-============================================================ */
-h1,h2,h3,h4,h5,h6{ font-weight:var(--w-title); }
-h1.fw-bold,h2.fw-bold,h3.fw-bold,h4.fw-bold,h5.fw-bold,h6.fw-bold,
-.h1.fw-bold,.h2.fw-bold,.h3.fw-bold,.h4.fw-bold,.h5.fw-bold,.h6.fw-bold{
-  font-weight:var(--w-title)!important;
-}
-.brand-color{ color: var(--brand); }
-
-/* ============================================================
    PLATFORM HIGHLIGHTS (Supabase-like grid)
+   (toto NIE JE v styles-base, preto to tu nechávame)
 ============================================================ */
 .platform-grid-section { position: relative; }
 
@@ -260,8 +154,8 @@ h1.fw-bold,h2.fw-bold,h3.fw-bold,h4.fw-bold,h5.fw-bold,h6.fw-bold,
 }
 
 /* priestor pre dekorácie tak, aby sa netkli textu */
-.has-art-br{ padding-bottom:88px; } /* pre spodný roh */
-.has-art-tr{ padding-top:88px; }     /* pre horný roh */
+.has-art-br{ padding-bottom:88px; } /* spodný roh */
+.has-art-tr{ padding-top:88px; }     /* horný roh */
 
 /* Header v karte */
 .ph-icon-wrap{
@@ -288,43 +182,7 @@ h1.fw-bold,h2.fw-bold,h3.fw-bold,h4.fw-bold,h5.fw-bold,h6.fw-bold,
 .ph-art.fullw{ left:14px; right:14px; bottom:12px; width:auto; }
 
 /* ============================================================
-   RESPONSIVE
-============================================================ */
-@media (max-width:1200px){
-  .oc-top{ transform:translate(-50%,-70%); }
-  .oc-tr{ transform:translate(95%,-30%); }
-  .oc-right{ transform:translate(95%,-50%); }
-  .oc-bottom{ transform:translate(-50%,95%); }
-  .oc-left{ transform:translate(-80%,0); }
-}
-
-@media (max-width:992px){
-  .platform-grid{ grid-template-columns:repeat(6,minmax(0,1fr)); }
-  .span-6{ grid-column:span 6; }
-  .span-3{ grid-column:span 3; }
-
-  .timeline-steps{ grid-template-columns:1fr; }
-  .tconnector{ display:none; }
-
-  .hero-img{ width:100% !important; }
-  .oc-left,.oc-right,.oc-tr,.oc-bottom{ display:none; }
-  .oc-top{ transform:translate(-50%,-60%); }
-}
-
-@media (max-width:768px){
-  .platform-grid{ grid-template-columns:1fr; }
-  .span-6, .span-3{ grid-column:1 / -1; }
-  .has-art-br, .has-art-tr{ padding-top:16px; padding-bottom:16px; }
-  .ph-art{ display:none; }
-}
-
-@media (max-width:576px){
-  .btn-xlg{ width:100%; }
-  .hero-section{ padding:3rem 0 3rem; }
-}
-
-/* ============================================================
-   "Use one or all" – text only on white background
+   „Use one or all“ – text bez pozadia
 ============================================================ */
 .integrated-band{
   position:relative;
@@ -346,173 +204,23 @@ h1.fw-bold,h2.fw-bold,h3.fw-bold,h4.fw-bold,h5.fw-bold,h6.fw-bold,
 }
 .integrated-copy .strong{ color:#0e1116; font-weight:700; }
 .integrated-copy .muted{ color:#6b7280; font-weight:500; }
+
+/* ============================================================
+   RESPONSIVE iba pre to, čo nie je v base
+============================================================ */
+@media (max-width:992px){
+  .platform-grid{ grid-template-columns:repeat(6,minmax(0,1fr)); }
+  .span-6{ grid-column:span 6; }
+  .span-3{ grid-column:span 3; }
+}
+
 @media (max-width:768px){
-  .integrated-band{ margin-top:12px; }
-  .integrated-copy{ font-size:clamp(16px, 4.2vw, 22px); }
+  .platform-grid{ grid-template-columns:1fr; }
+  .span-6, .span-3{ grid-column:1 / -1; }
+  .has-art-br, .has-art-tr{ padding-top:16px; padding-bottom:16px; }
+  .ph-art{ display:none; }
 }
 
-/* === Cover + sport pill (izolované) === */
-.sp-cover{ position:relative; isolation:isolate; }
-.sp-cover img{ display:block; width:100%; height:100%; }
-.sp-sport-pill{
-  position:absolute; right:12px; top:12px; z-index:2;
-  display:inline-flex; align-items:center; gap:.35rem;
-  padding:.28rem .6rem;
-  background:#fff; border:1px solid var(--border); border-radius:999px;
-  font-size:.82rem; font-weight:600; color:#3b2a85;
-  box-shadow:0 8px 18px rgba(0,0,0,.06);
-  width:auto; height:auto; /* odolné voči kolíziám */
-}
-.sp-sport-pill i{ color:var(--brand-2); }
-
-/* === Title line (meno + check) === */
-.sp-title-line{ display:flex; align-items:center; gap:.4rem; flex-wrap:wrap; }
-.sp-title-text{ font-weight:var(--w-title); color:#0e1116; font-size:1.05rem; }
-.sp-verified{ color:var(--brand-2); font-size:1rem; }
-
-/* === Tagy + tri zvislé bodky (len ak je >3 tagov) === */
-.sp-tag-row{ display:flex; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:.6rem; }
-.sp-tag{
-  display:inline-flex; align-items:center;
-  padding:.38rem .6rem; border:1px solid var(--border);
-  border-radius:999px; background:#fff; color:#0e1116; font-size:.82rem;
-}
-
-/* details/summary */
-.sp-tag-fold{ display:inline-flex; align-items:center; }
-.sp-tag-fold > summary{ list-style:none; cursor:pointer; display:inline-flex; }
-.sp-tag-fold > summary::-webkit-details-marker{ display:none; }
-.sp-tag-kebab{
-  display:inline-flex; align-items:center; justify-content:center;
-  width:28px; height:28px; border-radius:999px;
-  border:1px solid var(--border); background:#fff; color:#6b7280;
-  transition:background .2s ease, border-color .2s ease, color .2s ease, transform .12s ease;
-}
-.sp-tag-kebab:hover{ background:#f6f8fb; }
-.sp-tag-fold[open] .sp-tag-kebab{ background:#f3f0ff; border-color:#e4ddff; color:#3b2a85; transform:rotate(90deg); }
-.sp-more-tags{ display:none; gap:8px; flex-wrap:wrap; }
-.sp-tag-fold[open] .sp-more-tags{ display:flex; }
-
-/* === Metriky + „Zobraziť“ v jednom riadku === */
-.sp-stat-row{ display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; }
-.sp-stat-left{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
-.sp-stat-chip{
-  display:inline-flex; align-items:center; gap:.35rem;
-  padding:.36rem .55rem; border:1px solid var(--border); border-radius:999px;
-  background:#fff; font-size:.82rem; color:#0e1116;
-}
-.sp-stat-chip i{ color:#6b5afc; }
-
-.sp-view-link{
-  display:inline-flex; align-items:center; justify-content:center;
-  padding:.36rem .7rem; border:1px solid var(--border);
-  border-radius:999px; background:#fff; font-weight:600; font-size:.84rem;
-  text-decoration:none; color:#0e1116;
-}
-.sp-view-link:hover{ background:#f6f8fb; }
-
-/* === Cover + sport pill (izolované) === */
-.sp-cover{ position:relative; isolation:isolate; }
-.sp-cover img{ display:block; width:100%; height:100%; }
-.sp-sport-pill{
-  position:absolute; right:12px; top:12px; z-index:2;
-  display:inline-flex; align-items:center; gap:.35rem;
-  padding:.28rem .6rem;
-  background:#fff; border:1px solid var(--border); border-radius:999px;
-  font-size:.82rem; font-weight:600; color:#3b2a85;
-  box-shadow:0 8px 18px rgba(0,0,0,.06);
-}
-.sp-sport-pill i{ color:var(--brand-2); }
-
-/* === Title line (meno + check) === */
-.sp-title-line{ display:flex; align-items:center; gap:.4rem; flex-wrap:wrap; }
-.sp-title-text{ font-weight:var(--w-title); color:#0e1116; font-size:1.05rem; }
-.sp-verified{ color:var(--brand-2); font-size:1rem; }
-
-/* === Tagy + tri zvislé bodky (len ak je >3 tagov) === */
-.sp-tag-row{ display:flex; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:.6rem; }
-.sp-tag{
-  display:inline-flex; align-items:center;
-  padding:.38rem .6rem; border:1px solid var(--border);
-  border-radius:999px; background:#fff; color:#0e1116; font-size:.82rem;
-}
-.sp-tag-fold{ display:inline-flex; align-items:center; }
-.sp-tag-fold > summary{ list-style:none; cursor:pointer; display:inline-flex; }
-.sp-tag-fold > summary::-webkit-details-marker{ display:none; }
-.sp-tag-kebab{
-  display:inline-flex; align-items:center; justify-content:center;
-  width:28px; height:28px; border-radius:999px;
-  border:1px solid var(--border); background:#fff; color:#6b7280;
-  transition:background .2s ease, border-color .2s ease, color .2s ease, transform .12s ease;
-}
-.sp-tag-kebab:hover{ background:#f6f8fb; }
-.sp-tag-fold[open] .sp-tag-kebab{ background:#f3f0ff; border-color:#e4ddff; color:#3b2a85; transform:rotate(90deg); }
-.sp-more-tags{ display:none; gap:8px; flex-wrap:wrap; }
-.sp-tag-fold[open] .sp-more-tags{ display:flex; }
-
-/* === Metriky + „Zobraziť“ v jednom riadku === */
-.sp-stat-row{ display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; }
-.sp-stat-left{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
-.sp-stat-chip{
-  display:inline-flex; align-items:center; gap:.35rem;
-  padding:.36rem .55rem; border:1px solid var(--border); border-radius:999px;
-  background:#fff; font-size:.82rem; color:#0e1116;
-}
-.sp-stat-chip i{ color:#6b5afc; }
-.sp-view-link{
-  display:inline-flex; align-items:center; justify-content:center;
-  padding:.36rem .7rem; border:1px solid var(--border);
-  border-radius:999px; background:#fff; font-weight:600; font-size:.84rem;
-  text-decoration:none; color:#0e1116;
-}
-.sp-view-link:hover{ background:#f6f8fb; }
-
-/* --- FIX: Bootstrap .ratio robi z deti full-size; pre sport pill to prepiseme --- */
-.ratio > .sp-sport-pill,
-.ratio > .sport-pill {           /* ak niekde pouzivas staru class */
-  position: absolute !important;
-  top: 12px !important;
-  right: 12px !important;
-  left: auto !important;
-  bottom: auto !important;
-  width: auto !important;
-  height: auto !important;
-  z-index: 3;
-  white-space: nowrap;
-}
-
-/* Pekny fialovy pill (ako predtym) */
-.sp-sport-pill,
-.sport-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: .4rem;
-  padding: .32rem .66rem;
-  border-radius: 999px;
-  border: 1px solid #e6ddff;
-  background: linear-gradient(135deg, rgba(119,75,251,.18), rgba(119,75,251,.08));
-  color: #3b2a85;
-  box-shadow: 0 10px 22px rgba(119,75,251,.18);
-}
-.sp-sport-pill i,
-.sport-pill i { color: #6e59f8; }
-
-/* Sport pill – viac kontrastu na tmavom pozadí */
-.sp-sport-pill,
-.sport-pill{
-  /* biely základ + jemný fialový nádych navrchu */
-  background:
-    linear-gradient(135deg, rgba(119,75,251,.18), rgba(119,75,251,.08)),
-    rgba(255,255,255,.92);           /* <- biela vrstva pre kontrast */
-  border:1px solid #e6ddff;
-  color:#3b2a85;
-  box-shadow:
-    0 10px 22px rgba(0,0,0,.08),
-    0 2px 0 rgba(119,75,251,.06) inset;
-  backdrop-filter:saturate(120%) blur(2px); /* jemné „sklo“, ak je k dispozícii */
-}
-
-.sp-sport-pill i,
-.sport-pill i{
-  color:#6e59f8;
+@media (max-width:576px){
+  .hero-section{ padding:3rem 0 3rem; } /* jemný kompaktnejší spacing na mobile */
 }
