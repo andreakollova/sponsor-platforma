@@ -243,9 +243,9 @@
 
             <p class="text-secondary small mb-3">{{ card.desc }}</p>
 
-            {# TAGS – tri bodky len ak je viac než 3 tagy #}
+            <!-- ▼ VLOŽ TU BLOK S TAGMI (tri bodky) ▼ -->
             {% set visible = card.tags[:3] %}
-            {% set hidden = card.tags[3:] %}
+            {% set hidden  = card.tags[3:] %}
             <div class="sp-tag-row">
               {% for t in visible %}
                 <span class="sp-tag">{{ t }}</span>
@@ -263,6 +263,7 @@
               </details>
               {% endif %}
             </div>
+            <!-- ▲ KONIEC BLOKU S TAGMI ▲ -->
 
             <!-- Stats + Zobraziť -->
             <div class="sp-stat-row">
@@ -314,8 +315,9 @@
 
             <p class="text-secondary small mb-3">{{ card.desc }}</p>
 
+            <!-- ▼ VLOŽ TU BLOK S TAGMI (tri bodky) ▼ -->
             {% set visible = card.tags[:3] %}
-            {% set hidden = card.tags[3:] %}
+            {% set hidden  = card.tags[3:] %}
             <div class="sp-tag-row">
               {% for t in visible %}
                 <span class="sp-tag">{{ t }}</span>
@@ -333,6 +335,7 @@
               </details>
               {% endif %}
             </div>
+            <!-- ▲ KONIEC BLOKU S TAGMI ▲ -->
 
             <div class="sp-stat-row">
               <div class="sp-stat-left">

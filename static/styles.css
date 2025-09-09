@@ -224,3 +224,79 @@
 @media (max-width:576px){
   .hero-section{ padding:3rem 0 3rem; } /* jemný kompaktnejší spacing na mobile */
 }
+
+/* === Tags + three-dots (details/summary) === */
+.sp-tag-row{
+  display:flex; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:.6rem;
+}
+.sp-tag{
+  display:inline-flex; align-items:center;
+  padding:.38rem .6rem; border:1px solid var(--border);
+  border-radius:999px; background:#fff; color:#0e1116; font-size:.82rem;
+}
+
+/* three-dots toggle */
+.sp-tag-fold{ display:inline-flex; align-items:center; }
+.sp-tag-fold > summary{ list-style:none; cursor:pointer; display:inline-flex; }
+.sp-tag-fold > summary::-webkit-details-marker{ display:none; }
+
+.sp-tag-kebab{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:28px; height:28px; border-radius:999px;
+  border:1px solid var(--border); background:#fff; color:#6b7280;
+  transition:background .2s ease, border-color .2s ease, color .2s ease, transform .12s ease;
+}
+.sp-tag-kebab:hover{ background:#f6f8fb; }
+
+.sp-more-tags{ display:none; gap:8px; flex-wrap:wrap; }
+.sp-tag-fold[open] .sp-more-tags{ display:flex; }
+.sp-tag-fold[open] .sp-tag-kebab{
+  background:#f3f0ff; border-color:#e4ddff; color:#3b2a85; transform:rotate(90deg);
+}
+
+/* --- KEBAB FALLBACK: vždy zobraz "tri bodky" aj bez ikon --- */
+.sp-tag-kebab{
+  position:relative; /* pre pseudo-element */
+}
+
+/* skryj BI ikonu (nebude sa duplikovať s pseudo-elementom) */
+.sp-tag-kebab i{ display:none; }
+
+/* vykresli vertikálne tri bodky znakom, nezávisle od ikon fontu */
+.sp-tag-kebab::before{
+  content:"⋮";               /* tri bodky */
+  font-size:18px;
+  line-height:1;
+  display:inline-block;
+}
+
+/* stav po otvorení (už ho máš, len nech sa aplikuje aj na fallback) */
+.sp-tag-fold[open] .sp-tag-kebab{
+  background:#f3f0ff; border-color:#e4ddff; color:#3b2a85; transform:rotate(90deg);
+}
+
+/* --- KEBAB: always show three dots, no icon font needed --- */
+.sp-tag-kebab{
+  position:relative;            /* anchor for pseudo element */
+  color:#6b7280;                /* dot color */
+}
+.sp-tag-kebab i{ display:none; }/* avoid double icon if BI loads */
+
+/* draw three dots with CSS, centered inside the 28×28 button */
+.sp-tag-kebab::before{
+  content:"";
+  position:absolute;
+  top:50%; left:50%;
+  transform:translate(-50%,-50%);
+  width:4px; height:16px;       /* total stack height */
+  display:block;
+  background:
+    radial-gradient(currentColor 2px, transparent 2.5px) center 2px  / 4px 4px no-repeat,
+    radial-gradient(currentColor 2px, transparent 2.5px) center 8px  / 4px 4px no-repeat,
+    radial-gradient(currentColor 2px, transparent 2.5px) center 14px / 4px 4px no-repeat;
+}
+
+/* open state you already use – keep it for the fallback, too */
+.sp-tag-fold[open] .sp-tag-kebab{
+  background:#f3f0ff; border-color:#e4ddff; color:#3b2a85; transform:rotate(90deg);
+}
