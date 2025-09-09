@@ -467,3 +467,52 @@ h1.fw-bold,h2.fw-bold,h3.fw-bold,h4.fw-bold,h5.fw-bold,h6.fw-bold,
 }
 .sp-view-link:hover{ background:#f6f8fb; }
 
+/* --- FIX: Bootstrap .ratio robi z deti full-size; pre sport pill to prepiseme --- */
+.ratio > .sp-sport-pill,
+.ratio > .sport-pill {           /* ak niekde pouzivas staru class */
+  position: absolute !important;
+  top: 12px !important;
+  right: 12px !important;
+  left: auto !important;
+  bottom: auto !important;
+  width: auto !important;
+  height: auto !important;
+  z-index: 3;
+  white-space: nowrap;
+}
+
+/* Pekny fialovy pill (ako predtym) */
+.sp-sport-pill,
+.sport-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .32rem .66rem;
+  border-radius: 999px;
+  border: 1px solid #e6ddff;
+  background: linear-gradient(135deg, rgba(119,75,251,.18), rgba(119,75,251,.08));
+  color: #3b2a85;
+  box-shadow: 0 10px 22px rgba(119,75,251,.18);
+}
+.sp-sport-pill i,
+.sport-pill i { color: #6e59f8; }
+
+/* Sport pill – viac kontrastu na tmavom pozadí */
+.sp-sport-pill,
+.sport-pill{
+  /* biely základ + jemný fialový nádych navrchu */
+  background:
+    linear-gradient(135deg, rgba(119,75,251,.18), rgba(119,75,251,.08)),
+    rgba(255,255,255,.92);           /* <- biela vrstva pre kontrast */
+  border:1px solid #e6ddff;
+  color:#3b2a85;
+  box-shadow:
+    0 10px 22px rgba(0,0,0,.08),
+    0 2px 0 rgba(119,75,251,.06) inset;
+  backdrop-filter:saturate(120%) blur(2px); /* jemné „sklo“, ak je k dispozícii */
+}
+
+.sp-sport-pill i,
+.sport-pill i{
+  color:#6e59f8;
+}
