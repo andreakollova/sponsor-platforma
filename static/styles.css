@@ -300,3 +300,91 @@
 .sp-tag-fold[open] .sp-tag-kebab{
   background:#f3f0ff; border-color:#e4ddff; color:#3b2a85; transform:rotate(90deg);
 }
+
+/* --- KEBAB: reliable three vertical dots (no icon font) --- */
+.sp-tag-kebab { position: relative; color:#6b7280; } /* keep your 28×28, border, etc. above */
+.sp-tag-kebab i { display:none; }                    /* in case any <i> remains */
+
+.sp-kebab-dots{
+  width:4px;
+  height:16px;
+  display:block;
+  margin:0 auto;               /* centers inside the 28×28 button */
+  background:
+    radial-gradient(currentColor 2px, transparent 2.5px) center   2px / 4px 4px no-repeat,
+    radial-gradient(currentColor 2px, transparent 2.5px) center   8px / 4px 4px no-repeat,
+    radial-gradient(currentColor 2px, transparent 2.5px) center  14px / 4px 4px no-repeat;
+}
+
+/* Optional: graceful fallback if gradients weren’t supported */
+@supports not (background: radial-gradient(#000,#000)) {
+  .sp-kebab-dots::before{
+    content:"⋮";
+    font-size:18px;
+    line-height:16px;
+    display:block;
+    text-align:center;
+  }
+}
+
+/* --- HARD OVERRIDES: reliable kebab (inline SVG), no icon fonts --- */
+.sp-tag-kebab {
+  display:inline-grid !important;
+  place-items:center;
+  width:28px; height:28px;
+  border-radius:999px;
+  background:#fff;
+  color:#6b7280;
+  cursor:pointer;
+}
+.sp-tag-kebab:hover{ background:#f6f8fb; }
+.sp-tag-fold[open] .sp-tag-kebab{
+  background:#f3f0ff; border-color:#e4ddff; color:#3b2a85; transform:rotate(90deg);
+}
+
+/* kill any previous pseudo-element attempts & icon font */
+.sp-tag-kebab::before{ content:none !important; }
+.sp-tag-kebab i{ display:none !important; }
+
+/* the dots */
+.sp-kebab-svg{
+  display:block;
+  width:12px; height:16px;
+  fill:currentColor;
+}
+
+
+/* === Kebab: bez rámika v idle + menšie bodky (overrides) === */
+.sp-tag-kebab{
+  border:none !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  color:#9ca3af !important;          /* svetlejšie */
+  width:28px; height:28px;           /* nech ostane dobrý klik target */
+}
+
+/* menšie bodky vnútri */
+.sp-kebab-svg{
+  width:10px !important;
+  height:14px !important;
+  fill:currentColor;
+  display:block;
+}
+
+/* jemný hover, bez rámika/pozadia */
+.sp-tag-kebab:hover{
+  background:transparent !important;
+  color:#6b7280 !important;
+}
+
+/* open stav: len jemný podklad, bez borderu */
+.sp-tag-fold[open] .sp-tag-kebab{
+  background:#f3f0ff !important;
+  border:none !important;
+  color:#3b2a85 !important;
+  transform:rotate(90deg);
+}
+
+/* istota: vypni staré pseudo-elementy/ikonfonty */
+.sp-tag-kebab::before{ content:none !important; }
+.sp-tag-kebab i{ display:none !important; }

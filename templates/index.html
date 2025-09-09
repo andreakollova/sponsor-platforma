@@ -222,7 +222,7 @@
       <div class="col-12 col-sm-6 col-lg-4">
         <div class="card listing-card h-100 rounded-4">
 
-          <!-- Cover with sport pill (isolované triedy) -->
+          <!-- Cover with sport pill -->
           <div class="sp-cover ratio ratio-16x9 rounded-top-4 overflow-hidden">
             <img src="{{ url_for('static', filename=card.cover) }}" class="object-fit-cover" alt="cover {{ card.title }}">
             <span class="sp-sport-pill"><i class="bi bi-flag"></i> {{ card.sport }}</span>
@@ -243,17 +243,21 @@
 
             <p class="text-secondary small mb-3">{{ card.desc }}</p>
 
-            <!-- ▼ VLOŽ TU BLOK S TAGMI (tri bodky) ▼ -->
+            {# TAGS – kebab always shown; disabled when no hidden tags #}
             {% set visible = card.tags[:3] %}
             {% set hidden  = card.tags[3:] %}
             <div class="sp-tag-row">
               {% for t in visible %}
                 <span class="sp-tag">{{ t }}</span>
               {% endfor %}
-              {% if hidden|length > 0 %}
-              <details class="sp-tag-fold">
+
+              <details class="sp-tag-fold" data-has-more="{{ 1 if hidden|length > 0 else 0 }}">
                 <summary class="sp-tag-kebab" aria-label="Zobraziť ďalšie tagy" title="Zobraziť ďalšie tagy">
-                  <i class="bi bi-three-dots-vertical"></i>
+                  <svg class="sp-kebab-svg" viewBox="0 0 4 16" width="12" height="16" aria-hidden="true" focusable="false">
+                    <circle cx="2" cy="2" r="2"/>
+                    <circle cx="2" cy="8" r="2"/>
+                    <circle cx="2" cy="14" r="2"/>
+                  </svg>
                 </summary>
                 <div class="sp-more-tags">
                   {% for t in hidden %}
@@ -261,9 +265,7 @@
                   {% endfor %}
                 </div>
               </details>
-              {% endif %}
             </div>
-            <!-- ▲ KONIEC BLOKU S TAGMI ▲ -->
 
             <!-- Stats + Zobraziť -->
             <div class="sp-stat-row">
@@ -315,17 +317,20 @@
 
             <p class="text-secondary small mb-3">{{ card.desc }}</p>
 
-            <!-- ▼ VLOŽ TU BLOK S TAGMI (tri bodky) ▼ -->
             {% set visible = card.tags[:3] %}
             {% set hidden  = card.tags[3:] %}
             <div class="sp-tag-row">
               {% for t in visible %}
                 <span class="sp-tag">{{ t }}</span>
               {% endfor %}
-              {% if hidden|length > 0 %}
-              <details class="sp-tag-fold">
+
+              <details class="sp-tag-fold" data-has-more="{{ 1 if hidden|length > 0 else 0 }}">
                 <summary class="sp-tag-kebab" aria-label="Zobraziť ďalšie tagy" title="Zobraziť ďalšie tagy">
-                  <i class="bi bi-three-dots-vertical"></i>
+                  <svg class="sp-kebab-svg" viewBox="0 0 4 16" width="12" height="16" aria-hidden="true" focusable="false">
+                    <circle cx="2" cy="2" r="2"/>
+                    <circle cx="2" cy="8" r="2"/>
+                    <circle cx="2" cy="14" r="2"/>
+                  </svg>
                 </summary>
                 <div class="sp-more-tags">
                   {% for t in hidden %}
@@ -333,9 +338,7 @@
                   {% endfor %}
                 </div>
               </details>
-              {% endif %}
             </div>
-            <!-- ▲ KONIEC BLOKU S TAGMI ▲ -->
 
             <div class="sp-stat-row">
               <div class="sp-stat-left">
@@ -353,6 +356,7 @@
     </div>
   </div>
 </section>
+
 
 <!-- ===================== HOW & FAQ ===================== -->
 <section id="how" class="py-5">
