@@ -194,7 +194,7 @@
         <svg class="ph-art tr" viewBox="0 0 140 110" aria-hidden="true">
           <path d="M70 10c22 12 44 8 44 8v32c0 28-28 44-44 47-16-3-44-19-44-47V18s22 4 44-8z"
                 fill="none" stroke="rgba(18,39,52,.18)" stroke-width="2"/>
-          <path d="M70 16c18 10 36 7 36 7v26c0 23-23 37-36 39-13-2-36-16-36-39V23s18 4 36-7z"
+          <path d="M70 16c18 10 36 7 36 7v26c0 23-23 37-36 39-13-2-36-16-36-39V23 s18 4 36-7z"
                 fill="none" stroke="rgba(119,75,251,.35)" stroke-width="2"/>
         </svg>
       </article>
@@ -217,9 +217,21 @@
       <span class="text-secondary small">Detailnejšie dáta zobrazíme po prihlásení</span>
     </div>
 
-    <div class="row g-4">
+    <!-- FILTER: Kluby -->
+    <div class="filter-bar mb-3" data-target="#clubs-list">
+      <button class="filter-btn is-active" data-filter="*">
+        <i class="bi bi-grid-3x3-gap"></i><span>Všetko</span>
+      </button>
+      {% for s in club_sports %}
+        <button class="filter-btn" data-filter="{{ s }}">
+          <i class="bi {{ sport_icons.get(s, 'bi-collection') }}"></i><span>{{ s }}</span>
+        </button>
+      {% endfor %}
+    </div>
+
+    <div class="row g-4" id="clubs-list">
       {% for card in clubs %}
-      <div class="col-12 col-sm-6 col-lg-4">
+      <div class="col-12 col-sm-6 col-lg-4 filter-item" data-sport="{{ card.sport }}">
         <div class="card listing-card h-100 rounded-4">
 
           <!-- Cover with sport pill -->
@@ -293,9 +305,21 @@
       <span class="text-secondary small">Rýchly prehľad výkonu a cien</span>
     </div>
 
-    <div class="row g-4">
+    <!-- FILTER: Influenceri -->
+    <div class="filter-bar mb-3" data-target="#influencers-list">
+      <button class="filter-btn is-active" data-filter="*">
+        <i class="bi bi-grid-3x3-gap"></i><span>Všetko</span>
+      </button>
+      {% for s in influencer_sports %}
+        <button class="filter-btn" data-filter="{{ s }}">
+          <i class="bi {{ sport_icons.get(s, 'bi-collection') }}"></i><span>{{ s }}</span>
+        </button>
+      {% endfor %}
+    </div>
+
+    <div class="row g-4" id="influencers-list">
       {% for card in influencers %}
-      <div class="col-12 col-sm-6 col-lg-4">
+      <div class="col-12 col-sm-6 col-lg-4 filter-item" data-sport="{{ card.sport }}">
         <div class="card listing-card h-100 rounded-4">
 
           <div class="sp-cover ratio ratio-16x9 rounded-top-4 overflow-hidden">
@@ -349,7 +373,6 @@
                 </div>
               </details>
             </div>
-
 
             <div class="sp-stat-row">
               <div class="sp-stat-left">
@@ -427,5 +450,57 @@
     </div>
   </div>
 </section>
+
+<!-- === Minimal CSS pre filter + JS filtrovanie (self-contained) === -->
+<style>
+  .filter-bar{ display:flex; flex-wrap:wrap; gap:8px; }
+  .filter-btn{
+    display:inline-flex; align-items:center; gap:.4rem;
+    padding:.36rem .6rem; border:1px solid var(--border);
+    border-radius:999px; background:#fff; color:#0e1116;
+    font-size:.86rem; line-height:1; cursor:pointer;
+    transition:background .2s ease, border-color .2s ease, color .2s ease, box-shadow .2s ease;
+  }
+  .filter-btn i{ font-size:1rem; }
+  .filter-btn:hover{ background:#f6f8fb; }
+  .filter-btn.is-active{
+    background:linear-gradient(135deg, rgba(119,75,251,.12), rgba(119,75,251,.06)), #fff;
+    border-color:#e6ddff; color:#3b2a85; box-shadow:0 2px 0 rgba(119,75,251,.06) inset;
+  }
+</style>
+<script>
+  (function(){
+    const norm = s => (s || "").toString().toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+
+    function setupFilterBar(bar){
+      const targetSel = bar.getAttribute('data-target');
+      const list = document.querySelector(targetSel);
+      if(!list) return;
+      const items = Array.from(list.querySelectorAll('.filter-item'));
+
+      bar.addEventListener('click', (e) => {
+        const btn = e.target.closest('.filter-btn');
+        if(!btn) return;
+
+        bar.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('is-active'));
+        btn.classList.add('is-active');
+
+        const filter = btn.getAttribute('data-filter');
+        if(filter === '*'){
+          items.forEach(it => it.style.display = '');
+          return;
+        }
+        const f = norm(filter);
+        items.forEach(it => {
+          const sport = norm(it.getAttribute('data-sport'));
+          it.style.display = (sport === f) ? '' : 'none';
+        });
+      });
+    }
+
+    document.querySelectorAll('.filter-bar').forEach(setupFilterBar);
+  })();
+</script>
 
 {% endblock %}

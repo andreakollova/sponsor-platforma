@@ -109,14 +109,32 @@ FAQ = [
      "a": "Najbližšie zápasy/streamy, odkazy na obsah a metriky – vrátane mesačných PDF/CSV reportov za každú položku portfólia."}
 ]
 
+# --- Pomocné pre filter športov ---
+def unique_sports(cards):
+    return sorted({c["sport"] for c in cards})
+
+SPORT_ICONS = {
+    "Pozemný hokej": "bi-flag",
+    "Flag Football": "bi-flag",
+    "Ľadový hokej": "bi-snow",
+    "Beh": "bi-lightning-charge",
+    "Esports & Tech": "bi-controller",
+    "Fitness": "bi-activity",
+}
+
 @app.route("/")
 def index():
+    club_sports = unique_sports(CLUB_CARDS)
+    influencer_sports = unique_sports(INFLUENCER_CARDS)
     return render_template(
         "index.html",
         cities=CITIES, countries=COUNTRIES,
         clubs=CLUB_CARDS, influencers=INFLUENCER_CARDS,
         partners=PARTNER_SLUGS,
-        faq=FAQ, year=datetime.now().year
+        faq=FAQ, year=datetime.now().year,
+        club_sports=club_sports,
+        influencer_sports=influencer_sports,
+        sport_icons=SPORT_ICONS
     )
 
 if __name__ == "__main__":
