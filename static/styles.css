@@ -388,3 +388,6 @@
 /* istota: vypni staré pseudo-elementy/ikonfonty */
 .sp-tag-kebab::before{ content:none !important; }
 .sp-tag-kebab i{ display:none !important; }
+
+/* Kebab neukazuj, ak nie sú skryté tagy */
+.sp-tag-fold[data-has-more="0"] { display: inline; }

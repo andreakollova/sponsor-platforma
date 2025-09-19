@@ -317,18 +317,28 @@
 
             <p class="text-secondary small mb-3">{{ card.desc }}</p>
 
+            {# TAGS – prvé 3 vonku, zvyšok v <details> #}
             {% set visible = card.tags[:3] %}
             {% set hidden  = card.tags[3:] %}
+
+            {# DEMO: nasimuluj viac tagov pre HKM Nová Dubnica #}
+            {% if card.title == 'HKM Nová Dubnica' %}
+              {% set hidden = hidden + ['Livestream', 'Mládež', 'YouTube', 'CSR', 'Regionálny zásah'] %}
+            {% endif %}
+
             <div class="sp-tag-row">
               {% for t in visible %}
                 <span class="sp-tag">{{ t }}</span>
               {% endfor %}
 
-              <details class="sp-tag-fold" data-has-more="{{ 1 if hidden|length > 0 else 0 }}">
+              {# kebab len ak niečo je navyše #}
+              <details class="sp-tag-fold"
+                       data-has-more="{{ 1 if hidden|length > 0 else 0 }}"
+                       {% if card.title == 'HKM Nová Dubnica' %}open{% endif %}>
                 <summary class="sp-tag-kebab" aria-label="Zobraziť ďalšie tagy" title="Zobraziť ďalšie tagy">
                   <svg class="sp-kebab-svg" viewBox="0 0 4 16" width="12" height="16" aria-hidden="true" focusable="false">
-                    <circle cx="2" cy="2" r="2"/>
-                    <circle cx="2" cy="8" r="2"/>
+                    <circle cx="2" cy="2"  r="2"/>
+                    <circle cx="2" cy="8"  r="2"/>
                     <circle cx="2" cy="14" r="2"/>
                   </svg>
                 </summary>
@@ -339,6 +349,7 @@
                 </div>
               </details>
             </div>
+
 
             <div class="sp-stat-row">
               <div class="sp-stat-left">
