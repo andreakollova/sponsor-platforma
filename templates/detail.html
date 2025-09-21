@@ -1,0 +1,708 @@
+{% extends "base.html" %}
+{% block title %}{{ item.title }} – sponpon{% endblock %}
+
+{% block content %}
+
+<!-- ===================== BREADCRUMB ===================== -->
+<nav class="ld-breadcrumb">
+  <div class="container">
+    <ol class="bc-list">
+      <li><a href="{{ url_for('index') }}">Marketplace</a></li>
+      <li><a href="#">Kluby</a></li>
+      <li aria-current="page">{{ item.title }}</li>
+    </ol>
+  </div>
+</nav>
+
+<!-- ===================== HERO ===================== -->
+<section class="ld-hero">
+  <div class="container">
+    <div class="row g-3 align-items-center">
+      <div class="col-xl-8">
+        <div class="d-flex align-items-start gap-3">
+          <img class="ld-avatar" src="{{ url_for('static', filename=item.avatar) }}" alt="{{ item.title }}">
+          <div class="flex-grow-1">
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+              <h1 class="ld-title mb-0">{{ item.title }}</h1>
+              {% if item.verified %}<i class="bi bi-patch-check-fill sp-verified" title="Overené"></i>{% endif %}
+            </div>
+            <div class="ld-meta text-secondary mt-1 d-flex align-items-center gap-2 flex-wrap">
+              <span class="me-2"><i class="bi bi-geo-alt"></i> {{ item.location }}</span>
+              <span class="sp-tag"><i class="bi {{ sport_icon }}"></i> {{ item.sport }}</span>
+            </div>
+            <div class="ld-meta text-secondary mt-2 d-flex align-items-center gap-2 flex-wrap">
+              <span class="sp-stat-chip small"><i class="bi bi-people"></i> Dosah {{ item.reach }}</span>
+              <span class="sp-stat-chip small"><i class="bi bi-emoji-smile"></i> ER {{ '%.1f'|format(item.er) }}%</span>
+              <span class="sp-stat-chip small"><i class="bi bi-cash-coin"></i> od €{{ item.price_from }}</span>
+              {% if item.metrics and item.metrics.avg_cpm %}
+                <span class="sp-stat-chip small"><i class="bi bi-bar-chart"></i> CPM {{ item.metrics.avg_cpm }}</span>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Socials -->
+      <div class="col-xl-4">
+        <div class="ld-seg d-flex justify-content-xl-end">
+          {% if item.website %}<a class="seg-btn" href="{{ item.website }}" target="_blank" rel="noopener"><i class="bi bi-globe2"></i></a>{% endif %}
+          {% if item.social and item.social.instagram %}<a class="seg-btn" href="{{ item.social.instagram }}" target="_blank" rel="noopener"><i class="bi bi-instagram"></i></a>{% endif %}
+          {% if item.social and item.social.facebook %}<a class="seg-btn" href="{{ item.social.facebook }}" target="_blank" rel="noopener"><i class="bi bi-facebook"></i></a>{% endif %}
+          {% if item.social and item.social.youtube %}<a class="seg-btn" href="{{ item.social.youtube }}" target="_blank" rel="noopener"><i class="bi bi-youtube"></i></a>{% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== BODY ===================== -->
+<section class="py-3">
+  <div class="container">
+    <div class="row g-4">
+      <!-- LEFT -->
+      <div class="col-lg-8">
+
+        <!-- Cover (always cover.png) -->
+        <div class="card rounded-4 overflow-hidden ld-card mb-3">
+          <div class="ratio ratio-16x9 ld-main-img-wrap">
+            <img id="ldMain" src="{{ url_for('static', filename='covers/cover.png') }}" class="ld-main-img object-fit-cover" alt="cover {{ item.title }}">
+            <div class="sport-pill"><i class="bi {{ sport_icon }}"></i> {{ item.sport }}</div>
+            <div class="ld-grad"></div>
+          </div>
+        </div>
+
+        <!-- Thumbnails: 4× cover.png -->
+        <div class="card rounded-4 ld-card p-2 mb-4">
+          <div class="ld-thumbs-row">
+            <button class="ld-thumb is-active" data-src="{{ url_for('static', filename='covers/cover.png') }}">
+              <img src="{{ url_for('static', filename='covers/cover.png') }}" alt="thumb">
+            </button>
+            <button class="ld-thumb" data-src="{{ url_for('static', filename='covers/cover.png') }}">
+              <img src="{{ url_for('static', filename='covers/cover.png') }}" alt="thumb">
+            </button>
+            <button class="ld-thumb" data-src="{{ url_for('static', filename='covers/cover.png') }}">
+              <img src="{{ url_for('static', filename='covers/cover.png') }}" alt="thumb">
+            </button>
+            <button class="ld-thumb" data-src="{{ url_for('static', filename='covers/cover.png') }}">
+              <img src="{{ url_for('static', filename='covers/cover.png') }}" alt="thumb">
+            </button>
+          </div>
+        </div>
+
+        <!-- PREHĽAD (3 vety) -->
+        <div id="overview" class="card rounded-4 p-3 p-md-4 ld-card mb-4">
+          <h2 class="h5 mb-2">Prehľad</h2>
+          <p class="text-secondary mb-0">
+            {{ item.title }} je regionálny klub so silnou komunitou a aktívnou mládežou. Pôsobí v lokalite {{ item.location }} a venuje sa športu {{ item.sport }} s dôrazom na dlhodobý rozvoj hráčov aj fanúšikov. Pre partnerov prináša transparentnú spoluprácu, kvalitný obsah a merateľný lokálny dosah.
+          </p>
+        </div>
+
+        <!-- ========== SEZÓNA ========== -->
+        <div id="season" class="card rounded-4 p-3 p-md-4 ld-card mb-4">
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <h2 class="h5 mb-0">Sponzoring na sezónu</h2>
+            <span class="text-secondary small">Vyber balík alebo kombinuj inventár</span>
+          </div>
+
+          {% if item.inventory %}
+          <div class="ld-inv-block mb-3">
+            <div class="text-secondary small mb-1">Inventár</div>
+            <div class="ld-inv-grid">
+              {% for group, items in item.inventory.items() %}
+                {% for it in items %}
+                  <span class="inv-chip small"><i class="bi {{ it.icon }}"></i> {{ it.name }}</span>
+                {% endfor %}
+              {% endfor %}
+            </div>
+          </div>
+          {% endif %}
+
+          <div class="row g-3">
+            {% for p in item.packages|default([]) %}
+            <div class="col-12 col-md-6">
+              <div class="ld-pack h-100">
+                <div class="ld-pack-head">
+                  <div class="ld-pack-name">{{ p.name }}</div>
+                  <div class="ld-price">{{ p.price }}</div>
+                </div>
+                <ul class="ld-pack-list">
+                  {% for inc in p.incl %}<li>{{ inc }}</li>{% endfor %}
+                </ul>
+                <div class="ld-actions mt-2">
+                  <button class="btn btn-outline-brand btn-compact"
+                          data-cta="add"
+                          data-kind="{{ kind }}"
+                          data-slug="{{ item.slug }}"
+                          data-label="{{ item.title }} – {{ p.name }}"
+                          data-price="{{ p.price }}"
+                          data-cover="{{ url_for('static', filename='covers/cover.png') }}">
+                    <i class="bi bi-plus-circle"></i> Pridať do portfólia
+                  </button>
+                  <button class="btn btn-ghost btn-compact" data-cta="barter" data-label="{{ item.title }} – {{ p.name }}">
+                    Barter
+                  </button>
+                </div>
+              </div>
+            </div>
+            {% else %}
+            <div class="col-12">
+              <div class="text-secondary small">Zatiaľ bez definovaných balíkov – vyžiadaj ponuku na mieru.</div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- ========== EVENTY ========== -->
+        <div id="events" class="card rounded-4 p-3 p-md-4 ld-card mb-4">
+          <div class="d-flex align-items-center justify-content-between">
+            <h2 class="h5 mb-0">Najbližšie eventy</h2>
+            <a href="#calendar" class="btn btn-ghost btn-slim"><i class="bi bi-calendar-event"></i> Kalendár</a>
+          </div>
+
+          <div class="ld-timeline mt-3">
+            {% for u in item.upcoming|default([]) %}
+            {% set ds = u.date or '' %}
+            {% set dday = ds[8:10] %}
+            {% set dmon = ds[5:7] %}
+            <div class="ld-tl-row">
+              <div class="ld-datepill">
+                <div class="ld-day">{{ dday }}</div>
+                <div class="ld-month">{{ dmon }}</div>
+              </div>
+              <div class="ld-tl-card flex-grow-1">
+                <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                  <div class="me-2">
+                    <div class="fw-semibold">{{ u.title }}</div>
+                    <div class="text-secondary small"><i class="bi bi-calendar-event"></i> {{ u.date }} • {{ u.type }}</div>
+                  </div>
+
+                  <!-- One-line actions -->
+                  <div class="ld-actions">
+                    <div class="input-group ld-eur">
+                      <span class="input-group-text">€</span>
+                      <input type="number" class="form-control" placeholder="Suma" min="100" step="50" value="{{ u.suggest|default('') }}">
+                    </div>
+                    <button class="btn btn-outline-brand btn-compact"
+                            data-cta="add"
+                            data-kind="{{ kind }}"
+                            data-slug="{{ item.slug }}"
+                            data-label="{{ item.title }} – {{ u.title }}"
+                            data-price=""
+                            data-cover="{{ url_for('static', filename='covers/cover.png') }}">
+                      <i class="bi bi-plus-circle"></i> Pridať do portfólia
+                    </button>
+                    <button class="btn btn-ghost btn-compact" data-cta="barter" data-label="{{ item.title }} – {{ u.title }}">Barter</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% else %}
+            <div class="text-secondary small">Zatiaľ bez zverejnených termínov.</div>
+            {% endfor %}
+          </div>
+
+          <!-- Mini kalendár -->
+          <div id="calendar" class="ld-cal mt-3"
+               data-events='{{ item.upcoming|default([])|tojson }}'>
+            <div class="ld-cal-head">
+              <button class="cal-nav" data-dir="-1"><i class="bi bi-chevron-left"></i></button>
+              <div class="ld-cal-title">Kalendár</div>
+              <button class="cal-nav" data-dir="1"><i class="bi bi-chevron-right"></i></button>
+            </div>
+            <div class="ld-cal-grid">
+              <div class="wday">Po</div><div class="wday">Ut</div><div class="wday">St</div><div class="wday">Št</div><div class="wday">Pi</div><div class="wday">So</div><div class="wday">Ne</div>
+              <!-- days injected by JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- ========== PROJEKTY ========== -->
+        <div id="projects" class="card rounded-4 p-3 p-md-4 ld-card mb-4">
+          <h2 class="h5 mb-3">Projekty klubu</h2>
+
+          <div class="row g-3">
+            {% for p in item.projects|default([]) %}
+            <div class="col-12">
+              <div class="ld-proj">
+                <div class="ld-proj-media">
+                  <img src="{{ url_for('static', filename='covers/cover.png') }}" alt="{{ p.title }}">
+                </div>
+                <div class="ld-proj-body">
+                  <div class="d-flex align-items-start justify-content-between gap-2">
+                    <div>
+                      <div class="ld-proj-title">{{ p.title }}</div>
+                      <div class="text-secondary small mb-2">{{ p.desc }}</div>
+                      {% if p.tags %}
+                      <div class="d-flex flex-wrap gap-2 mb-2">
+                        {% for t in p.tags %}<span class="sp-tag small">{{ t }}</span>{% endfor %}
+                      </div>
+                      {% endif %}
+                    </div>
+                    {% if p.budget %}
+                    <div class="ld-price">{{ p.budget }}</div>
+                    {% endif %}
+                  </div>
+                  <div class="ld-actions">
+                    <button class="btn btn-outline-brand btn-compact"
+                            data-cta="add"
+                            data-kind="{{ kind }}"
+                            data-slug="{{ item.slug }}"
+                            data-label="{{ item.title }} – projekt: {{ p.title }}"
+                            data-price="{{ p.budget|default('') }}"
+                            data-cover="{{ url_for('static', filename='covers/cover.png') }}">
+                      <i class="bi bi-plus-circle"></i> Pridať do portfólia
+                    </button>
+                    <button class="btn btn-ghost btn-compact" data-cta="barter" data-label="{{ item.title }} – projekt: {{ p.title }}">Barter</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% else %}
+            <div class="col-12">
+              <div class="ld-proj">
+                <div class="ld-proj-media">
+                  <img src="{{ url_for('static', filename='covers/cover.png') }}" alt="Projekt klubu">
+                </div>
+                <div class="ld-proj-body">
+                  <div class="d-flex align-items-start justify-content-between gap-2">
+                    <div>
+                      <div class="ld-proj-title">Nové dresy – mládež U15</div>
+                      <div class="text-secondary small mb-2">Kompletná sada domácich/hosťujúcich dresov pre mládežnícke tímy vrátane trenérok. Branding na rukáve a social vďaka.</div>
+                    </div>
+                    <div class="ld-price">€2 500</div>
+                  </div>
+                  <div class="ld-actions">
+                    <button class="btn btn-outline-brand btn-compact"
+                            data-cta="add"
+                            data-kind="{{ kind }}"
+                            data-slug="{{ item.slug }}"
+                            data-label="{{ item.title }} – projekt: Nové dresy U15 }}"
+                            data-price="2500"
+                            data-cover="{{ url_for('static', filename='covers/cover.png') }}">
+                      <i class="bi bi-plus-circle"></i> Pridať do portfólia
+                    </button>
+                    <button class="btn btn-ghost btn-compact" data-cta="barter" data-label="{{ item.title }} – projekt: Nové dresy U15 }}">Barter</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- ========== EXTRA: Ďalšie dôležité štatistiky (NEW) ========== -->
+        <div id="more-stats" class="card rounded-4 p-3 p-md-4 ld-card mb-4">
+          <h2 class="h5 mb-3">Ďalšie dôležité štatistiky</h2>
+          <div class="ld-statgrid">
+            <div class="stat"><span class="label">Zápasy / rok</span><span class="val">28</span></div>
+            <div class="stat"><span class="label">Domáce zápasy</span><span class="val">14</span></div>
+            <div class="stat"><span class="label">Ø návštevnosť štadióna</span><span class="val">1 800</span></div>
+            <div class="stat"><span class="label">Predané permanentky</span><span class="val">650</span></div>
+            <div class="stat"><span class="label">Členovia mládeže</span><span class="val">220</span></div>
+            <div class="stat"><span class="label">Počet trénerov</span><span class="val">18</span></div>
+            <div class="stat"><span class="label">Streamy / mesiac</span><span class="val">4</span></div>
+            <div class="stat"><span class="label">Ø video views</span><span class="val">25k</span></div>
+            <div class="stat"><span class="label">Newsletter odbery</span><span class="val">4.1k</span></div>
+            <div class="stat"><span class="label">Web návštevnosť / mes.</span><span class="val">18k</span></div>
+            <div class="stat"><span class="label">Top mesto</span><span class="val">Nová Dubnica</span></div>
+            <div class="stat"><span class="label">Lokálne publikum</span><span class="val">78%</span></div>
+          </div>
+        </div>
+
+        <!-- ========== PUBLIKUM (NEW, at the very bottom) ========== -->
+        <div id="audience" class="card rounded-4 p-3 p-md-4 ld-card mb-4">
+          <h2 class="h5 mb-3">Publikum</h2>
+          <div class="row g-3 align-items-start">
+            <div class="col-md-4">
+              <div class="ld-aud-box">
+                <div class="text-secondary small mb-2">Pohlavie</div>
+                <div class="d-flex align-items-center gap-2 flex-wrap">
+                  <span class="aud-chip"><i class="bi bi-gender-female"></i> {{ (item.audience.female if item.audience and item.audience.female is defined else 38) }}%</span>
+                  <span class="aud-chip"><i class="bi bi-gender-male"></i> {{ (item.audience.male if item.audience and item.audience.male is defined else 62) }}%</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-8">
+              <div class="ld-aud-ages">
+                <div class="text-secondary small mb-2">Vekové skupiny</div>
+                {% set ages = (item.audience.age if item.audience and item.audience.age is defined else {'13–17':12,'18–24':28,'25–34':34,'35–44':16,'45+':10}) %}
+                {% for label, val in ages.items() %}
+                  <div class="ld-age-row">
+                    <div class="ld-age-label">{{ label }}</div>
+                    <div class="ld-age-bar">
+                      <div class="ld-age-fill" style="width: {{ val }}%"><span>{{ val }}%</span></div>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- ========== /PUBLIKUM ========== -->
+
+      </div>
+
+      <!-- RIGHT (SIDEBAR) -->
+      <div class="col-lg-4">
+        <div class="ld-side card rounded-4 p-3 p-md-4 sticky-md-top">
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <img class="ld-side-avatar" src="{{ url_for('static', filename=item.avatar) }}" alt="{{ item.title }}">
+            <div>
+              <div class="fw-semibold">{{ item.title }}</div>
+              <div class="text-secondary small"><i class="bi bi-geo-alt"></i> {{ item.location }}</div>
+            </div>
+          </div>
+
+          <div class="ld-side-facts my-3 small">
+            <div class="d-flex justify-content-between"><span class="text-secondary">Ceny od</span><span class="fw-semibold">€{{ item.price_from }}</span></div>
+            <div class="d-flex justify-content-between"><span class="text-secondary">Dosah</span><span class="fw-semibold">{{ item.reach }}</span></div>
+            <div class="d-flex justify-content-between"><span class="text-secondary">ER</span><span class="fw-semibold">{{ '%.1f'|format(item.er) }}%</span></div>
+          </div>
+
+          {% if item.metrics %}
+          <div class="ld-mini-metrics">
+            <div class="ld-mm"><span class="text-secondary small">Posty/mes</span><div class="fw-semibold">{{ item.metrics.posts_m }}</div></div>
+            <div class="ld-mm"><span class="text-secondary small">Ø videní</span><div class="fw-semibold">{{ item.metrics.avg_views }}</div></div>
+            <div class="ld-mm"><span class="text-secondary small">CPM</span><div class="fw-semibold">{{ item.metrics.avg_cpm }}</div></div>
+          </div>
+          {% endif %}
+
+          {% if item.tags %}
+          <div class="mt-3 d-flex flex-wrap gap-2">
+            {% for t in item.tags %}<span class="sp-tag small">{{ t }}</span>{% endfor %}
+          </div>
+          {% endif %}
+
+          <hr class="my-3">
+          <div class="d-grid gap-2">
+            <a class="btn btn-outline-brand btn-compact" data-scroll="#season"><i class="bi bi-collection"></i> Sezónne balíčky</a>
+            <a class="btn btn-ghost btn-compact" data-scroll="#events"><i class="bi bi-calendar-event"></i> Eventy & kalendár</a>
+            <a class="btn btn-ghost btn-compact" data-scroll="#projects"><i class="bi bi-hammer"></i> Projekty klubu</a>
+          </div>
+
+          <div class="mt-3 small">
+            {% if item.website %}
+              <div class="d-flex align-items-center gap-2 mb-1"><i class="bi bi-globe2"></i> <a href="{{ item.website }}" class="link-underline">{{ item.website }}</a></div>
+            {% endif %}
+            {% if item.address %}
+              <div class="d-flex align-items-center gap-2"><i class="bi bi-geo"></i> <span>{{ item.address }}</span></div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== PAGE-LOCAL CSS ===================== -->
+<style>
+  /* Breadcrumb */
+  .ld-breadcrumb{ border-bottom:1px solid var(--border); background:#fff; }
+  .bc-list{ margin:0; padding:.5rem 0; list-style:none; display:flex; gap:.5rem; align-items:center; }
+  .bc-list li{ color:#6b7280; font-size:.9rem; }
+  .bc-list li a{ color:#374151; text-decoration:none; }
+  .bc-list li+li::before{ content:"/"; margin:0 .5rem; color:#9aa3b2; }
+
+  /* Hero – compact top spacing */
+  .ld-hero{
+    padding:.4rem 0 .5rem;
+    background:
+      radial-gradient(1200px 600px at 20% -10%, rgba(119,75,251,.05), transparent 60%),
+      radial-gradient(800px 500px at 100% 0%, rgba(18,39,52,.04), transparent 60%);
+    border-bottom:1px solid var(--border);
+  }
+  .ld-title{ font-weight:700; letter-spacing:-.01em; color:#0e1116; font-size:clamp(22px,2.5vw,34px); }
+  .ld-avatar{ width:56px; height:56px; border-radius:50%; border:1px solid var(--border); object-fit:cover; }
+  .sp-verified{ color:var(--brand-2); }
+
+  /* Segmented / Socials */
+  .ld-seg{ gap:6px; }
+  .seg-btn{
+    padding:.36rem .75rem; border-radius:999px; border:1px solid #e6ddff; background:#fff;
+    color:#3b2a85; font-weight:600; cursor:pointer; white-space:nowrap; font-size:.92rem;
+  }
+  .seg-btn:hover{ background:#f6f8fb; }
+  .seg-btn i{ font-size:1.05rem; }
+
+  /* Cards */
+  .ld-card{ border:1px solid var(--border); box-shadow:0 8px 18px rgba(10,20,30,.04); }
+
+  /* Cover */
+  .ld-main-img-wrap{ border-bottom:1px solid var(--border); }
+  .ld-main-img{ width:100%; height:100%; object-fit:cover; }
+  .ld-grad{ position:absolute; inset:0; pointer-events:none; background:linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(0,0,0,.04) 100%); }
+  .sport-pill{
+    position:absolute; top:12px; right:12px; z-index:2;
+    display:inline-flex; align-items:center; gap:.4rem;
+    padding:.32rem .6rem; border-radius:999px; font-size:.82rem; font-weight:600;
+    background:linear-gradient(135deg, rgba(119,75,251,.18), rgba(119,75,251,.08)), rgba(255,255,255,.92);
+    border:1px solid #e6ddff; color:#3b2a85;
+    box-shadow:0 10px 22px rgba(0,0,0,.08), 0 2px 0 rgba(119,75,251,.06) inset;
+    backdrop-filter:saturate(120%) blur(2px);
+  }
+  .sport-pill i{ color:#6e59f8; }
+
+  /* Thumbs */
+  .ld-thumbs-row{ display:flex; gap:12px; overflow:auto; padding:6px; }
+  .ld-thumb{
+    border:1px solid var(--border); background:#fff; border-radius:14px; overflow:hidden;
+    width:220px; height:120px; flex:0 0 auto; padding:0; cursor:pointer;
+    transition:border-color .15s ease, transform .15s ease;
+  }
+  .ld-thumb:hover{ transform:translateY(-2px); }
+  .ld-thumb.is-active{ border-color:#d7ceff; box-shadow:0 8px 18px rgba(119,75,251,.12); }
+  .ld-thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+  /* Chips & stats */
+  .sp-tag{
+    display:inline-flex; align-items:center; gap:.35rem;
+    padding:.32rem .56rem; border:1px dashed var(--border);
+    border-radius:999px; background:#fff; color:#0e1116; font-size:.8rem;
+  }
+  .sp-stat-chip{
+    display:inline-flex; align-items:center; gap:.35rem;
+    padding:.32rem .5rem; border:1px solid var(--border); border-radius:999px;
+    background:#fff; font-size:.8rem; color:#0e1116; white-space:nowrap;
+  }
+  .sp-stat-chip i{ color:#6b5afc; }
+
+  /* Buttons – compact one-line */
+  .btn-outline-brand{
+    background:#fff; color:#3b2a85; border:1px solid #e6ddff; font-weight:600; border-radius:999px;
+  }
+  .btn-outline-brand:hover{ background:#f6f0ff; }
+  .btn-ghost{ background:#fff; color:#0e1116; border:1px solid var(--border); border-radius:999px; }
+  .btn-ghost:hover{ background:#f6f8fb; }
+  .btn-slim{ padding:.3rem .6rem; border-radius:999px; font-size:.9rem; }
+  .btn-compact{ padding:.36rem .6rem; font-size:.9rem; white-space:nowrap; }
+
+  /* One-line action container */
+  .ld-actions{ display:flex; align-items:center; gap:8px; flex-wrap:nowrap; }
+  .ld-actions .input-group{ width:140px; min-width:140px; }
+
+  /* Inventory + packages */
+  .ld-inv-grid{ display:flex; flex-wrap:wrap; gap:8px; }
+  .inv-chip{ display:inline-flex; align-items:center; gap:.4rem; padding:.32rem .56rem; border:1px solid var(--border); border-radius:999px; background:#fff; font-size:.86rem; color:#0e1116; }
+  .inv-chip i{ color:#6b5afc; }
+
+  .ld-pack{
+    border:1px solid var(--border); border-radius:16px; background:#fff; padding:14px;
+    box-shadow:0 10px 22px rgba(10,20,30,.04);
+  }
+  .ld-pack-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:.35rem; }
+  .ld-pack-name{ font-weight:700; }
+  .ld-price{
+    display:inline-flex; align-items:center; padding:.24rem .55rem; border-radius:999px;
+    background:linear-gradient(135deg, rgba(119,75,251,.12), rgba(119,75,251,.06)), #fff;
+    border:1px solid #e6ddff; color:#3b2a85; font-weight:600; font-size:.9rem;
+  }
+  .ld-pack-list{ margin:.25rem 0 0; padding-left:1rem; color:#4b5563; font-size:.94rem; }
+
+  /* Timeline / events */
+  .ld-timeline{ display:grid; gap:12px; }
+  .ld-tl-row{ display:flex; gap:12px; align-items:stretch; }
+  .ld-tl-card{ border:1px solid var(--border); border-radius:14px; background:#fff; padding:.7rem; box-shadow:0 8px 18px rgba(10,20,30,.04); }
+  .ld-datepill{
+    width:60px; border-radius:16px; background:#f8f7ff; border:1px solid #e6ddff; color:#3b2a85;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; line-height:1; gap:4px;
+  }
+  .ld-day{ font-size:24px; font-weight:800; }
+  .ld-month{ font-size:13px; opacity:.85; }
+  .ld-eur .input-group-text{ background:#fff; border-right:0; }
+  .ld-eur .form-control{ border-left:0; padding:.36rem .5rem; }
+
+  /* Calendar */
+  .ld-cal{ border:1px solid var(--border); border-radius:16px; background:#fff; overflow:hidden; }
+  .ld-cal-head{ display:flex; align-items:center; justify-content:space-between; padding:.5rem .75rem; border-bottom:1px solid var(--border); }
+  .ld-cal-title{ font-weight:700; }
+  .cal-nav{ border:1px solid var(--border); background:#fff; border-radius:999px; width:32px; height:32px; display:grid; place-items:center; }
+  .ld-cal-grid{ display:grid; grid-template-columns:repeat(7,1fr); gap:2px; padding:.5rem; }
+  .wday{ text-align:center; font-size:.8rem; color:#6b7280; padding:.2rem 0; }
+  .day{
+    aspect-ratio:1/1; border:1px solid var(--border); border-radius:10px; background:#fff;
+    display:flex; align-items:flex-start; justify-content:flex-end; padding:.25rem; position:relative; font-size:.9rem;
+  }
+  .day.muted{ color:#9aa3b2; background:#fafbff; }
+  .dot{ position:absolute; left:8px; bottom:8px; width:6px; height:6px; border-radius:50%; background:#7a63ff; }
+
+  /* Project */
+  .ld-proj{ border:1px solid var(--border); border-radius:18px; background:#fff; overflow:hidden; box-shadow:0 10px 22px rgba(10,20,30,.04); }
+  .ld-proj-media{ width:100%; height:240px; overflow:hidden; }
+  .ld-proj-media img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .ld-proj-body{ padding:14px; }
+  .ld-proj-title{ font-weight:700; margin-bottom:.1rem; }
+
+  /* Extra stats */
+  .ld-statgrid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+  }
+  @media (min-width: 768px){ .ld-statgrid{ grid-template-columns:repeat(3,1fr);} }
+  .stat{
+    border:1px solid var(--border); border-radius:14px; background:#fff; padding:.8rem .9rem;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .stat .label{ color:#6b7280; font-size:.9rem; }
+  .stat .val{ font-weight:700; }
+
+  /* Audience (new) */
+  .ld-aud-box{ border:1px solid var(--border); border-radius:16px; background:#fff; padding:.9rem; }
+  .aud-chip{
+    display:inline-flex; align-items:center; gap:.35rem;
+    padding:.36rem .7rem; border:1px solid var(--border); border-radius:999px; font-weight:700;
+    background:#fff; color:#111827; font-size:.95rem;
+  }
+  .aud-chip i{ opacity:.9; }
+  .ld-age-row{ display:flex; align-items:center; gap:12px; margin:.4rem 0; }
+  .ld-age-label{ width:72px; color:#4b5563; font-weight:600; }
+  .ld-age-bar{ flex:1; height:16px; background:#eff2f6; border-radius:999px; overflow:hidden; position:relative; }
+  .ld-age-fill{
+    height:100%; background:linear-gradient(90deg,#bca8ff,#7a63ff); border-radius:999px; position:relative; display:flex; align-items:center; justify-content:flex-end;
+  }
+  .ld-age-fill span{ color:#fff; font-size:.8rem; padding-right:6px; font-weight:700; text-shadow:0 1px 0 rgba(0,0,0,.15); }
+
+  /* Sidebar */
+  .ld-side{ border:1px solid var(--border); box-shadow:0 10px 22px rgba(10,20,30,.04); top:88px; }
+  .ld-side-avatar{ width:44px; height:44px; border-radius:50%; border:1px solid var(--border); object-fit:cover; }
+  .ld-side-facts{ display:grid; gap:.3rem; }
+  .ld-mini-metrics{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+  .ld-mm{ border:1px solid var(--border); background:#fff; border-radius:12px; padding:.6rem .7rem; text-align:center; }
+
+  /* Responsive tweaks */
+  @media (max-width: 991px){
+    .ld-actions{ flex-wrap:wrap; }
+    .ld-proj-media{ height:200px; }
+    .seg-btn{ font-size:.88rem; }
+  }
+</style>
+
+<!-- ===================== PAGE-LOCAL JS ===================== -->
+<script>
+  // Scroll helpers
+  function smoothTo(sel){
+    const el = document.querySelector(sel);
+    if(!el) return;
+    const y = el.getBoundingClientRect().top + window.pageYOffset - 96;
+    window.scrollTo({top:y, behavior:'smooth'});
+  }
+  document.querySelectorAll('[data-scroll]').forEach(btn=>{
+    btn.addEventListener('click', e=>{
+      e.preventDefault();
+      const sel = btn.getAttribute('data-scroll');
+      smoothTo(sel);
+    });
+  });
+
+  // Gallery thumbs -> swap main image
+  (function(){
+    const main = document.getElementById('ldMain');
+    if(!main) return;
+    document.querySelectorAll('.ld-thumb').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const src = btn.getAttribute('data-src');
+        if(src){ main.src = src; }
+        document.querySelectorAll('.ld-thumb').forEach(b=>b.classList.remove('is-active'));
+        btn.classList.add('is-active');
+      });
+    });
+  })();
+
+  // Portfolio storage
+  function getPortfolio(){
+    try{ return JSON.parse(localStorage.getItem('portfolio_items')||'[]'); }catch(e){ return []; }
+  }
+  function setPortfolio(arr){
+    localStorage.setItem('portfolio_items', JSON.stringify(arr));
+    if(window.updatePortfolioBadge){ window.updatePortfolioBadge(); }
+  }
+  function addToPortfolio(payload){
+    const list = getPortfolio();
+    const exists = list.some(x=>x.kind===payload.kind && x.slug===payload.slug && x.label===payload.label);
+    if(!exists){ list.push(payload); setPortfolio(list); }
+  }
+  document.querySelectorAll('[data-cta="add"]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const priceField = btn.parentElement?.querySelector('input[type="number"]');
+      const payload = {
+        kind: btn.dataset.kind,
+        slug: btn.dataset.slug,
+        label: btn.dataset.label,
+        price_from: Number(priceField?.value || (btn.dataset.price||'').toString().replace(/[^\d.]/g,'')) || 0,
+        cover: btn.dataset.cover
+      };
+      addToPortfolio(payload);
+      btn.innerHTML = '<i class="bi bi-check2-circle"></i> Pridané';
+      btn.classList.add('btn-success');
+      setTimeout(()=>{ btn.classList.remove('btn-success'); btn.innerHTML='<i class="bi bi-plus-circle"></i> Pridať do portfólia'; }, 1600);
+    });
+  });
+  document.querySelectorAll('[data-cta="barter"]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      alert('Ďakujeme! Ozveme sa k barter možnostiam pre: ' + (btn.dataset.label||'projekt'));
+    });
+  });
+
+  // Mini calendar builder
+  (function(){
+    const root = document.getElementById('calendar');
+    if(!root) return;
+    const grid = root.querySelector('.ld-cal-grid');
+    const title = root.querySelector('.ld-cal-title');
+    const events = (()=>{ try{ return JSON.parse(root.dataset.events||'[]'); }catch(e){ return []; } })();
+
+    let view = new Date();
+    view.setDate(1);
+
+    function render(){
+      grid.querySelectorAll('.day').forEach(d=>d.remove());
+      const year = view.getFullYear();
+      const month = view.getMonth();
+      const monthNames = ['Január','Február','Marec','Apríl','Máj','Jún','Júl','August','September','Október','November','December'];
+      title.textContent = `${monthNames[month]} ${year}`;
+
+      const firstDayIdx = (view.getDay()+6)%7; // Mon=0
+      const daysInMonth = new Date(year, month+1, 0).getDate();
+      const prevDays = new Date(year, month, 0).getDate();
+
+      for(let i=firstDayIdx-1;i>=0;i--){
+        const n = prevDays - i;
+        const d = document.createElement('div');
+        d.className='day muted';
+        d.textContent = n;
+        grid.appendChild(d);
+      }
+      for(let dnum=1; dnum<=daysInMonth; dnum++){
+        const d = document.createElement('div');
+        d.className='day';
+        d.textContent = dnum;
+        const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(dnum).padStart(2,'0')}`;
+        if(events.some(e=>e.date===dateStr)){
+          const dot = document.createElement('span'); dot.className='dot'; d.appendChild(dot);
+          d.title = events.filter(e=>e.date===dateStr).map(e=>e.title).join(', ');
+        }
+        grid.appendChild(d);
+      }
+      const cells = grid.querySelectorAll('.day,.wday').length - 7;
+      const mod = cells % 7;
+      const tail = (mod===0)?0:(7-mod);
+      for(let i=1; i<=tail; i++){
+        const d = document.createElement('div');
+        d.className='day muted';
+        d.textContent = i;
+        grid.appendChild(d);
+      }
+    }
+
+    render();
+    root.querySelectorAll('.cal-nav').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const dir = Number(btn.dataset.dir||1);
+        view.setMonth(view.getMonth()+dir);
+        render();
+      });
+    });
+  })();
+</script>
+
+{% endblock %}

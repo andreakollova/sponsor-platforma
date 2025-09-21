@@ -286,7 +286,7 @@
                 <span class="sp-stat-chip"><i class="bi bi-emoji-smile"></i> ER {{ '%.1f'|format(card.er) }}%</span>
                 <span class="sp-stat-chip"><i class="bi bi-cash-coin"></i> od €{{ card.price_from }}</span>
               </div>
-              <a href="#" class="sp-view-link">Zobraziť</a>
+              <a href="{{ url_for('detail', kind='club', slug=card.slug) }}" class="sp-view-link">Zobraziť</a>
             </div>
           </div>
 
@@ -380,7 +380,7 @@
                 <span class="sp-stat-chip"><i class="bi bi-emoji-smile"></i> ER {{ '%.1f'|format(card.er) }}%</span>
                 <span class="sp-stat-chip"><i class="bi bi-cash-coin"></i> od €{{ card.price_from }}</span>
               </div>
-              <a href="#" class="sp-view-link">Zobraziť</a>
+              <a href="{{ url_for('detail', kind='influencer', slug=card.slug) }}" class="sp-view-link">Zobraziť</a>
             </div>
           </div>
 
