@@ -411,28 +411,17 @@
     margin-bottom:20px;
   }
 
-  /* Force 4px text size */
+  /* Force 4px text size (kept as-is from your code; currently 14px) */
   .ld-breadcrumb .bc-list{
     font-size:14px !important;
     line-height:1 !important;
   }
-
   .ld-breadcrumb .bc-list li,
-  .ld-breadcrumb .bc-list li a{
-    font-size:inherit !important;
-  }
-
-  /* Keep the "/" divider aligned at 4px too */
+  .ld-breadcrumb .bc-list li a{ font-size:inherit !important; }
   .ld-breadcrumb .bc-list li+li::before{
-    content:"/";
-    margin:0 .25rem;
-    font-size:inherit !important;
+    content:"/"; margin:0 .25rem; font-size:inherit !important;
   }
-
-  /* Optional: slightly smaller shift on mobile */
-  @media (max-width: 991px){
-    .ld-breadcrumb{ margin-top:-24px; }
-  }
+  @media (max-width: 991px){ .ld-breadcrumb{ margin-top:-24px; } }
 
   /* Hero – compact top spacing */
   .ld-hero{
@@ -605,6 +594,12 @@
     .ld-actions{ flex-wrap:wrap; }
     .ld-proj-media{ height:200px; }
     .seg-btn{ font-size:.88rem; }
+  }
+
+  /* === OVERRIDE: Unify header backgrounds === */
+  .ld-breadcrumb,
+  .ld-hero{
+    background:#f8f9f9 !important;
   }
 </style>
 
