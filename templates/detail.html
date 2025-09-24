@@ -3,6 +3,10 @@
 
 {% block content %}
 
+{# ---- one source of truth for the video url (for gallery thumb) ---- #}
+{% set yt_fallback = 'https://www.youtube.com/watch?v=fTvPYdKZqO0' %}
+{% set yt_url = (item.video_url if item is defined and item.video_url is defined and item.video_url else yt_fallback) %}
+
 <!-- ===================== BREADCRUMB ===================== -->
 <nav class="ld-breadcrumb">
   <div class="container">
@@ -64,22 +68,26 @@
 
         <!-- Cover (always cover.png) -->
         <div class="card rounded-4 overflow-hidden ld-card mb-3">
-          <div class="ratio ratio-16x9 ld-main-img-wrap">
+          <div class="ratio ratio-16x9 ld-main-img-wrap" id="ldMainWrap" data-yt="{{ yt_url }}">
             <img id="ldMain" src="{{ url_for('static', filename='covers/cover.png') }}" class="ld-main-img object-fit-cover" alt="cover {{ item.title }}">
             <div class="sport-pill"><i class="bi {{ sport_icon }}"></i> {{ item.sport }}</div>
             <div class="ld-grad"></div>
           </div>
         </div>
 
-        <!-- Thumbnails: 4× cover.png -->
+        <!-- Thumbnails: 1) cover  2) video tile  3–4) cover -->
         <div class="card rounded-4 ld-card p-2 mb-4">
           <div class="ld-thumbs-row">
             <button class="ld-thumb is-active" data-src="{{ url_for('static', filename='covers/cover.png') }}">
               <img src="{{ url_for('static', filename='covers/cover.png') }}" alt="thumb">
             </button>
-            <button class="ld-thumb" data-src="{{ url_for('static', filename='covers/cover.png') }}">
-              <img src="{{ url_for('static', filename='covers/cover.png') }}" alt="thumb">
+
+            <!-- video thumb; JS swaps thumbnail to YT preview -->
+            <button class="ld-thumb ld-thumb-video" data-video="{{ yt_url }}">
+              <img src="{{ url_for('static', filename='covers/cover.png') }}" alt="video thumb">
+              <span class="yt-badge"><i class="bi bi-play-fill"></i></span>
             </button>
+
             <button class="ld-thumb" data-src="{{ url_for('static', filename='covers/cover.png') }}">
               <img src="{{ url_for('static', filename='covers/cover.png') }}" alt="thumb">
             </button>
@@ -89,12 +97,59 @@
           </div>
         </div>
 
-        <!-- PREHĽAD (3 vety) -->
+        <!-- PREHĽAD -->
         <div id="overview" class="card rounded-4 p-3 p-md-4 ld-card mb-4">
           <h2 class="h5 mb-2">Prehľad</h2>
-          <p class="text-secondary mb-0">
+          <p class="ld-overview-text text-secondary mb-0">
             {{ item.title }} je regionálny klub so silnou komunitou a aktívnou mládežou. Pôsobí v lokalite {{ item.location }} a venuje sa športu {{ item.sport }} s dôrazom na dlhodobý rozvoj hráčov aj fanúšikov. Pre partnerov prináša transparentnú spoluprácu, kvalitný obsah a merateľný lokálny dosah.
+            <a href="#more-stats" class="link-plain">Zobraziť štatistiky</a>
           </p>
+
+          <!-- Významné úspechy -->
+          <div class="mt-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <h3 class="h6 mb-0">Významné úspechy</h3>
+            <button id="achToggle" class="btn btn-ghost btn-slim ach-more-btn">Zobraziť viac</button>
+          </div>
+          <div id="achList" class="mt-2">
+            <div class="row g-2">
+              <div class="col-md-6">
+                <div class="ach-pill">
+                  <img class="ach-logo" src="{{ url_for('static', filename='achievements/logo1.png') }}" alt="logo">
+                  Majster 1. ligy – 2021/22
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="ach-pill">
+                  <img class="ach-logo" src="{{ url_for('static', filename='achievements/logo2.png') }}" alt="logo">
+                  Postup do extraligy – 2022/23
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="ach-pill">
+                  <img class="ach-logo" src="{{ url_for('static', filename='achievements/logo1.png') }}" alt="logo">
+                  Víťaz Memoriál J. Mráza – 2023
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="ach-pill">
+                  <img class="ach-logo" src="{{ url_for('static', filename='achievements/logo2.png') }}" alt="logo">
+                  Top 8 Slovenský pohár – 2024
+                </div>
+              </div>
+              <div class="col-md-6 extra-ach d-none">
+                <div class="ach-pill">
+                  <img class="ach-logo" src="{{ url_for('static', filename='achievements/logo1.png') }}" alt="logo">
+                  Najlepší mládežnícky program – 2024
+                </div>
+              </div>
+              <div class="col-md-6 extra-ach d-none">
+                <div class="ach-pill">
+                  <img class="ach-logo" src="{{ url_for('static', filename='achievements/logo2.png') }}" alt="logo">
+                  Rekordná sezóna ER – 3.9%
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- ========== SEZÓNA ========== -->
@@ -138,9 +193,6 @@
                           data-cover="{{ url_for('static', filename='covers/cover.png') }}">
                     <i class="bi bi-plus-circle"></i> Pridať do portfólia
                   </button>
-                  <button class="btn btn-ghost btn-compact" data-cta="barter" data-label="{{ item.title }} – {{ p.name }}">
-                    Barter
-                  </button>
                 </div>
               </div>
             </div>
@@ -149,70 +201,6 @@
               <div class="text-secondary small">Zatiaľ bez definovaných balíkov – vyžiadaj ponuku na mieru.</div>
             </div>
             {% endfor %}
-          </div>
-        </div>
-
-        <!-- ========== EVENTY ========== -->
-        <div id="events" class="card rounded-4 p-3 p-md-4 ld-card mb-4">
-          <div class="d-flex align-items-center justify-content-between">
-            <h2 class="h5 mb-0">Najbližšie eventy</h2>
-            <a href="#calendar" class="btn btn-ghost btn-slim"><i class="bi bi-calendar-event"></i> Kalendár</a>
-          </div>
-
-          <div class="ld-timeline mt-3">
-            {% for u in item.upcoming|default([]) %}
-            {% set ds = u.date or '' %}
-            {% set dday = ds[8:10] %}
-            {% set dmon = ds[5:7] %}
-            <div class="ld-tl-row">
-              <div class="ld-datepill">
-                <div class="ld-day">{{ dday }}</div>
-                <div class="ld-month">{{ dmon }}</div>
-              </div>
-              <div class="ld-tl-card flex-grow-1">
-                <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-                  <div class="me-2">
-                    <div class="fw-semibold">{{ u.title }}</div>
-                    <div class="text-secondary small"><i class="bi bi-calendar-event"></i> {{ u.date }} • {{ u.type }}</div>
-                  </div>
-
-                  <!-- One-line actions -->
-                  <div class="ld-actions">
-                    <div class="input-group ld-eur">
-                      <span class="input-group-text">€</span>
-                      <input type="number" class="form-control" placeholder="Suma" min="100" step="50" value="{{ u.suggest|default('') }}">
-                    </div>
-                    <button class="btn btn-outline-brand btn-compact"
-                            data-cta="add"
-                            data-kind="{{ kind }}"
-                            data-slug="{{ item.slug }}"
-                            data-label="{{ item.title }} – {{ u.title }}"
-                            data-price=""
-                            data-cover="{{ url_for('static', filename='covers/cover.png') }}">
-                      <i class="bi bi-plus-circle"></i> Pridať do portfólia
-                    </button>
-                    <button class="btn btn-ghost btn-compact" data-cta="barter" data-label="{{ item.title }} – {{ u.title }}">Barter</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {% else %}
-            <div class="text-secondary small">Zatiaľ bez zverejnených termínov.</div>
-            {% endfor %}
-          </div>
-
-          <!-- Mini kalendár -->
-          <div id="calendar" class="ld-cal mt-3"
-               data-events='{{ item.upcoming|default([])|tojson }}'>
-            <div class="ld-cal-head">
-              <button class="cal-nav" data-dir="-1"><i class="bi bi-chevron-left"></i></button>
-              <div class="ld-cal-title">Kalendár</div>
-              <button class="cal-nav" data-dir="1"><i class="bi bi-chevron-right"></i></button>
-            </div>
-            <div class="ld-cal-grid">
-              <div class="wday">Po</div><div class="wday">Ut</div><div class="wday">St</div><div class="wday">Št</div><div class="wday">Pi</div><div class="wday">So</div><div class="wday">Ne</div>
-              <!-- days injected by JS -->
-            </div>
           </div>
         </div>
 
@@ -252,7 +240,6 @@
                             data-cover="{{ url_for('static', filename='covers/cover.png') }}">
                       <i class="bi bi-plus-circle"></i> Pridať do portfólia
                     </button>
-                    <button class="btn btn-ghost btn-compact" data-cta="barter" data-label="{{ item.title }} – projekt: {{ p.title }}">Barter</button>
                   </div>
                 </div>
               </div>
@@ -267,7 +254,13 @@
                   <div class="d-flex align-items-start justify-content-between gap-2">
                     <div>
                       <div class="ld-proj-title">Nové dresy – mládež U15</div>
-                      <div class="text-secondary small mb-2">Kompletná sada domácich/hosťujúcich dresov pre mládežnícke tímy vrátane trenérok. Branding na rukáve a social vďaka.</div>
+                      <div class="text-secondary small mb-2">
+                        Kompletná sada domácich/hostujúcich dresov pre mládežnícke tímy vrátane trenérok. Branding na rukáve a social vďaka.
+                      </div>
+                      <div class="d-flex flex-wrap gap-2 mb-2">
+                        <span class="sp-tag small">Logo na drese</span>
+                        <span class="sp-tag small">Logo na sociálnych sieťach</span>
+                      </div>
                     </div>
                     <div class="ld-price">€2 500</div>
                   </div>
@@ -281,7 +274,6 @@
                             data-cover="{{ url_for('static', filename='covers/cover.png') }}">
                       <i class="bi bi-plus-circle"></i> Pridať do portfólia
                     </button>
-                    <button class="btn btn-ghost btn-compact" data-cta="barter" data-label="{{ item.title }} – projekt: Nové dresy U15 }}">Barter</button>
                   </div>
                 </div>
               </div>
@@ -290,7 +282,105 @@
           </div>
         </div>
 
-        <!-- ========== EXTRA: Ďalšie dôležité štatistiky (NEW) ========== -->
+        <!-- ========== EVENTY ========== -->
+        <div id="events" class="card rounded-4 p-3 p-md-4 ld-card mb-4">
+          <div class="d-flex align-items-center justify-content-between">
+            <h2 class="h5 mb-0">Najbližšie eventy</h2>
+            <a href="#calendar" class="btn btn-ghost btn-slim"><i class="bi bi-calendar-event"></i> Kalendár</a>
+          </div>
+
+          <div class="ld-timeline mt-3">
+            {% for u in item.upcoming|default([]) %}
+            {% set ds = u.date or '' %}
+            {% set dday = ds[8:10] %}
+            {% set dmon = ds[5:7] %}
+            <div class="ld-tl-row">
+              <div class="ld-datepill">
+                <div class="ld-day">{{ dday }}</div>
+                <div class="ld-month">{{ dmon }}</div>
+              </div>
+              <div class="ld-tl-card flex-grow-1">
+                <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                  <div class="me-2">
+                    <div class="fw-semibold">{{ u.title }}</div>
+                    <div class="text-secondary small"><i class="bi bi-calendar-event"></i> {{ u.date }} • {{ u.type }}</div>
+                  </div>
+
+                  <!-- One-line action (ONLY portfolio) -->
+                  <div class="ld-actions">
+                    <button class="btn btn-outline-brand btn-compact"
+                            data-cta="add"
+                            data-kind="{{ kind }}"
+                            data-slug="{{ item.slug }}"
+                            data-label="{{ item.title }} – {{ u.title }}"
+                            data-price=""
+                            data-cover="{{ url_for('static', filename='covers/cover.png') }}">
+                      <i class="bi bi-plus-circle"></i> Pridať do portfólia
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% else %}
+            <div class="text-secondary small">Zatiaľ bez zverejnených termínov.</div>
+            {% endfor %}
+          </div>
+
+          <!-- Najvýznamnejšie eventy sezóny -->
+          {% set key_events = item.key_events|default([
+            {'date':'2025-11-20','title':'Derby zápas vs. Spartak','type':'Zápas'},
+            {'date':'2026-01-05','title':'Zápas pod holým nebom','type':'Špeciálny event'}
+          ]) %}
+          <h3 class="h6 mt-4 mb-2">Najvýznamnejšie eventy sezóny</h3>
+          <div class="ld-timeline">
+            {% for u in key_events %}
+            {% set ds = u.date or '' %}
+            {% set dday = ds[8:10] %}
+            {% set dmon = ds[5:7] %}
+            <div class="ld-tl-row">
+              <div class="ld-datepill">
+                <div class="ld-day">{{ dday }}</div>
+                <div class="ld-month">{{ dmon }}</div>
+              </div>
+              <div class="ld-tl-card flex-grow-1">
+                <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                  <div class="me-2">
+                    <div class="fw-semibold">{{ u.title }} <span class="ld-key-tag">TOP</span></div>
+                    <div class="text-secondary small"><i class="bi bi-calendar-event"></i> {{ u.date }} • {{ u.type }}</div>
+                  </div>
+                  <div class="ld-actions">
+                    <button class="btn btn-outline-brand btn-compact"
+                            data-cta="add"
+                            data-kind="{{ kind }}"
+                            data-slug="{{ item.slug }}"
+                            data-label="{{ item.title }} – {{ u.title }}"
+                            data-price=""
+                            data-cover="{{ url_for('static', filename='covers/cover.png') }}">
+                      <i class="bi bi-plus-circle"></i> Pridať do portfólia
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+
+          <!-- Mini kalendár -->
+          <div id="calendar" class="ld-cal mt-3"
+               data-events='{{ (item.upcoming|default([]) + key_events)|tojson }}'>
+            <div class="ld-cal-head">
+              <button class="cal-nav" data-dir="-1"><i class="bi bi-chevron-left"></i></button>
+              <div class="ld-cal-title">Kalendár</div>
+              <button class="cal-nav" data-dir="1"><i class="bi bi-chevron-right"></i></button>
+            </div>
+            <div class="ld-cal-grid">
+              <div class="wday">Po</div><div class="wday">Ut</div><div class="wday">St</div><div class="wday">Št</div><div class="wday">Pi</div><div class="wday">So</div><div class="wday">Ne</div>
+              <!-- days injected by JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- ========== EXTRA: Ďalšie dôležité štatistiky ========== -->
         <div id="more-stats" class="card rounded-4 p-3 p-md-4 ld-card mb-4">
           <h2 class="h5 mb-3">Ďalšie dôležité štatistiky</h2>
           <div class="ld-statgrid">
@@ -309,7 +399,7 @@
           </div>
         </div>
 
-        <!-- ========== PUBLIKUM (NEW, at the very bottom) ========== -->
+        <!-- ========== PUBLIKUM ========== -->
         <div id="audience" class="card rounded-4 p-3 p-md-4 ld-card mb-4">
           <h2 class="h5 mb-3">Publikum</h2>
           <div class="row g-3 align-items-start">
@@ -338,7 +428,6 @@
             </div>
           </div>
         </div>
-        <!-- ========== /PUBLIKUM ========== -->
 
       </div>
 
@@ -377,7 +466,7 @@
           <div class="d-grid gap-2">
             <a class="btn btn-outline-brand btn-compact" data-scroll="#season"><i class="bi bi-collection"></i> Sezónne balíčky</a>
             <a class="btn btn-ghost btn-compact" data-scroll="#events"><i class="bi bi-calendar-event"></i> Eventy & kalendár</a>
-            <a class="btn btn-ghost btn-compact" data-scroll="#projects"><i class="bi bi-hammer"></i> Projekty klubu</a>
+            <a class="btn btn-ghost btn-compact" data-scroll="#projects"><i class="bi bi-tools"></i> Projekty klubu</a>
           </div>
 
           <div class="mt-3 small">
@@ -394,6 +483,31 @@
   </div>
 </section>
 
+<!-- ========= EVENT MODAL (light & modern) ========= -->
+<div id="calModal" class="sp-modal" aria-hidden="true">
+  <div class="sp-modal__backdrop"></div>
+  <div class="sp-modal__card" role="dialog" aria-modal="true" aria-labelledby="calTitle">
+    <button class="sp-modal__close" aria-label="Zavrieť">&times;</button>
+    <div class="sp-modal__content">
+      <div id="calTitle" class="spm-title"></div>
+      <div class="spm-date"><i class="bi bi-calendar-event"></i> <span id="calDate"></span></div>
+      <div id="calType" class="spm-tag"></div>
+      <div class="ld-actions mt-2">
+        <button id="calAddBtn"
+                class="btn btn-outline-brand btn-compact"
+                data-cta="add"
+                data-kind="{{ kind }}"
+                data-slug="{{ item.slug }}"
+                data-label=""
+                data-price=""
+                data-cover="{{ url_for('static', filename='covers/cover.png') }}">
+          <i class="bi bi-plus-circle"></i> Pridať do portfólia
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ===================== PAGE-LOCAL CSS ===================== -->
 <style>
   /* Breadcrumb base */
@@ -403,42 +517,30 @@
   .bc-list li a{ color:#374151; text-decoration:none; }
   .bc-list li+li::before{ content:"/"; margin:0 .5rem; color:#9aa3b2; }
 
-  /* Remove margins to avoid hairline gaps; use padding instead */
-  .ld-breadcrumb{
-    border-bottom:none;
-    margin:0;                /* <- no margins, no collapsed lines */
-    padding:10px 0 14px;     /* visual breathing without gaps */
-  }
-
-  /* Force size */
+  .ld-breadcrumb{ border-bottom:none; margin:0; padding:10px 0 14px; }
+  .ld-breadcrumb{ margin-top: -72px !important; }
   .ld-breadcrumb .bc-list{ font-size:14px !important; line-height:1 !important; }
   .ld-breadcrumb .bc-list li,
   .ld-breadcrumb .bc-list li a{ font-size:inherit !important; }
   .ld-breadcrumb .bc-list li+li::before{ content:"/"; margin:0 .25rem; font-size:inherit !important; }
+  @media (max-width: 991px){ .ld-breadcrumb{ padding:8px 0 12px; } }
 
-  @media (max-width: 991px){
-    .ld-breadcrumb{ padding:8px 0 12px; }
-  }
-
-  /* Hero – compact top spacing */
+  /* Hero */
   .ld-hero{
     padding:.4rem 0 .5rem;
     background:
       radial-gradient(1200px 600px at 20% -10%, rgba(119,75,251,.06), transparent 65%),
       #f8f9f9 !important;
     border-bottom:1px solid var(--border);
-    margin:0; /* ensure no margins that could create lines */
+    margin:0;
   }
   .ld-title{ font-weight:700; letter-spacing:-.01em; color:#0e1116; font-size:clamp(22px,2.5vw,34px); }
   .ld-avatar{ width:56px; height:56px; border-radius:50%; border:1px solid var(--border); object-fit:cover; }
   .sp-verified{ color:var(--brand-2); }
 
-  /* Segmented / Socials */
+  /* Social buttons */
   .ld-seg{ gap:6px; }
-  .seg-btn{
-    padding:.36rem .75rem; border-radius:999px; border:1px solid #e6ddff; background:#fff;
-    color:#3b2a85; font-weight:600; cursor:pointer; white-space:nowrap; font-size:.92rem;
-  }
+  .seg-btn{ padding:.36rem .75rem; border-radius:999px; border:1px solid #e6ddff; background:#fff; color:#3b2a85; font-weight:600; cursor:pointer; white-space:nowrap; font-size:.92rem; }
   .seg-btn:hover{ background:#f6f8fb; }
   .seg-btn i{ font-size:1.05rem; }
 
@@ -446,102 +548,83 @@
   .ld-card{ border:1px solid var(--border); box-shadow:0 8px 18px rgba(10,20,30,.04); }
 
   /* Cover */
-  .ld-main-img-wrap{ border-bottom:1px solid var(--border); }
-  .ld-main-img{ width:100%; height:100%; object-fit:cover; }
+  .ld-main-img-wrap{ border-bottom:1px solid var(--border); position:relative; }
+  .ld-main-img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .ld-video{ position:absolute; inset:0; width:100%; height:100%; border:0; display:none; }
   .ld-grad{ position:absolute; inset:0; pointer-events:none; background:linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(0,0,0,.04) 100%); }
-  .sport-pill{
-    position:absolute; top:12px; right:12px; z-index:2;
-    display:inline-flex; align-items:center; gap:.4rem;
-    padding:.32rem .6rem; border-radius:999px; font-size:.82rem; font-weight:600;
-    background:linear-gradient(135deg, rgba(119,75,251,.18), rgba(119,75,251,.08)), rgba(255,255,255,.92);
-    border:1px solid #e6ddff; color:#3b2a85;
-    box-shadow:0 10px 22px rgba(0,0,0,.08), 0 2px 0 rgba(119,75,251,.06) inset;
-    backdrop-filter:saturate(120%) blur(2px);
-  }
+  .sport-pill{ position:absolute; top:12px; right:12px; z-index:2; display:inline-flex; align-items:center; gap:.4rem; padding:.32rem .6rem; border-radius:999px; font-size:.82rem; font-weight:600; background:linear-gradient(135deg, rgba(119,75,251,.18), rgba(119,75,251,.08)), rgba(255,255,255,.92); border:1px solid #e6ddff; color:#3b2a85; box-shadow:0 10px 22px rgba(0,0,0,.08), 0 2px 0 rgba(119,75,251,.06) inset; backdrop-filter:saturate(120%) blur(2px); }
   .sport-pill i{ color:#6e59f8; }
 
   /* Thumbs */
   .ld-thumbs-row{ display:flex; gap:12px; overflow:auto; padding:6px; }
-  .ld-thumb{
-    border:1px solid var(--border); background:#fff; border-radius:14px; overflow:hidden;
-    width:220px; height:120px; flex:0 0 auto; padding:0; cursor:pointer;
-    transition:border-color .15s ease, transform .15s ease;
-  }
+  .ld-thumb{ border:1px solid var(--border); background:#fff; border-radius:14px; overflow:hidden; width:220px; height:120px; flex:0 0 auto; padding:0; cursor:pointer; transition:border-color .15s ease, transform .15s ease; position:relative; }
   .ld-thumb:hover{ transform:translateY(-2px); }
   .ld-thumb.is-active{ border-color:#d7ceff; box-shadow:0 8px 18px rgba(119,75,251,.12); }
   .ld-thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .ld-thumb-video .yt-badge{ position:absolute; left:10px; bottom:10px; width:34px; height:34px; border-radius:999px; display:grid; place-items:center; background:rgba(255,255,255,.9); border:1px solid #e6ddff; }
+  .ld-thumb-video .yt-badge i{ font-size:20px; color:#6b5afc; }
+
+  /* Overview text smaller + link tweak */
+  .ld-overview-text{ font-size:clamp(13px, .92rem, 15px); line-height:1.6; }
+  .ld-overview-text .link-plain{ text-decoration:underline; color:inherit; font-weight:500; font-size:.92em; }
+
+  /* Achievements pills + logo */
+  .ach-pill{ border:1px solid var(--border); background:#fff; border-radius:14px; padding:.55rem .8rem; display:flex; align-items:center; gap:.55rem; font-weight:400; font-size:.95rem; }
+  .ach-logo{ width:22px; height:22px; object-fit:contain; }
+
+  .ach-more-btn{ font-size:.78rem; padding:.22rem .5rem; font-weight:400; }
 
   /* Chips & stats */
-  .sp-tag{
-    display:inline-flex; align-items:center; gap:.35rem;
-    padding:.32rem .56rem; border:1px dashed var(--border);
-    border-radius:999px; background:#fff; color:#0e1116; font-size:.8rem;
-  }
-  .sp-stat-chip{
-    display:inline-flex; align-items:center; gap:.35rem;
-    padding:.32rem .5rem; border:1px solid var(--border); border-radius:999px;
-    background:#fff; font-size:.8rem; color:#0e1116; white-space:nowrap;
-  }
+  .sp-tag{ display:inline-flex; align-items:center; gap:.35rem; padding:.32rem .56rem; border:1px dashed var(--border); border-radius:999px; background:#fff; color:#0e1116; font-size:.8rem; }
+  .sp-stat-chip{ display:inline-flex; align-items:center; gap:.35rem; padding:.32rem .5rem; border:1px solid var(--border); border-radius:999px; background:#fff; font-size:.8rem; color:#0e1116; white-space:nowrap; }
   .sp-stat-chip i{ color:#6b5afc; }
 
-  /* Buttons – compact one-line */
-  .btn-outline-brand{
-    background:#fff; color:#3b2a85; border:1px solid #e6ddff; font-weight:600; border-radius:999px;
-  }
+  /* Buttons */
+  .btn-outline-brand{ background:#fff; color:#3b2a85; border:1px solid #e6ddff; font-weight:600; border-radius:999px; }
   .btn-outline-brand:hover{ background:#f6f0ff; }
   .btn-ghost{ background:#fff; color:#0e1116; border:1px solid var(--border); border-radius:999px; }
   .btn-ghost:hover{ background:#f6f8fb; }
   .btn-slim{ padding:.3rem .6rem; border-radius:999px; font-size:.9rem; }
   .btn-compact{ padding:.36rem .6rem; font-size:.9rem; white-space:nowrap; }
+  .btn-added{ background:#2d226c !important; color:#fff !important; border-color:#2d226c !important; }
+  .btn-added i{ color:#fff !important; }
 
   /* One-line action container */
   .ld-actions{ display:flex; align-items:center; gap:8px; flex-wrap:nowrap; }
-  .ld-actions .input-group{ width:140px; min-width:140px; }
 
   /* Inventory + packages */
   .ld-inv-grid{ display:flex; flex-wrap:wrap; gap:8px; }
   .inv-chip{ display:inline-flex; align-items:center; gap:.4rem; padding:.32rem .56rem; border:1px solid var(--border); border-radius:999px; background:#fff; font-size:.86rem; color:#0e1116; }
   .inv-chip i{ color:#6b5afc; }
 
-  .ld-pack{
-    border:1px solid var(--border); border-radius:16px; background:#fff; padding:14px;
-    box-shadow:0 10px 22px rgba(10,20,30,.04);
-  }
+  .ld-pack{ border:1px solid var(--border); border-radius:16px; background:#fff; padding:14px; box-shadow:0 10px 22px rgba(10,20,30,.04); }
   .ld-pack-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:.35rem; }
   .ld-pack-name{ font-weight:700; }
-  .ld-price{
-    display:inline-flex; align-items:center; padding:.24rem .55rem; border-radius:999px;
-    background:linear-gradient(135deg, rgba(119,75,251,.12), rgba(119,75,251,.06)), #fff;
-    border:1px solid #e6ddff; color:#3b2a85; font-weight:600; font-size:.9rem;
-  }
+  .ld-price{ display:inline-flex; align-items:center; padding:.24rem .55rem; border-radius:999px; background:linear-gradient(135deg, rgba(119,75,251,.12), rgba(119,75,251,.06)), #fff; border:1px solid #e6ddff; color:#3b2a85; font-weight:600; font-size:.9rem; white-space:nowrap; }
   .ld-pack-list{ margin:.25rem 0 0; padding-left:1rem; color:#4b5563; font-size:.94rem; }
 
   /* Timeline / events */
   .ld-timeline{ display:grid; gap:12px; }
   .ld-tl-row{ display:flex; gap:12px; align-items:stretch; }
   .ld-tl-card{ border:1px solid var(--border); border-radius:14px; background:#fff; padding:.7rem; box-shadow:0 8px 18px rgba(10,20,30,.04); }
-  .ld-datepill{
-    width:60px; border-radius:16px; background:#f8f7ff; border:1px solid #e6ddff; color:#3b2a85;
-    display:flex; flex-direction:column; align-items:center; justify-content:center; line-height:1; gap:4px;
-  }
+  .ld-datepill{ width:60px; border-radius:16px; background:#f8f7ff; border:1px solid #e6ddff; color:#3b2a85; display:flex; flex-direction:column; align-items:center; justify-content:center; line-height:1; gap:4px; }
   .ld-day{ font-size:24px; font-weight:800; }
   .ld-month{ font-size:13px; opacity:.85; }
-  .ld-eur .input-group-text{ background:#fff; border-right:0; }
-  .ld-eur .form-control{ border-left:0; padding:.36rem .5rem; }
+  .ld-key-tag{ font-size:.72rem; padding:.12rem .35rem; border-radius:999px; border:1px solid #e6ddff; color:#3b2a85; background:#f6f0ff; margin-left:.35rem; vertical-align:middle; }
 
-  /* Calendar */
+  /* Calendar with event titles */
   .ld-cal{ border:1px solid var(--border); border-radius:16px; background:#fff; overflow:hidden; }
   .ld-cal-head{ display:flex; align-items:center; justify-content:space-between; padding:.5rem .75rem; border-bottom:1px solid var(--border); }
   .ld-cal-title{ font-weight:700; }
   .cal-nav{ border:1px solid var(--border); background:#fff; border-radius:999px; width:32px; height:32px; display:grid; place-items:center; }
-  .ld-cal-grid{ display:grid; grid-template-columns:repeat(7,1fr); gap:2px; padding:.5rem; }
+  .ld-cal-grid{ display:grid; grid-template-columns:repeat(7,1fr); gap:6px; padding:.5rem; }
   .wday{ text-align:center; font-size:.8rem; color:#6b7280; padding:.2rem 0; }
-  .day{
-    aspect-ratio:1/1; border:1px solid var(--border); border-radius:10px; background:#fff;
-    display:flex; align-items:flex-start; justify-content:flex-end; padding:.25rem; position:relative; font-size:.9rem;
-  }
+  .day{ border:1px solid var(--border); border-radius:10px; background:#fff; padding:.4rem .45rem .45rem; min-height:86px; position:relative; display:flex; flex-direction:column; gap:4px; }
   .day.muted{ color:#9aa3b2; background:#fafbff; }
-  .dot{ position:absolute; left:8px; bottom:8px; width:6px; height:6px; border-radius:50%; background:#7a63ff; }
+  .day-num{ position:absolute; top:6px; right:8px; font-size:.8rem; color:#6b7280; z-index:2; background:#fff; padding:0 2px; border-radius:4px; }
+  .evt{ font-size:.72rem; line-height:1.2; background:#f6f0ff; border:1px solid #e6ddff; border-radius:8px; padding:.12rem .3rem; color:#3b2a85; overflow:hidden; text-overflow:ellipsis; white-space:normal; max-width:100%; cursor:pointer; }
+  .day .evt:first-of-type{ margin-top:18px; }
+  .day .evt + .evt{ margin-top:4px; }
 
   /* Project */
   .ld-proj{ border:1px solid var(--border); border-radius:18px; background:#fff; overflow:hidden; box-shadow:0 10px 22px rgba(10,20,30,.04); }
@@ -551,33 +634,20 @@
   .ld-proj-title{ font-weight:700; margin-bottom:.1rem; }
 
   /* Extra stats */
-  .ld-statgrid{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:10px;
-  }
+  .ld-statgrid{ display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
   @media (min-width: 768px){ .ld-statgrid{ grid-template-columns:repeat(3,1fr);} }
-  .stat{
-    border:1px solid var(--border); border-radius:14px; background:#fff; padding:.8rem .9rem;
-    display:flex; align-items:center; justify-content:space-between;
-  }
+  .stat{ border:1px solid var(--border); border-radius:14px; background:#fff; padding:.8rem .9rem; display:flex; align-items:center; justify-content:space-between; }
   .stat .label{ color:#6b7280; font-size:.9rem; }
   .stat .val{ font-weight:700; }
 
-  /* Audience (new) */
+  /* Audience */
   .ld-aud-box{ border:1px solid var(--border); border-radius:16px; background:#fff; padding:.9rem; }
-  .aud-chip{
-    display:inline-flex; align-items:center; gap:.35rem;
-    padding:.36rem .7rem; border:1px solid var(--border); border-radius:999px; font-weight:700;
-    background:#fff; color:#111827; font-size:.95rem;
-  }
+  .aud-chip{ display:inline-flex; align-items:center; gap:.35rem; padding:.36rem .7rem; border:1px solid var(--border); border-radius:999px; font-weight:700; background:#fff; color:#111827; font-size:.95rem; }
   .aud-chip i{ opacity:.9; }
   .ld-age-row{ display:flex; align-items:center; gap:12px; margin:.4rem 0; }
   .ld-age-label{ width:72px; color:#4b5563; font-weight:600; }
   .ld-age-bar{ flex:1; height:16px; background:#eff2f6; border-radius:999px; overflow:hidden; position:relative; }
-  .ld-age-fill{
-    height:100%; background:linear-gradient(90deg,#bca8ff,#7a63ff); border-radius:999px; position:relative; display:flex; align-items:center; justify-content:flex-end;
-  }
+  .ld-age-fill{ height:100%; background:linear-gradient(90deg,#bca8ff,#7a63ff); border-radius:999px; position:relative; display:flex; align-items:center; justify-content:flex-end; }
   .ld-age-fill span{ color:#fff; font-size:.8rem; padding-right:6px; font-weight:700; text-shadow:0 1px 0 rgba(0,0,0,.15); }
 
   /* Sidebar */
@@ -587,6 +657,43 @@
   .ld-mini-metrics{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
   .ld-mm{ border:1px solid var(--border); background:#fff; border-radius:12px; padding:.6rem .7rem; text-align:center; }
 
+  /* Toast confirmation — dark, modern */
+  .sp-toast{
+    position:fixed; right:18px; bottom:18px;
+    background:rgba(16,18,27,.9);
+    border:1px solid rgba(119,75,251,.35);
+    color:#eef;
+    border-radius:16px; padding:.9rem 1rem;
+    box-shadow:0 18px 40px rgba(0,0,0,.35), 0 0 0 1px rgba(255,255,255,.04) inset;
+    display:flex; align-items:center; gap:.85rem; z-index:9999;
+    opacity:0; transform:translateY(10px); transition:opacity .2s ease, transform .2s ease;
+    max-width:92vw; width:min(420px,92vw);
+    backdrop-filter:saturate(120%) blur(8px);
+  }
+  .sp-toast.show{ opacity:1; transform:translateY(0); }
+  .sp-toast img{ width:44px; height:44px; object-fit:cover; border-radius:12px; border:1px solid rgba(119,75,251,.35); }
+  .sp-toast .t-hed{ font-size:.78rem; letter-spacing:.02em; color:#bdb7ff; margin-bottom:.1rem; }
+  .sp-toast .t-title{ font-weight:800; line-height:1.15; color:#fff; }
+  .sp-toast .t-price{ font-weight:800; color:#e9e6ff; }
+  .sp-toast .t-link{ margin-top:.35rem; display:inline-block; text-decoration:underline; color:#cfcaff; }
+  .sp-toast .t-close{ margin-left:auto; background:transparent; border:0; color:#d8d5ff; font-size:20px; line-height:1; cursor:pointer; }
+
+  /* Event modal — LIGHT minimalist */
+  .sp-modal{ position:fixed; inset:0; display:none; z-index:9998; }
+  .sp-modal.is-open{ display:block; }
+  .sp-modal__backdrop{ position:absolute; inset:0; background:rgba(9,11,17,.45); backdrop-filter:blur(4px); }
+  .sp-modal__card{
+    position:relative; max-width:600px; width:calc(100% - 28px);
+    margin:6vh auto; background:#ffffff; color:#0e1116;
+    border:1px solid #e6ddff; border-radius:18px;
+    box-shadow:0 24px 60px rgba(18,20,28,.25);
+  }
+  .sp-modal__close{ position:absolute; top:10px; right:12px; background:transparent; border:0; color:#111; font-size:26px; line-height:1; cursor:pointer; }
+  .sp-modal__content{ padding:18px 18px 20px; }
+  .spm-title{ font-size:1.25rem; font-weight:800; color:#0e1116; }
+  .spm-date{ margin-top:.55rem; color:#374151; font-weight:600; }
+  .spm-tag{ margin-top:.45rem; display:inline-flex; padding:.24rem .55rem; border-radius:999px; border:1px solid #e6ddff; background:#f6f0ff; color:#3b2a85; font-size:.85rem; }
+
   /* Responsive tweaks */
   @media (max-width: 991px){
     .ld-actions{ flex-wrap:wrap; }
@@ -594,9 +701,7 @@
     .seg-btn{ font-size:.88rem; }
   }
 
-  /* Header gradient for breadcrumb + hero (kept) */
-  .ld-breadcrumb,
-  .ld-hero{
+  .ld-breadcrumb, .ld-hero{
     background:
       radial-gradient(900px 450px at 8% -20%, rgba(119,75,251,.06), transparent 65%),
       #f8f9f9 !important;
@@ -620,17 +725,69 @@
     });
   });
 
-  // Gallery thumbs -> swap main image
+  // Gallery thumbs -> swap main image or play video
   (function(){
-    const main = document.getElementById('ldMain');
-    if(!main) return;
+    const wrap = document.getElementById('ldMainWrap');
+    if(!wrap) return;
+    const img = document.getElementById('ldMain');
+
+    // create iframe placeholder (hidden by default)
+    let iframe = document.createElement('iframe');
+    iframe.className = 'ld-video';
+    iframe.setAttribute('allow','accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+    iframe.setAttribute('allowfullscreen','');
+    wrap.appendChild(iframe);
+
+    const ytUrl = wrap.getAttribute('data-yt') || '';
+    const ytId = (function(u){
+      if(!u) return '';
+      try{
+        const url = new URL(u);
+        if(url.hostname.includes('youtu.be')) return url.pathname.replace('/','');
+        if(url.searchParams.get('v')) return url.searchParams.get('v');
+        const parts = url.pathname.split('/'); // /embed/ID or /v/ID
+        return parts[parts.length-1] || '';
+      }catch(e){ return ''; }
+    })(ytUrl);
+
+    // if second thumb exists, set its thumbnail from YT
+    const videoThumb = document.querySelector('.ld-thumb-video');
+    if(videoThumb && ytId){
+      const imgEl = videoThumb.querySelector('img');
+      if(imgEl) imgEl.src = `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
+      videoThumb.dataset.video = ytUrl;
+    }
+
+    function showImage(src){
+      iframe.style.display = 'none';
+      iframe.src = '';
+      img.style.display = 'block';
+      if(src) img.src = src;
+    }
+    function showVideo(){
+      if(!ytId) return;
+      img.style.display = 'none';
+      iframe.src = `https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0`;
+      iframe.style.display = 'block';
+    }
+
+    // thumbs click
     document.querySelectorAll('.ld-thumb').forEach(btn=>{
       btn.addEventListener('click', ()=>{
-        const src = btn.getAttribute('data-src');
-        if(src){ main.src = src; }
         document.querySelectorAll('.ld-thumb').forEach(b=>b.classList.remove('is-active'));
         btn.classList.add('is-active');
+        if(btn.hasAttribute('data-video')){ showVideo(); } else { showImage(btn.getAttribute('data-src')); }
       });
+    });
+  })();
+
+  // Achievements toggle
+  (function(){
+    const btn = document.getElementById('achToggle');
+    if(!btn) return;
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.extra-ach').forEach(n=>n.classList.toggle('d-none'));
+      btn.textContent = /viac/i.test(btn.textContent) ? 'Skryť' : 'Zobraziť viac';
     });
   })();
 
@@ -647,29 +804,104 @@
     const exists = list.some(x=>x.kind===payload.kind && x.slug===payload.slug && x.label===payload.label);
     if(!exists){ list.push(payload); setPortfolio(list); }
   }
+
+  // Toast (dark + modern; includes logo/label/price; longer display)
+  const CLUB_LOGO_URL = "{{ url_for('static', filename=item.avatar) }}";
+  function showToast({label, price, logo, linkHref}){
+    const t = document.createElement('div');
+    t.className = 'sp-toast';
+    t.innerHTML = `
+      <img src="${logo||''}" alt="logo">
+      <div class="t-wrap">
+        <div class="t-hed">Pridané do portfólia</div>
+        <div class="t-title">${label||'Položka pridaná'}</div>
+        ${price ? `<div class="t-price">${price}</div>` : ''}
+        <a class="t-link" href="${linkHref||'/portfolio'}">Zobraziť portfólio</a>
+      </div>
+      <button class="t-close" aria-label="Zavrieť">×</button>
+    `;
+    document.body.appendChild(t);
+    const close = ()=>{ t.classList.remove('show'); t.addEventListener('transitionend', ()=> t.remove(), { once:true }); };
+    t.querySelector('.t-close').addEventListener('click', close);
+    requestAnimationFrame(()=> t.classList.add('show'));
+    setTimeout(close, 8000); // stays longer
+  }
+
+  // Add-to-portfolio buttons: darker state + toast
   document.querySelectorAll('[data-cta="add"]').forEach(btn=>{
     btn.addEventListener('click', ()=>{
-      const priceField = btn.parentElement?.querySelector('input[type="number"]');
       const payload = {
         kind: btn.dataset.kind,
         slug: btn.dataset.slug,
         label: btn.dataset.label,
-        price_from: Number(priceField?.value || (btn.dataset.price||'').toString().replace(/[^\d.]/g,'')) || 0,
+        price_from: Number((btn.dataset.price||'').toString().replace(/[^\d.]/g,'')) || 0,
         cover: btn.dataset.cover
       };
       addToPortfolio(payload);
       btn.innerHTML = '<i class="bi bi-check2-circle"></i> Pridané';
-      btn.classList.add('btn-success');
-      setTimeout(()=>{ btn.classList.remove('btn-success'); btn.innerHTML='<i class="bi bi-plus-circle"></i> Pridať do portfólia'; }, 1600);
-    });
-  });
-  document.querySelectorAll('[data-cta="barter"]').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      alert('Ďakujeme! Ozveme sa k barter možnostiam pre: ' + (btn.dataset.label||'projekt'));
+      btn.classList.remove('btn-outline-brand');
+      btn.classList.add('btn-added');
+
+      const priceText = (btn.dataset.price||'').trim();
+      showToast({
+        label: btn.dataset.label || 'Položka pridaná',
+        price: priceText,
+        logo: CLUB_LOGO_URL,
+        linkHref: '/portfolio'
+      });
     });
   });
 
-  // Mini calendar builder
+  // ===== Event modal helpers (light) =====
+  const calModal = document.getElementById('calModal');
+  const calTitle = document.getElementById('calTitle');
+  const calDate = document.getElementById('calDate');
+  const calType = document.getElementById('calType');
+  const calAddBtn = document.getElementById('calAddBtn');
+
+  function openEventModal(evData){
+    if(!calModal) return;
+    calTitle.textContent = evData.title || '';
+    calDate.textContent  = evData.date  || '';
+    calType.textContent  = evData.type  || '';
+    // prepare add button payload
+    calAddBtn.dataset.label = "{{ item.title }} – " + (evData.title || 'Event');
+    calAddBtn.dataset.price = "";
+    // reset button state
+    calAddBtn.classList.remove('btn-added');
+    calAddBtn.classList.add('btn-outline-brand');
+    calAddBtn.innerHTML = '<i class="bi bi-plus-circle"></i> Pridať do portfólia';
+    // one-time click handler for this event
+    calAddBtn.onclick = ()=>{
+      const payload = {
+        kind: calAddBtn.dataset.kind,
+        slug: calAddBtn.dataset.slug,
+        label: calAddBtn.dataset.label,
+        price_from: 0,
+        cover: calAddBtn.dataset.cover
+      };
+      addToPortfolio(payload);
+      calAddBtn.innerHTML = '<i class="bi bi-check2-circle"></i> Pridané';
+      calAddBtn.classList.remove('btn-outline-brand');
+      calAddBtn.classList.add('btn-added');
+      showToast({ label: calAddBtn.dataset.label, price: '', logo: CLUB_LOGO_URL, linkHref: '/portfolio' });
+    };
+
+    calModal.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeEventModal(){
+    if(!calModal) return;
+    calModal.classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+  if(calModal){
+    calModal.querySelector('.sp-modal__backdrop').addEventListener('click', closeEventModal);
+    calModal.querySelector('.sp-modal__close').addEventListener('click', closeEventModal);
+    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeEventModal(); });
+  }
+
+  // ===== Mini calendar builder (titles inside cells; clickable events) =====
   (function(){
     const root = document.getElementById('calendar');
     if(!root) return;
@@ -679,6 +911,25 @@
 
     let view = new Date();
     view.setDate(1);
+
+    function addDayCell(n, muted=false, evs=[]){
+      const d = document.createElement('div');
+      d.className = 'day' + (muted ? ' muted':'');
+      const num = document.createElement('span');
+      num.className = 'day-num';
+      num.textContent = n;
+      d.appendChild(num);
+      (evs||[]).slice(0,2).forEach(e=>{
+        const badge = document.createElement('div');
+        badge.className = 'evt';
+        badge.textContent = e.title || '';
+        badge.addEventListener('click', ()=>{
+          openEventModal({ title:e.title, date:e.date, type:e.type });
+        });
+        d.appendChild(badge);
+      });
+      grid.appendChild(d);
+    }
 
     function render(){
       grid.querySelectorAll('.day').forEach(d=>d.remove());
@@ -693,31 +944,17 @@
 
       for(let i=firstDayIdx-1;i>=0;i--){
         const n = prevDays - i;
-        const d = document.createElement('div');
-        d.className='day muted';
-        d.textContent = n;
-        grid.appendChild(d);
+        addDayCell(n, true, []);
       }
       for(let dnum=1; dnum<=daysInMonth; dnum++){
-        const d = document.createElement('div');
-        d.className='day';
-        d.textContent = dnum;
         const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(dnum).padStart(2,'0')}`;
-        if(events.some(e=>e.date===dateStr)){
-          const dot = document.createElement('span'); dot.className='dot'; d.appendChild(dot);
-          d.title = events.filter(e=>e.date===dateStr).map(e=>e.title).join(', ');
-        }
-        grid.appendChild(d);
+        const evs = events.filter(e=>e.date===dateStr);
+        addDayCell(dnum, false, evs);
       }
       const cells = grid.querySelectorAll('.day,.wday').length - 7;
       const mod = cells % 7;
       const tail = (mod===0)?0:(7-mod);
-      for(let i=1; i<=tail; i++){
-        const d = document.createElement('div');
-        d.className='day muted';
-        d.textContent = i;
-        grid.appendChild(d);
-      }
+      for(let i=1; i<=tail; i++){ addDayCell(i, true, []); }
     }
 
     render();
