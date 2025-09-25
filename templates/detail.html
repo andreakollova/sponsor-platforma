@@ -483,7 +483,7 @@
   </div>
 </section>
 
-<!-- ========= EVENT MODAL (light & modern) ========= -->
+<!-- ========= EVENT/ITEM MODAL (light) ========= -->
 <div id="calModal" class="sp-modal" aria-hidden="true">
   <div class="sp-modal__backdrop"></div>
   <div class="sp-modal__card" role="dialog" aria-modal="true" aria-labelledby="calTitle">
@@ -503,6 +503,7 @@
                 data-cover="{{ url_for('static', filename='covers/cover.png') }}">
           <i class="bi bi-plus-circle"></i> Pridať do portfólia
         </button>
+        <button id="calQuoteBtn" class="btn btn-ghost btn-compact">Vyžiadať cenu</button>
       </div>
     </div>
   </div>
@@ -586,6 +587,7 @@
   .btn-ghost:hover{ background:#f6f8fb; }
   .btn-slim{ padding:.3rem .6rem; border-radius:999px; font-size:.9rem; }
   .btn-compact{ padding:.36rem .6rem; font-size:.9rem; white-space:nowrap; }
+  .btn-compact i{ position:relative; top:-1px; font-size:1.05em; } /* ↑ plus ikonka vyššie & výraznejšia */
   .btn-added{ background:#2d226c !important; color:#fff !important; border-color:#2d226c !important; }
   .btn-added i{ color:#fff !important; }
 
@@ -594,7 +596,7 @@
 
   /* Inventory + packages */
   .ld-inv-grid{ display:flex; flex-wrap:wrap; gap:8px; }
-  .inv-chip{ display:inline-flex; align-items:center; gap:.4rem; padding:.32rem .56rem; border:1px solid var(--border); border-radius:999px; background:#fff; font-size:.86rem; color:#0e1116; }
+  .inv-chip{ display:inline-flex; align-items:center; gap:.4rem; padding:.32rem .56rem; border:1px solid var(--border); border-radius:999px; background:#fff; font-size:.86rem; color:#0e1116; cursor:pointer; }
   .inv-chip i{ color:#6b5afc; }
 
   .ld-pack{ border:1px solid var(--border); border-radius:16px; background:#fff; padding:14px; box-shadow:0 10px 22px rgba(10,20,30,.04); }
@@ -657,7 +659,7 @@
   .ld-mini-metrics{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
   .ld-mm{ border:1px solid var(--border); background:#fff; border-radius:12px; padding:.6rem .7rem; text-align:center; }
 
-  /* Toast confirmation — dark, modern */
+  /* Toast confirmation */
   .sp-toast{
     position:fixed; right:18px; bottom:18px;
     background:rgba(16,18,27,.9);
@@ -678,7 +680,20 @@
   .sp-toast .t-link{ margin-top:.35rem; display:inline-block; text-decoration:underline; color:#cfcaff; }
   .sp-toast .t-close{ margin-left:auto; background:transparent; border:0; color:#d8d5ff; font-size:20px; line-height:1; cursor:pointer; }
 
-  /* Event modal — LIGHT minimalist */
+  /* LIGHT variant for "Odstránené" toast */
+  .sp-toast--light{
+    background:#f7f8fb;
+    border:1px solid var(--border);
+    color:#0e1116;
+    box-shadow:0 16px 36px rgba(9,11,17,.08), 0 0 0 1px rgba(255,255,255,.6) inset;
+  }
+  .sp-toast--light .t-hed{ color:#6b7280; }
+  .sp-toast--light .t-title{ color:#0e1116; }
+  .sp-toast--light .t-price{ color:#111; }
+  .sp-toast--light .t-link{ color:#3b2a85; }
+  .sp-toast--light .t-close{ color:#6b6f7a; }
+
+  /* Event modal — LIGHT */
   .sp-modal{ position:fixed; inset:0; display:none; z-index:9998; }
   .sp-modal.is-open{ display:block; }
   .sp-modal__backdrop{ position:absolute; inset:0; background:rgba(9,11,17,.45); backdrop-filter:blur(4px); }
@@ -791,7 +806,7 @@
     });
   })();
 
-  // Portfolio storage
+  // ===== Portfolio storage + helpers =====
   function getPortfolio(){
     try{ return JSON.parse(localStorage.getItem('portfolio_items')||'[]'); }catch(e){ return []; }
   }
@@ -804,17 +819,48 @@
     const exists = list.some(x=>x.kind===payload.kind && x.slug===payload.slug && x.label===payload.label);
     if(!exists){ list.push(payload); setPortfolio(list); }
   }
+  function removeFromPortfolio(label){
+    const list = getPortfolio().filter(x=>x.label!==label);
+    setPortfolio(list);
+  }
+  function isInPortfolio(label){
+    return getPortfolio().some(x=>x.label===label);
+  }
+  function cssEscapeSel(str){ return str.replace(/("|'|\\)/g,'\\$1'); }
+  function markAddedUI(label){
+    const sel = `[data-cta="add"][data-label="${cssEscapeSel(label)}"]`;
+    document.querySelectorAll(sel).forEach(b=>{
+      b.innerHTML = '<i class="bi bi-check2-circle"></i> Pridané';
+      b.classList.remove('btn-outline-brand');
+      b.classList.add('btn-added');
+    });
+  }
+  function resetAddedUI(label){
+    const sel = `[data-cta="add"][data-label="${cssEscapeSel(label)}"]`;
+    document.querySelectorAll(sel).forEach(b=>{
+      b.innerHTML = '<i class="bi bi-plus-circle"></i> Pridať do portfólia';
+      b.classList.add('btn-outline-brand');
+      b.classList.remove('btn-added');
+    });
+  }
+  function syncAllAddButtons(){
+    document.querySelectorAll('[data-cta="add"]').forEach(b=>{
+      const lbl = b.dataset.label || '';
+      if(!lbl) return;
+      if(isInPortfolio(lbl)){ markAddedUI(lbl); } else { resetAddedUI(lbl); }
+    });
+  }
 
-  // Toast (dark + modern; includes logo/label/price; longer display)
+  // Toasts
   const CLUB_LOGO_URL = "{{ url_for('static', filename=item.avatar) }}";
-  function showToast({label, price, logo, linkHref}){
+  function showToast({label, price, logo, linkHref, header, variant='added'}){
     const t = document.createElement('div');
-    t.className = 'sp-toast';
+    t.className = 'sp-toast' + (variant==='removed' ? ' sp-toast--light' : '');
     t.innerHTML = `
       <img src="${logo||''}" alt="logo">
       <div class="t-wrap">
-        <div class="t-hed">Pridané do portfólia</div>
-        <div class="t-title">${label||'Položka pridaná'}</div>
+        <div class="t-hed">${header || (variant==='removed' ? 'Odstránené z portfólia' : 'Pridané do portfólia')}</div>
+        <div class="t-title">${label||''}</div>
         ${price ? `<div class="t-price">${price}</div>` : ''}
         <a class="t-link" href="${linkHref||'/portfolio'}">Zobraziť portfólio</a>
       </div>
@@ -824,10 +870,10 @@
     const close = ()=>{ t.classList.remove('show'); t.addEventListener('transitionend', ()=> t.remove(), { once:true }); };
     t.querySelector('.t-close').addEventListener('click', close);
     requestAnimationFrame(()=> t.classList.add('show'));
-    setTimeout(close, 8000); // stays longer
+    setTimeout(close, 8000);
   }
 
-  // Add-to-portfolio buttons: darker state + toast
+  // Toggle add/remove on all buttons (list/cards)
   document.querySelectorAll('[data-cta="add"]').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       const payload = {
@@ -837,41 +883,55 @@
         price_from: Number((btn.dataset.price||'').toString().replace(/[^\d.]/g,'')) || 0,
         cover: btn.dataset.cover
       };
-      addToPortfolio(payload);
-      btn.innerHTML = '<i class="bi bi-check2-circle"></i> Pridané';
-      btn.classList.remove('btn-outline-brand');
-      btn.classList.add('btn-added');
-
-      const priceText = (btn.dataset.price||'').trim();
-      showToast({
-        label: btn.dataset.label || 'Položka pridaná',
-        price: priceText,
-        logo: CLUB_LOGO_URL,
-        linkHref: '/portfolio'
-      });
+      if(isInPortfolio(payload.label)){
+        removeFromPortfolio(payload.label);
+        resetAddedUI(payload.label);
+        showToast({
+          label: payload.label,
+          price: '',
+          logo: CLUB_LOGO_URL,
+          linkHref: '/portfolio',
+          variant: 'removed',
+          header: 'Odstránené z portfólia'
+        });
+      }else{
+        addToPortfolio(payload);
+        markAddedUI(payload.label);
+        showToast({
+          label: payload.label,
+          price: (btn.dataset.price||'').trim(),
+          logo: CLUB_LOGO_URL,
+          linkHref: '/portfolio',
+          variant: 'added'
+        });
+      }
     });
   });
 
-  // ===== Event modal helpers (light) =====
+  // ===== Event / Item modal helpers (light) =====
   const calModal = document.getElementById('calModal');
   const calTitle = document.getElementById('calTitle');
   const calDate = document.getElementById('calDate');
   const calType = document.getElementById('calType');
   const calAddBtn = document.getElementById('calAddBtn');
+  const calQuoteBtn = document.getElementById('calQuoteBtn');
+  const calDateRow = document.querySelector('.spm-date');
 
   function openEventModal(evData){
     if(!calModal) return;
     calTitle.textContent = evData.title || '';
     calDate.textContent  = evData.date  || '';
     calType.textContent  = evData.type  || '';
-    // prepare add button payload
-    calAddBtn.dataset.label = "{{ item.title }} – " + (evData.title || 'Event');
+    calDateRow.style.display = evData.date ? '' : 'none';
+
+    const lbl = "{{ item.title }} – " + (evData.labelSuffix || evData.title || 'Event');
+    calAddBtn.dataset.label = lbl;
     calAddBtn.dataset.price = "";
-    // reset button state
-    calAddBtn.classList.remove('btn-added');
-    calAddBtn.classList.add('btn-outline-brand');
-    calAddBtn.innerHTML = '<i class="bi bi-plus-circle"></i> Pridať do portfólia';
-    // one-time click handler for this event
+
+    // reflect state
+    if(isInPortfolio(lbl)){ markAddedUI(lbl); } else { resetAddedUI(lbl); }
+
+    // toggle handler
     calAddBtn.onclick = ()=>{
       const payload = {
         kind: calAddBtn.dataset.kind,
@@ -880,11 +940,20 @@
         price_from: 0,
         cover: calAddBtn.dataset.cover
       };
-      addToPortfolio(payload);
-      calAddBtn.innerHTML = '<i class="bi bi-check2-circle"></i> Pridané';
-      calAddBtn.classList.remove('btn-outline-brand');
-      calAddBtn.classList.add('btn-added');
-      showToast({ label: calAddBtn.dataset.label, price: '', logo: CLUB_LOGO_URL, linkHref: '/portfolio' });
+      if(isInPortfolio(payload.label)){
+        removeFromPortfolio(payload.label);
+        resetAddedUI(payload.label);
+        showToast({ label: payload.label, price:'', logo: CLUB_LOGO_URL, linkHref:'/portfolio', variant:'removed', header:'Odstránené z portfólia' });
+      }else{
+        addToPortfolio(payload);
+        markAddedUI(payload.label);
+        showToast({ label: payload.label, price:'', logo: CLUB_LOGO_URL, linkHref:'/portfolio', variant:'added' });
+      }
+    };
+
+    // (left intact as requested)
+    calQuoteBtn.onclick = ()=>{
+      showToast({ header:'Žiadosť o cenu odoslaná', label: lbl, price:'', logo: CLUB_LOGO_URL, linkHref:'/kontakt', variant:'removed' });
     };
 
     calModal.classList.add('is-open');
@@ -900,6 +969,14 @@
     calModal.querySelector('.sp-modal__close').addEventListener('click', closeEventModal);
     document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeEventModal(); });
   }
+
+  // Inventory chips open modal (left exactly as in your code)
+  document.querySelectorAll('.inv-chip').forEach(chip=>{
+    chip.addEventListener('click', ()=>{
+      const name = chip.textContent.trim();
+      openEventModal({ title: name, type: 'Inventár', labelSuffix: 'inventár: ' + name, date: '' });
+    });
+  });
 
   // ===== Mini calendar builder (titles inside cells; clickable events) =====
   (function(){
@@ -966,6 +1043,9 @@
       });
     });
   })();
+
+  // Initial sync for any buttons already present
+  syncAllAddButtons();
 </script>
 
 {% endblock %}
