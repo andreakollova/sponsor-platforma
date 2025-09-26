@@ -597,8 +597,18 @@
   .ld-inv-grid{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
   .inv-chip{ display:inline-flex; align-items:center; gap:.4rem; padding:.32rem .56rem; border:1px solid var(--border); border-radius:999px; background:#fff; font-size:.86rem; color:#0e1116; cursor:pointer; transition:box-shadow .15s ease, border-color .15s ease, background .15s ease; }
   .inv-chip i{ color:#6b5afc; }
-  .inv-chip.is-selected{ border-color:#c9b9ff; box-shadow:0 6px 16px rgba(119,75,251,.15); background:linear-gradient(135deg, rgba(119,75,251,.10), rgba(119,75,251,.04)), #fff; }
-  .inv-chip.is-added{ border-color:#a694ff; background:linear-gradient(135deg, rgba(119,75,251,.16), rgba(119,75,251,.06)), #fff; box-shadow:0 6px 18px rgba(119,75,251,.18); }
+  .inv-chip.is-selected{
+    border-color:#c9b9ff;
+    background:linear-gradient(135deg, rgba(119,75,251,.08), rgba(119,75,251,.03)), #fff;
+    box-shadow: 0 4px 12px rgba(119,75,251,.12);
+  }
+
+  /* Pridaný chip – tiež jemnejšie, aby to ladilo */
+  .inv-chip.is-added{
+    border-color:#a694ff;
+    background:linear-gradient(135deg, rgba(119,75,251,.12), rgba(119,75,251,.05)), #fff;
+    box-shadow: 0 5px 14px rgba(119,75,251,.14);
+  }
   .inv-add-btn{
     display:none; align-items:center; justify-content:center;
     width:40px; height:40px; border-radius:999px; border:1px solid #e6ddff;
