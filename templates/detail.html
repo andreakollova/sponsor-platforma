@@ -46,13 +46,50 @@
         </div>
       </div>
 
-      <!-- Socials -->
+      <!-- Socials (zobraz iba siete, ktoré majú link) -->
       <div class="col-xl-4">
-        <div class="ld-seg d-flex justify-content-xl-end">
-          {% if item.website %}<a class="seg-btn" href="{{ item.website }}" target="_blank" rel="noopener"><i class="bi bi-globe2"></i></a>{% endif %}
-          {% if item.social and item.social.instagram %}<a class="seg-btn" href="{{ item.social.instagram }}" target="_blank" rel="noopener"><i class="bi bi-instagram"></i></a>{% endif %}
-          {% if item.social and item.social.facebook %}<a class="seg-btn" href="{{ item.social.facebook }}" target="_blank" rel="noopener"><i class="bi bi-facebook"></i></a>{% endif %}
-          {% if item.social and item.social.youtube %}<a class="seg-btn" href="{{ item.social.youtube }}" target="_blank" rel="noopener"><i class="bi bi-youtube"></i></a>{% endif %}
+        {% set S = item.social or {} %}
+        <div class="ld-seg d-flex justify-content-xl-end flex-wrap">
+          {# web #}
+          {% if item.website %}
+            <a class="seg-btn"
+               href="{{ item.website if item.website.startswith('http') else 'https://' ~ item.website }}"
+               target="_blank" rel="noopener noreferrer nofollow" aria-label="Web">
+              <i class="bi bi-globe2"></i>
+            </a>
+          {% endif %}
+
+          {# instagram #}
+          {% if S.instagram %}
+            <a class="seg-btn" href="{{ S.instagram }}"
+               target="_blank" rel="noopener noreferrer nofollow" aria-label="Instagram">
+              <i class="bi bi-instagram"></i>
+            </a>
+          {% endif %}
+
+          {# facebook #}
+          {% if S.facebook %}
+            <a class="seg-btn" href="{{ S.facebook }}"
+               target="_blank" rel="noopener noreferrer nofollow" aria-label="Facebook">
+              <i class="bi bi-facebook"></i>
+            </a>
+          {% endif %}
+
+          {# youtube #}
+          {% if S.youtube %}
+            <a class="seg-btn" href="{{ S.youtube }}"
+               target="_blank" rel="noopener noreferrer nofollow" aria-label="YouTube">
+              <i class="bi bi-youtube"></i>
+            </a>
+          {% endif %}
+
+          {# twitch #}
+          {% if S.twitch %}
+            <a class="seg-btn" href="{{ S.twitch }}"
+               target="_blank" rel="noopener noreferrer nofollow" aria-label="Twitch">
+              <i class="bi bi-twitch"></i>
+            </a>
+          {% endif %}
         </div>
       </div>
     </div>
@@ -75,14 +112,14 @@
           </div>
         </div>
 
-        <!-- Thumbnails: 1) cover  2) video tile  3–4) cover -->
+        <!-- Thumbnails (drag/swipe scroll; žiadne overlay/šípky) -->
         <div class="card rounded-4 ld-card p-2 mb-4">
           <div class="ld-thumbs-row">
             <button class="ld-thumb is-active" data-src="{{ url_for('static', filename='covers/cover.png') }}">
               <img src="{{ url_for('static', filename='covers/cover.png') }}" alt="thumb">
             </button>
 
-            <!-- video thumb; JS swaps thumbnail to YT preview -->
+            <!-- video thumb; JS swapne thumbnail na YT preview -->
             <button class="ld-thumb ld-thumb-video" data-video="{{ yt_url }}">
               <img src="{{ url_for('static', filename='covers/cover.png') }}" alt="video thumb">
               <span class="yt-badge"><i class="bi bi-play-fill"></i></span>
@@ -519,12 +556,12 @@
   .bc-list li+li::before{ content:"/"; margin:0 .5rem; color:#9aa3b2; }
 
   .ld-breadcrumb{ border-bottom:none; margin:0; padding:10px 0 14px; }
-  .ld-breadcrumb{ margin-top: -72px !important; }
+  .ld-breadcrumb{ margin-top:-72px !important; }
   .ld-breadcrumb .bc-list{ font-size:14px !important; line-height:1 !important; }
   .ld-breadcrumb .bc-list li,
   .ld-breadcrumb .bc-list li a{ font-size:inherit !important; }
   .ld-breadcrumb .bc-list li+li::before{ content:"/"; margin:0 .25rem; font-size:inherit !important; }
-  @media (max-width: 991px){ .ld-breadcrumb{ padding:8px 0 12px; } }
+  @media (max-width:991px){ .ld-breadcrumb{ padding:8px 0 12px; } }
 
   /* Hero */
   .ld-hero{
@@ -539,12 +576,6 @@
   .ld-avatar{ width:56px; height:56px; border-radius:50%; border:1px solid var(--border); object-fit:cover; }
   .sp-verified{ color:var(--brand-2); }
 
-  /* Social buttons */
-  .ld-seg{ gap:6px; }
-  .seg-btn{ padding:.36rem .75rem; border-radius:999px; border:1px solid #e6ddff; background:#fff; color:#3b2a85; font-weight:600; cursor:pointer; white-space:nowrap; font-size:.92rem; }
-  .seg-btn:hover{ background:#f6f8fb; }
-  .seg-btn i{ font-size:1.05rem; }
-
   /* Cards */
   .ld-card{ border:1px solid var(--border); box-shadow:0 8px 18px rgba(10,20,30,.04); }
 
@@ -556,26 +587,44 @@
   .sport-pill{ position:absolute; top:12px; right:12px; z-index:2; display:inline-flex; align-items:center; gap:.4rem; padding:.32rem .6rem; border-radius:999px; font-size:.82rem; font-weight:600; background:linear-gradient(135deg, rgba(119,75,251,.18), rgba(119,75,251,.08)), rgba(255,255,255,.92); border:1px solid #e6ddff; color:#3b2a85; box-shadow:0 10px 22px rgba(0,0,0,.08), 0 2px 0 rgba(119,75,251,.06) inset; backdrop-filter:saturate(120%) blur(2px); }
   .sport-pill i{ color:#6e59f8; }
 
-  /* Thumbs */
-  .ld-thumbs-row{ display:flex; gap:12px; overflow:auto; padding:6px; }
-  .ld-thumb{ border:1px solid var(--border); background:#fff; border-radius:14px; overflow:hidden; width:220px; height:120px; flex:0 0 auto; padding:0; cursor:pointer; transition:border-color .15s ease, transform .15s ease; position:relative; }
+  /* ================ Thumbs (drag/swipe) ================ */
+  .ld-thumbs-row{
+    position:relative; isolation:isolate;
+    display:flex; gap:12px;
+    overflow-x:auto; overflow-y:hidden;
+    padding:6px;
+    -webkit-overflow-scrolling:touch;
+    scroll-snap-type:x proximity;
+    scrollbar-width:none;
+    cursor:grab;
+  }
+  .ld-thumbs-row::-webkit-scrollbar{ display:none; }
+  .ld-thumbs-row.grabbing{ cursor:grabbing; user-select:none; }
+
+  .ld-thumb{
+    border:1px solid var(--border); background:#fff;
+    border-radius:14px; overflow:hidden;
+    width:220px; height:120px; flex:0 0 auto; padding:0; cursor:pointer;
+    transition:border-color .15s ease, transform .15s ease;
+    position:relative; scroll-snap-align:start;
+  }
   .ld-thumb:hover{ transform:translateY(-2px); }
   .ld-thumb.is-active{ border-color:#d7ceff; box-shadow:0 8px 18px rgba(119,75,251,.12); }
   .ld-thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
-  .ld-thumb-video .yt-badge{ position:absolute; left:10px; bottom:10px; width:34px; height:34px; border-radius:999px; display:grid; place-items:center; background:rgba(255,255,255,.9); border:1px solid #e6ddff; }
+  .ld-thumb-video .yt-badge{
+    position:absolute; left:10px; bottom:10px; width:34px; height:34px; border-radius:999px;
+    display:grid; place-items:center; background:rgba(255,255,255,.9); border:1px solid #e6ddff;
+  }
   .ld-thumb-video .yt-badge i{ font-size:20px; color:#6b5afc; }
 
-  /* Overview text smaller + link tweak */
-  .ld-overview-text{ font-size:clamp(13px, .92rem, 15px); line-height:1.6; }
+  /* Text & chips */
+  .ld-overview-text{ font-size:clamp(13px,.92rem,15px); line-height:1.6; }
   .ld-overview-text .link-plain{ text-decoration:underline; color:inherit; font-weight:500; font-size:.92em; }
 
-  /* Achievements pills + logo */
   .ach-pill{ border:1px solid var(--border); background:#fff; border-radius:14px; padding:.55rem .8rem; display:flex; align-items:center; gap:.55rem; font-weight:400; font-size:.95rem; }
   .ach-logo{ width:22px; height:22px; object-fit:contain; }
-
   .ach-more-btn{ font-size:.78rem; padding:.22rem .5rem; font-weight:400; }
 
-  /* Chips & stats */
   .sp-tag{ display:inline-flex; align-items:center; gap:.35rem; padding:.32rem .56rem; border:1px dashed var(--border); border-radius:999px; background:#fff; color:#0e1116; font-size:.8rem; }
   .sp-stat-chip{ display:inline-flex; align-items:center; gap:.35rem; padding:.32rem .5rem; border:1px solid var(--border); border-radius:999px; background:#fff; font-size:.8rem; color:#0e1116; white-space:nowrap; }
   .sp-stat-chip i{ color:#6b5afc; }
@@ -590,31 +639,20 @@
   .btn-added{ background:#2d226c !important; color:#fff !important; border-color:#2d226c !important; }
   .btn-added i{ color:#fff !important; }
 
-  /* One-line action container */
   .ld-actions{ display:flex; align-items:center; gap:8px; flex-wrap:nowrap; }
 
   /* Inventory + multi-select + PLUS */
   .ld-inv-grid{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
   .inv-chip{ display:inline-flex; align-items:center; gap:.4rem; padding:.32rem .56rem; border:1px solid var(--border); border-radius:999px; background:#fff; font-size:.86rem; color:#0e1116; cursor:pointer; transition:box-shadow .15s ease, border-color .15s ease, background .15s ease; }
   .inv-chip i{ color:#6b5afc; }
-  .inv-chip.is-selected{
-    border-color:#c9b9ff;
-    background:linear-gradient(135deg, rgba(119,75,251,.08), rgba(119,75,251,.03)), #fff;
-    box-shadow: 0 4px 12px rgba(119,75,251,.12);
-  }
+  .inv-chip.is-selected{ border-color:#c9b9ff; background:linear-gradient(135deg, rgba(119,75,251,.08), rgba(119,75,251,.03)), #fff; box-shadow:0 4px 12px rgba(119,75,251,.12); }
+  .inv-chip.is-added{ border-color:#a694ff; background:linear-gradient(135deg, rgba(119,75,251,.12), rgba(119,75,251,.05)), #fff; box-shadow:0 5px 14px rgba(119,75,251,.14); }
 
-  /* Pridaný chip – tiež jemnejšie, aby to ladilo */
-  .inv-chip.is-added{
-    border-color:#a694ff;
-    background:linear-gradient(135deg, rgba(119,75,251,.12), rgba(119,75,251,.05)), #fff;
-    box-shadow: 0 5px 14px rgba(119,75,251,.14);
-  }
   .inv-add-btn{
     display:none; align-items:center; justify-content:center;
     width:40px; height:40px; border-radius:999px; border:1px solid #e6ddff;
     background:#2d226c; color:#fff; box-shadow:0 10px 22px rgba(45,34,108,.28);
-    cursor:pointer; margin-left:4px; flex:0 0 auto;
-    position:relative; top:-2px; /* vyššie a výraznejšie */
+    cursor:pointer; margin-left:4px; flex:0 0 auto; position:relative; top:-2px;
   }
   .inv-add-btn.show{ display:inline-flex; }
   .inv-add-btn:disabled{ opacity:.45; cursor:not-allowed; box-shadow:none; }
@@ -635,7 +673,7 @@
   .ld-month{ font-size:13px; opacity:.85; }
   .ld-key-tag{ font-size:.72rem; padding:.12rem .35rem; border-radius:999px; border:1px solid #e6ddff; color:#3b2a85; background:#f6f0ff; margin-left:.35rem; vertical-align:middle; }
 
-  /* Calendar with event titles */
+  /* Calendar */
   .ld-cal{ border:1px solid var(--border); border-radius:16px; background:#fff; overflow:hidden; }
   .ld-cal-head{ display:flex; align-items:center; justify-content:space-between; padding:.5rem .75rem; border-bottom:1px solid var(--border); }
   .ld-cal-title{ font-weight:700; }
@@ -658,7 +696,7 @@
 
   /* Extra stats */
   .ld-statgrid{ display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
-  @media (min-width: 768px){ .ld-statgrid{ grid-template-columns:repeat(3,1fr);} }
+  @media (min-width:768px){ .ld-statgrid{ grid-template-columns:repeat(3,1fr);} }
   .stat{ border:1px solid var(--border); border-radius:14px; background:#fff; padding:.8rem .9rem; display:flex; align-items:center; justify-content:space-between; }
   .stat .label{ color:#6b7280; font-size:.9rem; }
   .stat .val{ font-weight:700; }
@@ -670,7 +708,7 @@
   .ld-age-row{ display:flex; align-items:center; gap:12px; margin:.4rem 0; }
   .ld-age-label{ width:72px; color:#4b5563; font-weight:600; }
   .ld-age-bar{ flex:1; height:16px; background:#eff2f6; border-radius:999px; overflow:hidden; position:relative; }
-  .ld-age-fill{ height:100%; background:linear-gradient(90deg,#bca8ff,#7a63ff); border-radius:999px; position:relative; display:flex; align-items:center; justify-content:flex-end; }
+  .ld-age-fill{ height:100%; background:linear-gradient(90deg,#774bfb); border-radius:999px; position:relative; display:flex; align-items:center; justify-content:flex-end; }
   .ld-age-fill span{ color:#fff; font-size:.8rem; padding-right:6px; font-weight:700; text-shadow:0 1px 0 rgba(0,0,0,.15); }
 
   /* Sidebar */
@@ -680,7 +718,7 @@
   .ld-mini-metrics{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
   .ld-mm{ border:1px solid var(--border); background:#fff; border-radius:12px; padding:.6rem .7rem; text-align:center; }
 
-  /* Toast confirmation */
+  /* Toasts */
   .sp-toast{
     position:fixed; right:18px; bottom:18px;
     background:rgba(16,18,27,.9);
@@ -693,12 +731,7 @@
     max-width:92vw; width:min(420px,92vw);
     backdrop-filter:saturate(120%) blur(8px);
   }
-  .sp-toast--light{
-    background:rgba(255,255,255,.96);
-    border:1px solid #e9ecf3;
-    color:#0e1116;
-    box-shadow:0 16px 36px rgba(0,0,0,.18);
-  }
+  .sp-toast--light{ background:rgba(255,255,255,.96); border:1px solid #e9ecf3; color:#0e1116; box-shadow:0 16px 36px rgba(0,0,0,.18); }
   .sp-toast.show{ opacity:1; transform:translateY(0); }
   .sp-toast img{ width:44px; height:44px; object-fit:cover; border-radius:12px; border:1px solid rgba(119,75,251,.35); }
   .sp-toast .t-hed{ font-size:.78rem; letter-spacing:.02em; color:#bdb7ff; margin-bottom:.1rem; }
@@ -712,7 +745,7 @@
   .sp-toast .t-close{ margin-left:auto; background:transparent; border:0; color:#d8d5ff; font-size:20px; line-height:1; cursor:pointer; }
   .sp-toast--light .t-close{ color:#444; }
 
-  /* Event modal — LIGHT */
+  /* Modal */
   .sp-modal{ position:fixed; inset:0; display:none; z-index:9998; }
   .sp-modal.is-open{ display:block; }
   .sp-modal__backdrop{ position:absolute; inset:0; background:rgba(9,11,17,.45); backdrop-filter:blur(4px); }
@@ -728,25 +761,37 @@
   .spm-date{ margin-top:.55rem; color:#374151; font-weight:600; }
   .spm-tag{ margin-top:.45rem; display:inline-flex; padding:.24rem .55rem; border-radius:999px; border:1px solid #e6ddff; background:#f6f0ff; color:#3b2a85; font-size:.85rem; }
 
-  /* Responsive tweaks */
-  @media (max-width: 991px){
+  @media (max-width:991px){
     .ld-actions{ flex-wrap:wrap; }
     .ld-proj-media{ height:200px; }
     .seg-btn{ font-size:.88rem; }
   }
 
-  .ld-breadcrumb, .ld-hero{
+  .ld-breadcrumb,.ld-hero{
     background:
       radial-gradient(900px 450px at 8% -20%, rgba(119,75,251,.06), transparent 65%),
       #f8f9f9 !important;
   }
 
+  /* Social buttons – rovnaký vzhľad ako predtým */
+.ld-seg{ gap:6px; }
+
+.seg-btn{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:38px; height:38px; border-radius:999px;
+  border:1px solid #e6ddff; background:#fff; color:#3b2a85;
+  font-weight:600; text-decoration:none; transition:background .15s ease, border-color .15s ease, transform .1s ease;
+}
+.seg-btn i{ font-size:1.05rem; line-height:1; }
+
+.seg-btn:hover{ background:#f6f0ff; border-color:#d8ccff; transform:translateY(-1px); }
+.seg-btn:focus-visible{ outline:2px solid #b7a6ff; outline-offset:2px; }
 
 </style>
 
 <!-- ===================== PAGE-LOCAL JS ===================== -->
 <script>
-  // Scroll helpers
+  /* Smooth scroll anchors */
   function smoothTo(sel){
     const el = document.querySelector(sel);
     if(!el) return;
@@ -756,37 +801,28 @@
   document.querySelectorAll('[data-scroll]').forEach(btn=>{
     btn.addEventListener('click', e=>{
       e.preventDefault();
-      const sel = btn.getAttribute('data-scroll');
-      smoothTo(sel);
+      smoothTo(btn.getAttribute('data-scroll'));
     });
   });
 
-  // Gallery thumbs -> swap main image or play video
+  /* Main image/video switch */
   (function(){
     const wrap = document.getElementById('ldMainWrap');
     if(!wrap) return;
     const img = document.getElementById('ldMain');
-
-    // create iframe placeholder (hidden by default)
-    let iframe = document.createElement('iframe');
-    iframe.className = 'ld-video';
-    iframe.setAttribute('allow','accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
-    iframe.setAttribute('allowfullscreen','');
+    const iframe = Object.assign(document.createElement('iframe'), {
+      className:'ld-video', allow:'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share', allowFullscreen:true
+    });
     wrap.appendChild(iframe);
 
     const ytUrl = wrap.getAttribute('data-yt') || '';
-    const ytId = (function(u){
-      if(!u) return '';
-      try{
-        const url = new URL(u);
-        if(url.hostname.includes('youtu.be')) return url.pathname.replace('/','');
-        if(url.searchParams.get('v')) return url.searchParams.get('v');
-        const parts = url.pathname.split('/'); // /embed/ID or /v/ID
-        return parts[parts.length-1] || '';
-      }catch(e){ return ''; }
-    })(ytUrl);
+    const ytId = (()=>{ try{
+      const u = new URL(ytUrl);
+      if(u.hostname.includes('youtu.be')) return u.pathname.replace('/','');
+      if(u.searchParams.get('v')) return u.searchParams.get('v');
+      const p=u.pathname.split('/'); return p[p.length-1]||'';
+    }catch(_){ return ''; }})();
 
-    // if second thumb exists, set its thumbnail from YT
     const videoThumb = document.querySelector('.ld-thumb-video');
     if(videoThumb && ytId){
       const imgEl = videoThumb.querySelector('img');
@@ -794,30 +830,59 @@
       videoThumb.dataset.video = ytUrl;
     }
 
-    function showImage(src){
-      iframe.style.display = 'none';
-      iframe.src = '';
-      img.style.display = 'block';
-      if(src) img.src = src;
-    }
-    function showVideo(){
-      if(!ytId) return;
-      img.style.display = 'none';
-      iframe.src = `https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0`;
-      iframe.style.display = 'block';
-    }
+    const showImage = src => { iframe.style.display='none'; iframe.src=''; img.style.display='block'; if(src) img.src=src; };
+    const showVideo = () => { if(!ytId) return; img.style.display='none'; iframe.src=`https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0`; iframe.style.display='block'; };
 
-    // thumbs click
     document.querySelectorAll('.ld-thumb').forEach(btn=>{
-      btn.addEventListener('click', ()=>{
+      btn.addEventListener('click', (ev)=>{
+        // ak sa row práve ťahala dragom, ignoruj klik
+        if(btn.closest('.ld-thumbs-row')?.dataset.dragged === '1'){ ev.preventDefault(); return; }
         document.querySelectorAll('.ld-thumb').forEach(b=>b.classList.remove('is-active'));
         btn.classList.add('is-active');
-        if(btn.hasAttribute('data-video')){ showVideo(); } else { showImage(btn.getAttribute('data-src')); }
+        if(btn.hasAttribute('data-video')) showVideo(); else showImage(btn.getAttribute('data-src'));
       });
     });
   })();
 
-  // Achievements toggle
+  /* Drag-to-scroll pre thumbnails (desktop „grab“ + mobile swipe) */
+  (function(){
+    const rows = document.querySelectorAll('.ld-thumbs-row');
+    if(!rows.length) return;
+
+    rows.forEach(row=>{
+      let isDown=false, startX=0, scrollStart=0, moved=false;
+
+      row.addEventListener('pointerdown', (e)=>{
+        isDown=true; moved=false;
+        startX=e.clientX; scrollStart=row.scrollLeft;
+        row.classList.add('grabbing');
+        if(e.pointerType==='mouse'){ e.preventDefault(); }      // lepší drag na desktope
+        row.setPointerCapture?.(e.pointerId);
+      });
+
+      row.addEventListener('pointermove', (e)=>{
+        if(!isDown) return;
+        const dx=e.clientX-startX;
+        if(Math.abs(dx)>5) moved=true;
+        row.scrollLeft = scrollStart - dx;
+      });
+
+      function endDrag(e){
+        if(!isDown) return;
+        isDown=false;
+        row.classList.remove('grabbing');
+        row.releasePointerCapture?.(e.pointerId);
+        // na krátky moment označ, že prebehol „drag“ – potlačíme klik na thumb
+        row.dataset.dragged = moved ? '1':'0';
+        setTimeout(()=>{ row.dataset.dragged='0'; }, 40);
+      }
+      row.addEventListener('pointerup', endDrag);
+      row.addEventListener('pointercancel', endDrag);
+      row.addEventListener('mouseleave', endDrag);
+    });
+  })();
+
+  /* Achievements toggle */
   (function(){
     const btn = document.getElementById('achToggle');
     if(!btn) return;
@@ -827,126 +892,80 @@
     });
   })();
 
-  // ===== Portfolio storage + helpers =====
-  function getPortfolio(){
-    try{ return JSON.parse(localStorage.getItem('portfolio_items')||'[]'); }catch(e){ return []; }
-  }
-  function setPortfolio(arr){
-    localStorage.setItem('portfolio_items', JSON.stringify(arr));
-    if(window.updatePortfolioBadge){ window.updatePortfolioBadge(); }
-  }
-  function addToPortfolio(payload){
-    const list = getPortfolio();
-    const exists = list.some(x=>x.kind===payload.kind && x.slug===payload.slug && x.label===payload.label);
-    if(!exists){ list.push(payload); setPortfolio(list); }
-  }
-  function removeFromPortfolio(label){
-    const list = getPortfolio().filter(x=>x.label!==label);
-    setPortfolio(list);
-  }
-  function isInPortfolio(label){
-    return getPortfolio().some(x=>x.label===label);
-  }
+  /* Portfolio storage */
+  function getPortfolio(){ try{ return JSON.parse(localStorage.getItem('portfolio_items')||'[]'); }catch(_){ return []; } }
+  function setPortfolio(arr){ localStorage.setItem('portfolio_items', JSON.stringify(arr)); if(window.updatePortfolioBadge){ window.updatePortfolioBadge(); } }
+  function addToPortfolio(p){ const l=getPortfolio(); if(!l.some(x=>x.kind===p.kind&&x.slug===p.slug&&x.label===p.label)){ l.push(p); setPortfolio(l);} }
+  function removeFromPortfolio(label){ setPortfolio(getPortfolio().filter(x=>x.label!==label)); }
+  function isInPortfolio(label){ return getPortfolio().some(x=>x.label===label); }
 
   function cssEscapeSel(str){ return str.replace(/("|'|\\)/g,'\\$1'); }
   function markAddedUI(label){
-    const sel = `[data-cta="add"][data-label="${cssEscapeSel(label)}"]`;
-    document.querySelectorAll(sel).forEach(b=>{
-      b.innerHTML = '<i class="bi bi-check2-circle"></i> Pridané';
-      b.classList.remove('btn-outline-brand');
-      b.classList.add('btn-added');
+    document.querySelectorAll(`[data-cta="add"][data-label="${cssEscapeSel(label)}"]`).forEach(b=>{
+      b.innerHTML='<i class="bi bi-check2-circle"></i> Pridané';
+      b.classList.remove('btn-outline-brand'); b.classList.add('btn-added');
     });
   }
   function unmarkAddedUI(label){
-    const sel = `[data-cta="add"][data-label="${cssEscapeSel(label)}"]`;
-    document.querySelectorAll(sel).forEach(b=>{
-      b.innerHTML = '<i class="bi bi-plus-circle"></i> Pridať do portfólia';
-      b.classList.add('btn-outline-brand');
-      b.classList.remove('btn-added');
+    document.querySelectorAll(`[data-cta="add"][data-label="${cssEscapeSel(label)}"]`).forEach(b=>{
+      b.innerHTML='<i class="bi bi-plus-circle"></i> Pridať do portfólia';
+      b.classList.add('btn-outline-brand'); b.classList.remove('btn-added');
     });
   }
   function syncAllAddButtons(){
     document.querySelectorAll('[data-cta="add"]').forEach(b=>{
-      const lbl = b.dataset.label || '';
-      if(!lbl) return;
-      if(isInPortfolio(lbl)){ markAddedUI(lbl); } else { unmarkAddedUI(lbl); }
+      const lbl=b.dataset.label||''; if(!lbl) return;
+      if(isInPortfolio(lbl)) markAddedUI(lbl); else unmarkAddedUI(lbl);
     });
   }
 
-  // Toasts
+  /* Toasts */
   const CLUB_LOGO_URL = "{{ url_for('static', filename=item.avatar) }}";
   function showToastAdd({label, price, logo, linkHref, header}){
-    const t = document.createElement('div');
-    t.className = 'sp-toast';
-    t.innerHTML = `
-      <img src="${logo||''}" alt="logo">
-      <div class="t-wrap">
-        <div class="t-hed">${header || 'Pridané do portfólia'}</div>
-        <div class="t-title">${label||'Položka pridaná'}</div>
-        ${price ? `<div class="t-price">${price}</div>` : ''}
-        <a class="t-link" href="${linkHref||'/portfolio'}">Zobraziť portfólio</a>
-      </div>
-      <button class="t-close" aria-label="Zavrieť">×</button>
-    `;
+    const t=document.createElement('div');
+    t.className='sp-toast';
+    t.innerHTML=`<img src="${logo||''}" alt="logo"><div class="t-wrap"><div class="t-hed">${header||'Pridané do portfólia'}</div><div class="t-title">${label||'Položka pridaná'}</div>${price?`<div class="t-price">${price}</div>`:''}<a class="t-link" href="${linkHref||'/portfolio'}">Zobraziť portfólio</a></div><button class="t-close" aria-label="Zavrieť">×</button>`;
     document.body.appendChild(t);
-    const close = ()=>{ t.classList.remove('show'); t.addEventListener('transitionend', ()=> t.remove(), { once:true }); };
-    t.querySelector('.t-close').addEventListener('click', close);
-    requestAnimationFrame(()=> t.classList.add('show'));
-    setTimeout(close, 8000);
+    const close=()=>{t.classList.remove('show'); t.addEventListener('transitionend',()=>t.remove(),{once:true});};
+    t.querySelector('.t-close').addEventListener('click',close);
+    requestAnimationFrame(()=>t.classList.add('show')); setTimeout(close,8000);
   }
   function showToastRemove({label, logo, linkHref}){
-    const t = document.createElement('div');
-    t.className = 'sp-toast sp-toast--light';
-    t.innerHTML = `
-      <img src="${logo||''}" alt="logo">
-      <div class="t-wrap">
-        <div class="t-hed">Odstránené z portfólia</div>
-        <div class="t-title">${label||''}</div>
-        <a class="t-link" href="${linkHref||'/portfolio'}">Zobraziť portfólio</a>
-      </div>
-      <button class="t-close" aria-label="Zavrieť">×</button>
-    `;
+    const t=document.createElement('div');
+    t.className='sp-toast sp-toast--light';
+    t.innerHTML=`<img src="${logo||''}" alt="logo"><div class="t-wrap"><div class="t-hed">Odstránené z portfólia</div><div class="t-title">${label||''}</div><a class="t-link" href="${linkHref||'/portfolio'}">Zobraziť portfólio</a></div><button class="t-close" aria-label="Zavrieť">×</button>`;
     document.body.appendChild(t);
-    const close = ()=>{ t.classList.remove('show'); t.addEventListener('transitionend', ()=> t.remove(), { once:true }); };
-    t.querySelector('.t-close').addEventListener('click', close);
-    requestAnimationFrame(()=> t.classList.add('show'));
-    setTimeout(close, 6000);
+    const close=()=>{t.classList.remove('show'); t.addEventListener('transitionend',()=>t.remove(),{once:true});};
+    t.querySelector('.t-close').addEventListener('click',close);
+    requestAnimationFrame(()=>t.classList.add('show')); setTimeout(close,6000);
   }
 
-/// Add-to-portfolio buttons (list/cards): TOGGLE add/remove + toasts
-document.querySelectorAll('[data-cta="add"]:not(#calAddBtn)').forEach(btn=>{
-  btn.addEventListener('click', (e)=>{
-    // Bezpečnostná poistka, ak by sa selector niekde neaplikoval
-    if (btn.id === 'calAddBtn') return;
-
-    const label = btn.dataset.label || '';
-    const payload = {
-      kind: btn.dataset.kind,
-      slug: btn.dataset.slug,
-      label,
-      price_from: Number((btn.dataset.price||'').toString().replace(/[^\d.]/g,'')) || 0,
-      cover: btn.dataset.cover
-    };
-
-    if(isInPortfolio(label)){
-      removeFromPortfolio(label);
-      unmarkAddedUI(label);
-      showToastRemove({ label, logo: CLUB_LOGO_URL, linkHref: '/portfolio' });
-      if(window.syncInvChips){ window.syncInvChips(); }
-    } else {
-      addToPortfolio(payload);
-      markAddedUI(label);
-      showToastAdd({ label, price:(btn.dataset.price||'').trim(), logo: CLUB_LOGO_URL, linkHref:'/portfolio' });
-      if(window.syncInvChips){ window.syncInvChips(); }
-    }
+  /* Add-to-portfolio CTAs (exclude modal button) */
+  document.querySelectorAll('[data-cta="add"]:not(#calAddBtn)').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const label = btn.dataset.label||'';
+      const payload = {
+        kind: btn.dataset.kind, slug: btn.dataset.slug, label,
+        price_from: Number((btn.dataset.price||'').toString().replace(/[^\d.]/g,'')) || 0,
+        cover: btn.dataset.cover
+      };
+      if(isInPortfolio(label)){
+        removeFromPortfolio(label); unmarkAddedUI(label);
+        showToastRemove({label, logo:CLUB_LOGO_URL, linkHref:'/portfolio'});
+        if(window.syncInvChips){ window.syncInvChips(); }
+      }else{
+        addToPortfolio(payload); markAddedUI(label);
+        showToastAdd({label, price:(btn.dataset.price||'').trim(), logo:CLUB_LOGO_URL, linkHref:'/portfolio'});
+        if(window.syncInvChips){ window.syncInvChips(); }
+      }
+    });
   });
-});
 
-  // ===== Event / Item modal helpers (light) =====
+  /* Modal add/remove */
   const calModal = document.getElementById('calModal');
   const calTitle = document.getElementById('calTitle');
-  const calDate = document.getElementById('calDate');
-  const calType = document.getElementById('calType');
+  const calDate  = document.getElementById('calDate');
+  const calType  = document.getElementById('calType');
   const calAddBtn = document.getElementById('calAddBtn');
   const calDateRow = document.querySelector('.spm-date');
 
@@ -960,217 +979,127 @@ document.querySelectorAll('[data-cta="add"]:not(#calAddBtn)').forEach(btn=>{
     const lbl = "{{ item.title }} – " + (evData.labelSuffix || evData.title || 'Event');
     calAddBtn.dataset.label = lbl;
     calAddBtn.dataset.price = "";
-    if(isInPortfolio(lbl)){ markAddedUI(lbl); } else { unmarkAddedUI(lbl); }
+    if(isInPortfolio(lbl)) markAddedUI(lbl); else unmarkAddedUI(lbl);
 
-    // add handler (ALWAYS add + toast ADD)
-    // add/remove handler (TOGGLE + správne toasty + UI) — MODAL ONLY
     calAddBtn.onclick = (e)=>{
-      e.preventDefault();
-      // Zabrániť spusteniu iných listenerov (globálny by inak stále bežal)
-      if(e && e.stopImmediatePropagation) e.stopImmediatePropagation();
-
-      const payload = {
-        kind: calAddBtn.dataset.kind,
-        slug: calAddBtn.dataset.slug,
-        label: calAddBtn.dataset.label,
-        price_from: 0,
-        cover: calAddBtn.dataset.cover
-      };
-
+      e.preventDefault(); e.stopImmediatePropagation?.();
+      const payload = { kind:calAddBtn.dataset.kind, slug:calAddBtn.dataset.slug, label:calAddBtn.dataset.label, price_from:0, cover:calAddBtn.dataset.cover };
       if(isInPortfolio(payload.label)){
-        // REMOVE
-        removeFromPortfolio(payload.label);
-        unmarkAddedUI(payload.label);         // zosynchronizuje všetky rovnaké CTA na stránke
-        calAddBtn.classList.remove('btn-added');
-        calAddBtn.classList.add('btn-outline-brand');
-        calAddBtn.innerHTML = '<i class="bi bi-plus-circle"></i> Pridať do portfólia';
-        showToastRemove({ label: payload.label, logo: CLUB_LOGO_URL, linkHref:'/portfolio' });
+        removeFromPortfolio(payload.label); unmarkAddedUI(payload.label);
+        calAddBtn.classList.remove('btn-added'); calAddBtn.classList.add('btn-outline-brand');
+        calAddBtn.innerHTML='<i class="bi bi-plus-circle"></i> Pridať do portfólia';
+        showToastRemove({label:payload.label, logo:CLUB_LOGO_URL, linkHref:'/portfolio'});
         if(window.syncInvChips){ window.syncInvChips(); }
-      } else {
-        // ADD
-        addToPortfolio(payload);
-        markAddedUI(payload.label);
-        calAddBtn.classList.add('btn-added');
-        calAddBtn.classList.remove('btn-outline-brand');
-        calAddBtn.innerHTML = '<i class="bi bi-check2-circle"></i> Pridané';
-        showToastAdd({ label: payload.label, price:'', logo: CLUB_LOGO_URL, linkHref:'/portfolio' });
+      }else{
+        addToPortfolio(payload); markAddedUI(payload.label);
+        calAddBtn.classList.add('btn-added'); calAddBtn.classList.remove('btn-outline-brand');
+        calAddBtn.innerHTML='<i class="bi bi-check2-circle"></i> Pridané';
+        showToastAdd({label:payload.label, price:'', logo:CLUB_LOGO_URL, linkHref:'/portfolio'});
         if(window.syncInvChips){ window.syncInvChips(); }
       }
     };
 
-
-
-    calModal.classList.add('is-open');
-    document.body.style.overflow = 'hidden';
+    calModal.classList.add('is-open'); document.body.style.overflow='hidden';
   }
-  function closeEventModal(){
-    if(!calModal) return;
-    calModal.classList.remove('is-open');
-    document.body.style.overflow = '';
-  }
+  function closeEventModal(){ if(!calModal) return; calModal.classList.remove('is-open'); document.body.style.overflow=''; }
   if(calModal){
     calModal.querySelector('.sp-modal__backdrop').addEventListener('click', closeEventModal);
     calModal.querySelector('.sp-modal__close').addEventListener('click', closeEventModal);
-    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeEventModal(); });
+    document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeEventModal(); });
   }
 
-  // ===== Mini calendar builder (titles inside cells; clickable events) =====
+  /* Mini calendar build */
   (function(){
-    const root = document.getElementById('calendar');
-    if(!root) return;
-    const grid = root.querySelector('.ld-cal-grid');
-    const title = root.querySelector('.ld-cal-title');
-    const events = (()=>{ try{ return JSON.parse(root.dataset.events||'[]'); }catch(e){ return []; } })();
+    const root=document.getElementById('calendar'); if(!root) return;
+    const grid=root.querySelector('.ld-cal-grid'); const title=root.querySelector('.ld-cal-title');
+    const events=(()=>{ try{return JSON.parse(root.dataset.events||'[]');}catch(_){return[];} })();
+    let view=new Date(); view.setDate(1);
 
-    let view = new Date();
-    view.setDate(1);
-
-    function addDayCell(n, muted=false, evs=[]){
-      const d = document.createElement('div');
-      d.className = 'day' + (muted ? ' muted':'');
-      const num = document.createElement('span');
-      num.className = 'day-num';
-      num.textContent = n;
-      d.appendChild(num);
+    function addDayCell(n,muted=false,evs=[]){
+      const d=document.createElement('div'); d.className='day'+(muted?' muted':'');
+      const num=document.createElement('span'); num.className='day-num'; num.textContent=n; d.appendChild(num);
       (evs||[]).slice(0,2).forEach(e=>{
-        const badge = document.createElement('div');
-        badge.className = 'evt';
-        badge.textContent = e.title || '';
-        badge.addEventListener('click', ()=>{
-          openEventModal({ title:e.title, date:e.date, type:e.type });
-        });
-        d.appendChild(badge);
+        const b=document.createElement('div'); b.className='evt'; b.textContent=e.title||'';
+        b.addEventListener('click',()=>openEventModal({title:e.title,date:e.date,type:e.type}));
+        d.appendChild(b);
       });
       grid.appendChild(d);
     }
 
     function render(){
       grid.querySelectorAll('.day').forEach(d=>d.remove());
-      const year = view.getFullYear();
-      const month = view.getMonth();
-      const monthNames = ['Január','Február','Marec','Apríl','Máj','Jún','Júl','August','September','Október','November','December'];
-      title.textContent = `${monthNames[month]} ${year}`;
-
-      const firstDayIdx = (view.getDay()+6)%7; // Mon=0
-      const daysInMonth = new Date(year, month+1, 0).getDate();
-      const prevDays = new Date(year, month, 0).getDate();
-
-      for(let i=firstDayIdx-1;i>=0;i--){
-        const n = prevDays - i;
-        addDayCell(n, true, []);
+      const y=view.getFullYear(), m=view.getMonth();
+      title.textContent=(['Január','Február','Marec','Apríl','Máj','Jún','Júl','August','September','Október','November','December'])[m]+' '+y;
+      const first=(view.getDay()+6)%7, days=new Date(y,m+1,0).getDate(), prev=new Date(y,m,0).getDate();
+      for(let i=first-1;i>=0;i--) addDayCell(prev-i,true,[]);
+      for(let dnum=1; dnum<=days; dnum++){
+        const ds=`${y}-${String(m+1).padStart(2,'0')}-${String(dnum).padStart(2,'0')}`;
+        addDayCell(dnum,false,events.filter(e=>e.date===ds));
       }
-      for(let dnum=1; dnum<=daysInMonth; dnum++){
-        const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(dnum).padStart(2,'0')}`;
-        const evs = events.filter(e=>e.date===dateStr);
-        addDayCell(dnum, false, evs);
-      }
-      const cells = grid.querySelectorAll('.day,.wday').length - 7;
-      const mod = cells % 7;
-      const tail = (mod===0)?0:(7-mod);
-      for(let i=1; i<=tail; i++){ addDayCell(i, true, []); }
+      const cells=grid.querySelectorAll('.day,.wday').length-7, mod=cells%7, tail=(mod===0)?0:(7-mod);
+      for(let i=1;i<=tail;i++) addDayCell(i,true,[]);
     }
 
     render();
     root.querySelectorAll('.cal-nav').forEach(btn=>{
-      btn.addEventListener('click', ()=>{
-        const dir = Number(btn.dataset.dir||1);
-        view.setMonth(view.getMonth()+dir);
-        render();
-      });
+      btn.addEventListener('click', ()=>{ view.setMonth(view.getMonth()+Number(btn.dataset.dir||1)); render(); });
     });
   })();
 
-  // ===== INVENTÁR: multi-select chips + výrazné PLUS v rade =====
+  /* Inventory multi-select + PLUS */
   (function(){
-    const grid = document.getElementById('invGrid');
-    if(!grid) return;
-
-    const plusBtn = document.createElement('button');
-    plusBtn.className = 'inv-add-btn';
-    plusBtn.innerHTML = '<i class="bi bi-plus-lg"></i>';
-    plusBtn.title = 'Pridať vybrané do portfólia';
-    plusBtn.dataset.kind = "{{ kind }}";
-    plusBtn.dataset.slug = "{{ item.slug }}";
-    plusBtn.dataset.cover = "{{ url_for('static', filename='covers/cover.png') }}";
+    const grid=document.getElementById('invGrid'); if(!grid) return;
+    const plusBtn=document.createElement('button');
+    plusBtn.className='inv-add-btn'; plusBtn.innerHTML='<i class="bi bi-plus-lg"></i>'; plusBtn.title='Pridať vybrané do portfólia';
+    plusBtn.dataset.kind="{{ kind }}"; plusBtn.dataset.slug="{{ item.slug }}"; plusBtn.dataset.cover="{{ url_for('static', filename='covers/cover.png') }}";
     grid.appendChild(plusBtn);
 
-    // label builder pre inventár
-    const makeInvLabel = (name)=> "{{ item.title }} – inventár: " + name;
+    const makeInvLabel=name=>"{{ item.title }} – inventár: "+name;
 
-    // Sync existujúcich stavov z portfólia
     function syncInvChips(){
       grid.querySelectorAll('.inv-chip').forEach(ch=>{
-        const name = ch.dataset.inv || ch.textContent.trim();
-        const lbl = makeInvLabel(name);
+        const name=ch.dataset.inv||ch.textContent.trim(); const lbl=makeInvLabel(name);
         ch.classList.remove('is-selected');
-        if(isInPortfolio(lbl)){ ch.classList.add('is-added'); } else { ch.classList.remove('is-added'); }
+        if(isInPortfolio(lbl)) ch.classList.add('is-added'); else ch.classList.remove('is-added');
       });
       updatePlusVisibility();
     }
-
     function updatePlusVisibility(){
-      const hasSel = grid.querySelectorAll('.inv-chip.is-selected:not(.is-added)').length > 0;
-      plusBtn.classList.toggle('show', hasSel);
+      plusBtn.classList.toggle('show', grid.querySelectorAll('.inv-chip.is-selected:not(.is-added)').length>0);
     }
 
-    // Klik na chip
     grid.querySelectorAll('.inv-chip').forEach(ch=>{
       ch.addEventListener('click', ()=>{
-        const name = ch.dataset.inv || ch.textContent.trim();
-        const lbl = makeInvLabel(name);
-
-        // ak je už v portfóliu -> kliknutie = odstránenie
+        const name=ch.dataset.inv||ch.textContent.trim(); const lbl=makeInvLabel(name);
         if(ch.classList.contains('is-added')){
-          removeFromPortfolio(lbl);
-          ch.classList.remove('is-added','is-selected');
-          showToastRemove({ label: lbl, logo: CLUB_LOGO_URL, linkHref: '/portfolio' });
-          updatePlusVisibility();
-          return;
+          removeFromPortfolio(lbl); ch.classList.remove('is-added','is-selected');
+          showToastRemove({label:lbl, logo:CLUB_LOGO_URL, linkHref:'/portfolio'}); updatePlusVisibility(); return;
         }
-
-        // inak iba toggle výberu
-        ch.classList.toggle('is-selected');
-        updatePlusVisibility();
+        ch.classList.toggle('is-selected'); updatePlusVisibility();
       });
     });
 
-    // Klik na PLUS -> pridaj všetky vybrané (ktoré ešte nie sú added)
     plusBtn.addEventListener('click', ()=>{
-      const selected = Array.from(grid.querySelectorAll('.inv-chip.is-selected:not(.is-added)'));
-      if(selected.length===0) return;
-
+      const selected=[...grid.querySelectorAll('.inv-chip.is-selected:not(.is-added)')];
+      if(!selected.length) return;
       selected.forEach(ch=>{
-        const name = ch.dataset.inv || ch.textContent.trim();
-        const lbl = makeInvLabel(name);
-        const payload = {
-          kind: plusBtn.dataset.kind,
-          slug: plusBtn.dataset.slug,
-          label: lbl,
-          price_from: 0,
-          cover: plusBtn.dataset.cover
-        };
-        addToPortfolio(payload);
-        ch.classList.remove('is-selected');
-        ch.classList.add('is-added');
+        const name=ch.dataset.inv||ch.textContent.trim(); const lbl=makeInvLabel(name);
+        addToPortfolio({kind:plusBtn.dataset.kind, slug:plusBtn.dataset.slug, label:lbl, price_from:0, cover:plusBtn.dataset.cover});
+        ch.classList.remove('is-selected'); ch.classList.add('is-added');
       });
-
-      // toast – single alebo multi
       if(selected.length===1){
-        const name = selected[0].dataset.inv || selected[0].textContent.trim();
-        showToastAdd({ label: makeInvLabel(name), logo: CLUB_LOGO_URL, linkHref:'/portfolio' });
+        const name=selected[0].dataset.inv||selected[0].textContent.trim();
+        showToastAdd({label:makeInvLabel(name), logo:CLUB_LOGO_URL, linkHref:'/portfolio'});
       }else{
-        showToastAdd({ label: `Inventár – pridané ${selected.length} položky`, logo: CLUB_LOGO_URL, linkHref:'/portfolio' });
+        showToastAdd({label:`Inventár – pridané ${selected.length} položky`, logo:CLUB_LOGO_URL, linkHref:'/portfolio'});
       }
-
       updatePlusVisibility();
     });
 
-    // expose na init
-    window.syncInvChips = syncInvChips;
-    syncInvChips();
+    window.syncInvChips=syncInvChips; syncInvChips();
   })();
 
-  // Initial sync for any buttons already present
+  /* Initial sync */
   syncAllAddButtons();
   if(window.syncInvChips){ window.syncInvChips(); }
 </script>
