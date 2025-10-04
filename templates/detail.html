@@ -241,6 +241,22 @@
               <div class="text-secondary small">Zatiaľ bez definovaných balíkov – vyžiadaj ponuku na mieru.</div>
             </div>
             {% endfor %}
+
+            {# ---- Kombinuj ponuku tile (kept as you had it) ---- #}
+            <div class="col-12 col-md-6">
+              <div class="ld-pack h-100 ld-pack--mix">
+                <div class="ld-pack-head">
+                  <div class="ld-pack-name">Kombinuj ponuku</div>
+                  <div class="ld-price">od €{{ item.price_from }}</div>
+                </div>
+                <div class="text-secondary">Naklikaj položky z ponuky a vytvor si vlastný balík.</div>
+                <div class="ld-actions mt-2">
+                  <button id="mixOpen" class="btn btn-outline-brand btn-compact">
+                    <i class="bi bi-sliders2"></i> Vybrať
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -253,8 +269,6 @@
         <div id="events" class="card rounded-4 p-3 p-md-4 ld-card mb-4">
           <div class="d-flex align-items-center justify-content-between">
             <h2 class="h5 mb-0">Najbližšie eventy</h2>
-
-            <!-- replaced "Kalendár" with toggle all matches -->
             <button id="allToggle" class="btn btn-ghost btn-slim"><i class="bi bi-list-ul"></i> Zobraziť všetky zápasy</button>
           </div>
 
@@ -274,8 +288,6 @@
                     <div class="fw-semibold">{{ u.title }}</div>
                     <div class="text-secondary small"><i class="bi bi-calendar-event"></i> {{ u.date }} • {{ u.type }}</div>
                   </div>
-
-                  <!-- One-line action (ONLY portfolio) -->
                   <div class="ld-actions">
                     <button class="btn btn-outline-brand btn-compact"
                             data-cta="add"
@@ -310,7 +322,12 @@
               <div class="ld-tl-card flex-grow-1">
                 <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
                   <div class="me-2">
-                    <div class="fw-semibold">{{ u.title }}{% if loop.index > (item.upcoming|length|default(0)) %} <span class="ld-key-tag">TOP</span>{% endif %}</div>
+                    <div class="fw-semibold">
+                      {{ u.title }}
+                      {% if loop.index > (item.upcoming|length|default(0)) %}
+                        <span class="ld-key-tag">TOP</span>
+                      {% endif %}
+                    </div>
                     <div class="text-secondary small"><i class="bi bi-calendar-event"></i> {{ u.date }} • {{ u.type }}</div>
                   </div>
                   <div class="ld-actions">
@@ -330,42 +347,7 @@
             {% endfor %}
           </div>
 
-          <!-- Najvýznamnejšie eventy sezóny -->
-          <h3 class="h6 mt-4 mb-2">Najvýznamnejšie eventy sezóny</h3>
-          <div class="ld-timeline">
-            {% for u in key_events %}
-            {% set ds = u.date or '' %}
-            {% set dday = ds[8:10] %}
-            {% set dmon = ds[5:7] %}
-            <div class="ld-tl-row">
-              <div class="ld-datepill">
-                <div class="ld-day">{{ dday }}</div>
-                <div class="ld-month">{{ dmon }}</div>
-              </div>
-              <div class="ld-tl-card flex-grow-1">
-                <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-                  <div class="me-2">
-                    <div class="fw-semibold">{{ u.title }} <span class="ld-key-tag">TOP</span></div>
-                    <div class="text-secondary small"><i class="bi bi-calendar-event"></i> {{ u.date }} • {{ u.type }}</div>
-                  </div>
-                  <div class="ld-actions">
-                    <button class="btn btn-outline-brand btn-compact"
-                            data-cta="add"
-                            data-kind="{{ kind }}"
-                            data-slug="{{ item.slug }}"
-                            data-label="{{ item.title }} – {{ u.title }}"
-                            data-price=""
-                            data-cover="{{ url_for('static', filename='covers/cover.png') }}">
-                      <i class="bi bi-plus-circle"></i> Pridať do portfólia
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {% endfor %}
-          </div>
-
-          <!-- Mini kalendár (ponechané) -->
+          <!-- Mini kalendár -->
           <div id="calendar" class="ld-cal mt-3"
                data-events='{{ (item.upcoming|default([]) + key_events)|tojson }}'>
             <div class="ld-cal-head">
@@ -393,7 +375,6 @@
             <div class="stat"><span class="label">Streamy / mesiac</span><span class="val">4</span></div>
             <div class="stat"><span class="label">Ø video views</span><span class="val">25k</span></div>
             <div class="stat"><span class="label">Web návštevnosť / mes.</span><span class="val">18k</span></div>
-            {# removed: Newsletter odbery, Top mesto, Lokálne publikum #}
           </div>
         </div>
 
@@ -441,11 +422,25 @@
           </div>
 
           <div class="ld-side-facts my-3 small">
-            <div class="d-flex justify-content-between"><span class="text-secondary">Ceny od</span><span class="fw-semibold">€{{ item.price_from }}</span></div>
-            <div class="d-flex justify-content-between"><span class="text-secondary">Dosah</span><span class="fw-semibold">{{ item.reach }}</span></div>
-            <div class="d-flex justify-content-between"><span class="text-secondary">ER</span><span class="fw-semibold">{{ '%.1f'|format(item.er) }}%</span></div>
+            <div class="d-flex justify-content-between">
+              <span class="text-secondary">Ceny od</span><span class="fw-semibold">€{{ item.price_from }}</span>
+            </div>
+            <div class="d-flex justify-content-between">
+              <span class="text-secondary">Dosah</span><span class="fw-semibold">{{ item.reach }}</span>
+            </div>
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="text-secondary">ER
+                <span class="mini-i" data-tip="Engagement Rate – priemerný podiel interakcií (lajky, komentáre, zdieľania) na dosahu za posledné obdobie."></span>
+              </span>
+              <span class="fw-semibold">{{ '%.1f'|format(item.er) }}%</span>
+            </div>
             {% if item.metrics and item.metrics.avg_cpm %}
-            <div class="d-flex justify-content-between"><span class="text-secondary">CPM</span><span class="fw-semibold">{{ item.metrics.avg_cpm }}</span></div>
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="text-secondary">CPM
+                <span class="mini-i" data-tip="Cost per Mille – cena za 1000 zobrazení. Pomáha porovnávať efektivitu naprieč ponukami."></span>
+              </span>
+              <span class="fw-semibold">{{ item.metrics.avg_cpm }}</span>
+            </div>
             {% endif %}
           </div>
 
@@ -453,7 +448,7 @@
           <div class="ld-mini-metrics">
             <div class="ld-mm"><span class="text-secondary small">Posty/mes</span><div class="fw-semibold">{{ item.metrics.posts_m }}</div></div>
             <div class="ld-mm"><span class="text-secondary small">Ø videní</span><div class="fw-semibold">{{ item.metrics.avg_views }}</div></div>
-            <div class="ld-mm"><span class="text-secondary small">CPM</span><div class="fw-semibold">{{ item.metrics.avg_cpm }}</div></div>
+            <div class="ld-mm"><span class="text-secondary small">Zápasy</span><div class="fw-semibold">{{ item.metrics.games|default(28) }}</div></div>
           </div>
           {% endif %}
 
@@ -522,16 +517,38 @@
   </div>
 </div>
 
+<!-- ========= MIX MODAL (builder) ========= -->
+<div id="mixModal" class="sp-modal" aria-hidden="true">
+  <div class="sp-modal__backdrop"></div>
+  <div class="sp-modal__card" role="dialog" aria-modal="true" aria-labelledby="mixTitle" style="max-width:860px">
+    <button class="sp-modal__close" aria-label="Zavrieť">&times;</button>
+    <div class="sp-modal__content">
+      <div id="mixTitle" class="spm-title" style="font-weight:700">Kombinuj ponuku</div>
+      <div class="text-secondary" style="margin:.25rem 0 1rem">Vyber položky a uprav počty. Vybrané položky sa sčítajú nižšie.</div>
+
+      <div id="mixList" class="mix-list"></div>
+
+      <div class="d-flex align-items-center justify-content-between mt-3">
+        <div class="fw-semibold">Spolu</div>
+        <div id="mixSum" class="fw-bold">€0</div>
+      </div>
+
+      <div class="ld-actions mt-3">
+        <button id="mixAddBtn" class="btn btn-outline-brand btn-compact">
+          <i class="bi bi-plus-circle"></i> Pridať do portfólia
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ===================== PAGE-LOCAL CSS ===================== -->
 <style>
   :root{
     --brand-purple:#2d226c;
     --brand-accent:#774bfb;
-    /* filter to purple-tint black SVGs */
     --sp-purple-filter: invert(33%) sepia(86%) saturate(7493%) hue-rotate(244deg) brightness(92%) contrast(104%);
   }
-
-  /* Small inline icons */
   .icon-16{width:16px;height:16px;vertical-align:-2px;display:inline-block}
 
   /* Breadcrumb base */
@@ -561,8 +578,6 @@
   .ld-title{ font-weight:700; letter-spacing:-.01em; color:#0e1116; font-size:clamp(22px,2.5vw,34px); }
   .ld-avatar{ width:56px; height:56px; border-radius:50%; border:1px solid var(--border); object-fit:cover; }
   .sp-verified{ color:var(--brand-2); }
-
-  /* Cards */
   .ld-card{ border:1px solid var(--border); box-shadow:0 8px 18px rgba(10,20,30,.04); }
 
   /* Cover */
@@ -581,36 +596,17 @@
     backdrop-filter:saturate(120%) blur(2px);
   }
   .sport-pill i{ color:currentColor; }
-  .sport-pill .icon-16{ filter:var(--sp-purple-filter); }       /* purple sport icon */
+  .sport-pill .icon-16{ filter:var(--sp-purple-filter); }
 
-  /* ================ Thumbs (drag/swipe) ================ */
-  .ld-thumbs-row{
-    position:relative; isolation:isolate;
-    display:flex; gap:12px;
-    overflow-x:auto; overflow-y:hidden;
-    padding:6px;
-    -webkit-overflow-scrolling:touch;
-    scroll-snap-type:x proximity;
-    scrollbar-width:none;
-    cursor:grab;
-  }
+  /* Thumbs */
+  .ld-thumbs-row{ position:relative; isolation:isolate; display:flex; gap:12px; overflow-x:auto; overflow-y:hidden; padding:6px; -webkit-overflow-scrolling:touch; scroll-snap-type:x proximity; scrollbar-width:none; cursor:grab;}
   .ld-thumbs-row::-webkit-scrollbar{ display:none; }
   .ld-thumbs-row.grabbing{ cursor:grabbing; user-select:none; }
-
-  .ld-thumb{
-    border:1px solid var(--border); background:#fff;
-    border-radius:14px; overflow:hidden;
-    width:220px; height:120px; flex:0 0 auto; padding:0; cursor:pointer;
-    transition:border-color .15s ease, transform .15s ease;
-    position:relative; scroll-snap-align:start;
-  }
+  .ld-thumb{ border:1px solid var(--border); background:#fff; border-radius:14px; overflow:hidden; width:220px; height:120px; flex:0 0 auto; padding:0; cursor:pointer; transition:border-color .15s ease, transform .15s ease; position:relative; scroll-snap-align:start; }
   .ld-thumb:hover{ transform:translateY(-2px); }
   .ld-thumb.is-active{ border-color:#d7ceff; box-shadow:0 8px 18px rgba(119,75,251,.12); }
   .ld-thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
-  .ld-thumb-video .yt-badge{
-    position:absolute; left:10px; bottom:10px; width:34px; height:34px; border-radius:999px;
-    display:grid; place-items:center; background:rgba(255,255,255,.9); border:1px solid #e6ddff;
-  }
+  .ld-thumb-video .yt-badge{ position:absolute; left:10px; bottom:10px; width:34px; height:34px; border-radius:999px; display:grid; place-items:center; background:rgba(255,255,255,.9); border:1px solid #e6ddff; }
   .ld-thumb-video .yt-badge i{ font-size:20px; color:#6b5afc; }
 
   /* Text & chips */
@@ -619,22 +615,33 @@
 
   .ach-pill{ border:1px solid var(--border); background:#fff; border-radius:14px; padding:.55rem .8rem; display:flex; align-items:center; gap:.55rem; font-weight:400; font-size:.95rem; }
   .ach-logo{ width:22px; height:22px; object-fit:contain; }
-  .ach-more-btn{ font-size:.78rem; padding:.22rem .5rem; font-weight:400; }
+  /* Smaller "Zobraziť viac" */
+  .ach-more-btn{ font-size:.7rem !important; padding:.16rem .44rem !important; border-radius:999px; }
 
-  .sp-tag{
-    display:inline-flex; align-items:center; gap:.28rem;
-    padding:.32rem .56rem; border:1px dashed var(--border);
-    border-radius:999px; background:#fff; color:#0e1116; font-size:.8rem;
-  }
-  .sp-tag i{ color:currentColor; }
-  .sp-tag .icon-16{ filter:var(--sp-purple-filter); }            /* purple sport tag icon */
+  .sp-tag{ display:inline-flex; align-items:center; gap:.28rem; padding:.32rem .56rem; border:1px dashed var(--border); border-radius:999px; background:#fff; color:#0e1116; font-size:.8rem; }
+  .sp-tag .icon-16{ filter:var(--sp-purple-filter); }
 
-  .sp-stat-chip{
-    display:inline-flex; align-items:center; gap:.28rem;
-    padding:.32rem .5rem; border:1px solid var(--border);
-    border-radius:999px; background:#fff; font-size:.8rem; color:#0e1116; white-space:nowrap;
+  .sp-stat-chip{ display:inline-flex; align-items:center; gap:.28rem; padding:.32rem .5rem; border:1px solid var(--border); border-radius:999px; background:#fff; font-size:.8rem; color:#0e1116; white-space:nowrap; }
+  .sp-stat-chip i{ color:#6b5afc; }
+
+  /* Info dot (sidebar ER/CPM) */
+  .mini-i{
+    display:inline-grid; place-items:center;
+    width:16px; height:16px; margin-left:6px;
+    border:1px solid #e6ddff; border-radius:999px;
+    color:#6b5afc; background:#fff; cursor:default; position:relative; top:-1px;
+    font-style:normal; line-height:1;
   }
-  .sp-stat-chip i{ color:#6b5afc; }                              /* purple chip icons */
+  .mini-i::before{ content:"i"; font-size:11px; font-weight:600; transform:translateY(0); }
+  .mini-i:hover{ background:#f6f0ff; }
+  .mini-i[data-tip]::after{
+    content:attr(data-tip); position:absolute; left:50%; transform:translate(-50%,6px); bottom:-6px;
+    opacity:0; pointer-events:none; transition:opacity .15s ease, transform .15s ease;
+    white-space:normal; width:max(190px, 22ch); max-width:260px;
+    background:#111827; color:#f3f4f6; border:1px solid rgba(119,75,251,.35);
+    padding:.45rem .55rem; border-radius:10px; font-size:.78rem; font-weight:400; z-index:10000;
+  }
+  .mini-i:hover[data-tip]::after{ opacity:1; transform:translate(-50%,10px); }
 
   /* Buttons */
   .btn-outline-brand{ background:#fff; color:#3b2a85; border:1px solid #e6ddff; font-weight:600; border-radius:999px; }
@@ -645,23 +652,15 @@
   .btn-compact{ padding:.36rem .6rem; font-size:.9rem; white-space:nowrap; }
   .btn-added{ background:#2d226c !important; color:#fff !important; border-color:#2d226c !important; }
   .btn-added i{ color:#fff !important; }
-
   .ld-actions{ display:flex; align-items:center; gap:8px; flex-wrap:nowrap; }
 
-  /* Inventory + multi-select + PLUS */
+  /* Inventory & Plus */
   .ld-inv-grid{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
   .inv-chip{ display:inline-flex; align-items:center; gap:.28rem; padding:.32rem .56rem; border:1px solid var(--border); border-radius:999px; background:#fff; font-size:.86rem; color:#0e1116; cursor:pointer; transition:box-shadow .15s ease, border-color .15s ease, background .15s ease; }
-  .inv-chip i{ color:#6b5afc; }                                   /* purple inventory icons */
-
+  .inv-chip i{ color:#6b5afc; }
   .inv-chip.is-selected{ border-color:#c9b9ff; background:linear-gradient(135deg, rgba(119,75,251,.08), rgba(119,75,251,.03)), #fff; box-shadow:0 4px 12px rgba(119,75,251,.12); }
   .inv-chip.is-added{ border-color:#a694ff; background:linear-gradient(135deg, rgba(119,75,251,.12), rgba(119,75,251,.05)), #fff; box-shadow:0 5px 14px rgba(119,75,251,.14); }
-
-  .inv-add-btn{
-    display:none; align-items:center; justify-content:center;
-    width:40px; height:40px; border-radius:999px; border:1px solid #e6ddff;
-    background:#2d226c; color:#fff; box-shadow:0 10px 22px rgba(45,34,108,.28);
-    cursor:pointer; margin-left:4px; flex:0 0 auto; position:relative; top:-2px;
-  }
+  .inv-add-btn{ display:none; align-items:center; justify-content:center; width:40px; height:40px; border-radius:999px; border:1px solid #e6ddff; background:#2d226c; color:#fff; box-shadow:0 10px 22px rgba(45,34,108,.28); cursor:pointer; margin-left:4px; flex:0 0 auto; position:relative; top:-2px; }
   .inv-add-btn.show{ display:inline-flex; }
   .inv-add-btn:disabled{ opacity:.45; cursor:not-allowed; box-shadow:none; }
 
@@ -670,6 +669,7 @@
   .ld-pack-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:.35rem; }
   .ld-pack-name{ font-weight:700; }
   .ld-price{ display:inline-flex; align-items:center; padding:.24rem .55rem; border-radius:999px; background:linear-gradient(135deg, rgba(119,75,251,.12), rgba(119,75,251,.06)), #fff; border:1px solid #e6ddff; color:#3b2a85; font-weight:600; font-size:.9rem; white-space:nowrap; }
+  .ld-pack--mix{ background:linear-gradient(180deg,#fafaff, #fff); }
 
   /* Timeline / events */
   .ld-timeline{ display:grid; gap:12px; }
@@ -716,11 +716,7 @@
   .ld-age-label{ width:72px; color:#4b5563; font-weight:600; }
   .ld-age-bar{ flex:1; height:16px; background:#eff2f6; border-radius:999px; overflow:hidden; position:relative; }
   .ld-age-fill{ height:100%; background:var(--brand-accent); border-radius:999px; position:relative; display:block; }
-  .ld-age-fill span{
-    position:absolute; right:6px; top:50%; transform:translateY(-50%);
-    color:#fff; font-size:.8rem; font-weight:700; text-shadow:0 1px 0 rgba(0,0,0,.15);
-  }
-  /* If the bar is too short, push the % outside on the right */
+  .ld-age-fill span{ position:absolute; right:6px; top:50%; transform:translateY(-50%); color:#fff; font-size:.8rem; font-weight:700; text-shadow:0 1px 0 rgba(0,0,0,.15); }
   .ld-age-fill.tiny span{ right:auto; left:100%; transform:translate(6px,-50%); color:#374151; text-shadow:none; }
 
   /* Sidebar */
@@ -731,18 +727,7 @@
   .ld-mm{ border:1px solid var(--border); background:#fff; border-radius:12px; padding:.6rem .7rem; text-align:center; }
 
   /* Toasts */
-  .sp-toast{
-    position:fixed; right:18px; bottom:18px;
-    background:rgba(16,18,27,.9);
-    border:1px solid rgba(119,75,251,.35);
-    color:#eef;
-    border-radius:16px; padding:.9rem 1rem;
-    box-shadow:0 18px 40px rgba(0,0,0,.35), 0 0 0 1px rgba(255,255,255,.04) inset;
-    display:flex; align-items:center; gap:.85rem; z-index:9999;
-    opacity:0; transform:translateY(10px); transition:opacity .2s ease, transform .2s ease;
-    max-width:92vw; width:min(420px,92vw);
-    backdrop-filter:saturate(120%) blur(8px);
-  }
+  .sp-toast{ position:fixed; right:18px; bottom:18px; background:rgba(16,18,27,.9); border:1px solid rgba(119,75,251,.35); color:#eef; border-radius:16px; padding:.9rem 1rem; box-shadow:0 18px 40px rgba(0,0,0,.35), 0 0 0 1px rgba(255,255,255,.04) inset; display:flex; align-items:center; gap:.85rem; z-index:9999; opacity:0; transform:translateY(10px); transition:opacity .2s ease, transform .2s ease; max-width:92vw; width:min(420px,92vw); backdrop-filter:saturate(120%) blur(8px); }
   .sp-toast--light{ background:rgba(255,255,255,.96); border:1px solid #e9ecf3; color:#0e1116; box-shadow:0 16px 36px rgba(0,0,0,.18); }
   .sp-toast.show{ opacity:1; transform:translateY(0); }
   .sp-toast img{ width:44px; height:44px; object-fit:cover; border-radius:12px; border:1px solid rgba(119,75,251,.35); }
@@ -761,46 +746,40 @@
   .sp-modal{ position:fixed; inset:0; display:none; z-index:9998; }
   .sp-modal.is-open{ display:block; }
   .sp-modal__backdrop{ position:absolute; inset:0; background:rgba(9,11,17,.45); backdrop-filter:blur(4px); }
-  .sp-modal__card{
-    position:relative; max-width:600px; width:calc(100% - 28px);
-    margin:6vh auto; background:#ffffff; color:#0e1116;
-    border:1px solid #e6ddff; border-radius:18px;
-    box-shadow:0 24px 60px rgba(18,20,28,.25);
-  }
+  .sp-modal__card{ position:relative; max-width:600px; width:calc(100% - 28px); margin:6vh auto; background:#ffffff; color:#0e1116; border:1px solid #e6ddff; border-radius:18px; box-shadow:0 24px 60px rgba(18,20,28,.25); }
   .sp-modal__close{ position:absolute; top:10px; right:12px; background:transparent; border:0; color:#111; font-size:26px; line-height:1; cursor:pointer; }
   .sp-modal__content{ padding:18px 18px 20px; }
   .spm-title{ font-size:1.25rem; font-weight:800; color:#0e1116; }
-  .spm-date{ margin-top:.55rem; color:#374151; font-weight:600; }
-  .spm-tag{ margin-top:.45rem; display:inline-flex; padding:.24rem .55rem; border-radius:999px; border:1px solid #e6ddff; background:#f6f0ff; color:#3b2a85; font-size:.85rem; }
 
-  /* Mobile improvements */
+  /* Builder list */
+  .mix-list{ display:grid; gap:10px; }
+  .mix-row{ display:flex; align-items:center; gap:12px; border:1px solid #eef0f5; background:#fafbff; border-radius:14px; padding:10px 12px; }
+  .mix-name{ flex:1; font-weight:600; }
+  .mix-price{ font-weight:700; padding:.2rem .55rem; border:1px solid #e6ddff; border-radius:999px; background:#fff; color:#3b2a85; }
+  .mix-plus{ border:1px solid #e6ddff; background:#fff; border-radius:10px; width:36px; height:36px; display:grid; place-items:center; }
+  .mix-plus:focus{ outline:2px solid #b8a9ff; outline-offset:2px; }
+
+  /* Quantity bubble anchored to + */
+  .qty-bubble{ position:fixed; z-index:10001; background:#fff; border:1px solid #e6ddff; border-radius:14px; display:flex; align-items:center; gap:8px; padding:6px 8px; box-shadow:0 12px 30px rgba(10,20,30,.2); }
+  .qty-bubble button{ width:36px; height:36px; border-radius:10px; border:1px solid #e6ddff; background:#fff; font-size:18px; }
+  .qty-bubble .cnt{ min-width:24px; text-align:center; font-weight:700; }
+  .qty-bubble.hide{ display:none; }
+
+  /* Mobile tweaks */
   .ld-breadcrumb,.ld-hero{
     background:
       radial-gradient(900px 450px at 8% -20%, rgba(119,75,251,.06), transparent 65%),
       #f8f9f9 !important;
   }
   .ld-seg{ gap:6px; }
-  .seg-btn{
-    display:inline-flex; align-items:center; justify-content:center;
-    width:38px; height:38px; border-radius:999px;
-    border:1px solid #e6ddff; background:#fff; color:#3b2a85;
-    font-weight:600; text-decoration:none; transition:background .15s ease, border-color .15s ease, transform .1s ease;
-  }
+  .seg-btn{ display:inline-flex; align-items:center; justify-content:center; width:38px; height:38px; border-radius:999px; border:1px solid #e6ddff; background:#fff; color:#3b2a85; font-weight:600; text-decoration:none; transition:background .15s ease, border-color .15s ease, transform .1s ease; }
   .seg-btn i{ font-size:1.05rem; line-height:1; }
   .seg-btn:hover{ background:#f6f0ff; border-color:#d8ccff; transform:translateY(-1px); }
   .seg-btn:focus-visible{ outline:2px solid #b7a6ff; outline-offset:2px; }
 
-  /* Sticky, finger-friendly mobile quick nav */
-  .ld-mobile-nav{
-    position:sticky; top:64px; z-index:10; margin:.6rem 0 0;
-    display:flex; gap:8px; overflow:auto; padding-bottom:6px;
-  }
-  .ld-mobile-nav .mnav{
-    border:1px solid var(--border); background:#fff; border-radius:999px;
-    padding:.45rem .7rem; font-size:.95rem; white-space:nowrap;
-  }
+  .ld-mobile-nav{ position:sticky; top:64px; z-index:10; margin:.6rem 0 0; display:flex; gap:8px; overflow:auto; padding-bottom:6px; }
+  .ld-mobile-nav .mnav{ border:1px solid var(--border); background:#fff; border-radius:999px; padding:.45rem .7rem; font-size:.95rem; white-space:nowrap; }
 
-  /* Calendar tighter on mobile */
   @media (max-width:576px){
     .day{ min-height:64px; padding:.35rem .4rem; }
     .ld-day{ font-size:20px; }
@@ -856,7 +835,6 @@
 
     document.querySelectorAll('.ld-thumb').forEach(btn=>{
       btn.addEventListener('click', (ev)=>{
-        // ak sa row práve ťahala dragom, ignoruj klik
         if(btn.closest('.ld-thumbs-row')?.dataset.dragged === '1'){ ev.preventDefault(); return; }
         document.querySelectorAll('.ld-thumb').forEach(b=>b.classList.remove('is-active'));
         btn.classList.add('is-active');
@@ -865,37 +843,15 @@
     });
   })();
 
-  /* Drag-to-scroll pre thumbnails (desktop „grab“ + mobile swipe) */
+  /* Drag-to-scroll for thumbs */
   (function(){
     const rows = document.querySelectorAll('.ld-thumbs-row');
     if(!rows.length) return;
-
     rows.forEach(row=>{
       let isDown=false, startX=0, scrollStart=0, moved=false;
-
-      row.addEventListener('pointerdown', (e)=>{
-        isDown=true; moved=false;
-        startX=e.clientX; scrollStart=row.scrollLeft;
-        row.classList.add('grabbing');
-        if(e.pointerType==='mouse'){ e.preventDefault(); }
-        row.setPointerCapture?.(e.pointerId);
-      });
-
-      row.addEventListener('pointermove', (e)=>{
-        if(!isDown) return;
-        const dx=e.clientX-startX;
-        if(Math.abs(dx)>5) moved=true;
-        row.scrollLeft = scrollStart - dx;
-      });
-
-      function endDrag(e){
-        if(!isDown) return;
-        isDown=false;
-        row.classList.remove('grabbing');
-        row.releasePointerCapture?.(e.pointerId);
-        row.dataset.dragged = moved ? '1':'0';
-        setTimeout(()=>{ row.dataset.dragged='0'; }, 40);
-      }
+      row.addEventListener('pointerdown', (e)=>{ isDown=true; moved=false; startX=e.clientX; scrollStart=row.scrollLeft; row.classList.add('grabbing'); if(e.pointerType==='mouse'){ e.preventDefault(); } row.setPointerCapture?.(e.pointerId);});
+      row.addEventListener('pointermove', (e)=>{ if(!isDown) return; const dx=e.clientX-startX; if(Math.abs(dx)>5) moved=true; row.scrollLeft = scrollStart - dx;});
+      function endDrag(e){ if(!isDown) return; isDown=false; row.classList.remove('grabbing'); row.releasePointerCapture?.(e.pointerId); row.dataset.dragged = moved ? '1':'0'; setTimeout(()=>{ row.dataset.dragged='0'; }, 40); }
       row.addEventListener('pointerup', endDrag);
       row.addEventListener('pointercancel', endDrag);
       row.addEventListener('mouseleave', endDrag);
@@ -918,7 +874,6 @@
   function addToPortfolio(p){ const l=getPortfolio(); if(!l.some(x=>x.kind===p.kind&&x.slug===p.slug&&x.label===p.label)){ l.push(p); setPortfolio(l);} }
   function removeFromPortfolio(label){ setPortfolio(getPortfolio().filter(x=>x.label!==label)); }
   function isInPortfolio(label){ return getPortfolio().some(x=>x.label===label); }
-
   function cssEscapeSel(str){ return str.replace(/("|'|\\)/g,'\\$1'); }
   function markAddedUI(label){
     document.querySelectorAll(`[data-cta="add"][data-label="${cssEscapeSel(label)}"]`).forEach(b=>{
@@ -961,7 +916,7 @@
   }
 
   /* Add-to-portfolio CTAs (exclude modal button) */
-  document.querySelectorAll('[data-cta="add"]:not(#calAddBtn)').forEach(btn=>{
+  document.querySelectorAll('[data-cta="add"]:not(#calAddBtn):not(#mixAddBtn)').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       const label = btn.dataset.label||'';
       const payload = {
@@ -979,50 +934,53 @@
     });
   });
 
-  /* Modal add/remove */
-  const calModal = document.getElementById('calModal');
-  const calTitle = document.getElementById('calTitle');
-  const calDate  = document.getElementById('calDate');
-  const calType  = document.getElementById('calType');
-  const calAddBtn = document.getElementById('calAddBtn');
-  const calDateRow = document.querySelector('.spm-date');
+  /* Modal add/remove (calendar) */
+  (function(){
+    const calModal = document.getElementById('calModal');
+    const calTitle = document.getElementById('calTitle');
+    const calDate  = document.getElementById('calDate');
+    const calType  = document.getElementById('calType');
+    const calAddBtn = document.getElementById('calAddBtn');
+    const calDateRow = document.querySelector('.spm-date');
 
-  function openEventModal(evData){
-    if(!calModal) return;
-    calTitle.textContent = evData.title || '';
-    calDate.textContent  = evData.date  || '';
-    calType.textContent  = evData.type  || '';
-    calDateRow.style.display = evData.date ? '' : 'none';
+    function openEventModal(evData){
+      if(!calModal) return;
+      calTitle.textContent = evData.title || '';
+      calDate.textContent  = evData.date  || '';
+      calType.textContent  = evData.type  || '';
+      calDateRow.style.display = evData.date ? '' : 'none';
 
-    const lbl = "{{ item.title }} – " + (evData.labelSuffix || evData.title || 'Event');
-    calAddBtn.dataset.label = lbl;
-    calAddBtn.dataset.price = "";
-    if(isInPortfolio(lbl)) markAddedUI(lbl); else unmarkAddedUI(lbl);
+      const lbl = "{{ item.title }} – " + (evData.labelSuffix || evData.title || 'Event');
+      calAddBtn.dataset.label = lbl;
+      calAddBtn.dataset.price = "";
+      if(isInPortfolio(lbl)) markAddedUI(lbl); else unmarkAddedUI(lbl);
 
-    calAddBtn.onclick = (e)=>{
-      e.preventDefault(); e.stopImmediatePropagation?.();
-      const payload = { kind:calAddBtn.dataset.kind, slug:calAddBtn.dataset.slug, label:calAddBtn.dataset.label, price_from:0, cover:calAddBtn.dataset.cover };
-      if(isInPortfolio(payload.label)){
-        removeFromPortfolio(payload.label); unmarkAddedUI(payload.label);
-        calAddBtn.classList.remove('btn-added'); calAddBtn.classList.add('btn-outline-brand');
-        calAddBtn.innerHTML='<i class="bi bi-plus-circle"></i> Pridať do portfólia';
-        showToastRemove({label:payload.label, logo:CLUB_LOGO_URL, linkHref:'/portfolio'});
-      }else{
-        addToPortfolio(payload); markAddedUI(payload.label);
-        calAddBtn.classList.add('btn-added'); calAddBtn.classList.remove('btn-outline-brand');
-        calAddBtn.innerHTML='<i class="bi bi-check2-circle"></i> Pridané';
-        showToastAdd({label:payload.label, price:'', logo:CLUB_LOGO_URL, linkHref:'/portfolio'});
-      }
-    };
+      calAddBtn.onclick = (e)=>{
+        e.preventDefault(); e.stopImmediatePropagation?.();
+        const payload = { kind:calAddBtn.dataset.kind, slug:calAddBtn.dataset.slug, label:calAddBtn.dataset.label, price_from:0, cover:calAddBtn.dataset.cover };
+        if(isInPortfolio(payload.label)){
+          removeFromPortfolio(payload.label); unmarkAddedUI(payload.label);
+          calAddBtn.classList.remove('btn-added'); calAddBtn.classList.add('btn-outline-brand');
+          calAddBtn.innerHTML='<i class="bi bi-plus-circle"></i> Pridať do portfólia';
+          showToastRemove({label:payload.label, logo:CLUB_LOGO_URL, linkHref:'/portfolio'});
+        }else{
+          addToPortfolio(payload); markAddedUI(payload.label);
+          calAddBtn.classList.add('btn-added'); calAddBtn.classList.remove('btn-outline-brand');
+          calAddBtn.innerHTML='<i class="bi bi-check2-circle"></i> Pridané';
+          showToastAdd({label:payload.label, price:'', logo:CLUB_LOGO_URL, linkHref:'/portfolio'});
+        }
+      };
 
-    calModal.classList.add('is-open'); document.body.style.overflow='hidden';
-  }
-  function closeEventModal(){ if(!calModal) return; calModal.classList.remove('is-open'); document.body.style.overflow=''; }
-  if(calModal){
-    calModal.querySelector('.sp-modal__backdrop').addEventListener('click', closeEventModal);
-    calModal.querySelector('.sp-modal__close').addEventListener('click', closeEventModal);
-    document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeEventModal(); });
-  }
+      calModal.classList.add('is-open'); document.body.style.overflow='hidden';
+    }
+    function closeEventModal(){ if(!calModal) return; calModal.classList.remove('is-open'); document.body.style.overflow=''; }
+    if(calModal){
+      calModal.querySelector('.sp-modal__backdrop').addEventListener('click', closeEventModal);
+      calModal.querySelector('.sp-modal__close').addEventListener('click', closeEventModal);
+      document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeEventModal(); });
+    }
+    window.openEventModal = openEventModal;
+  })();
 
   /* Mini calendar build */
   (function(){
@@ -1031,14 +989,12 @@
     const events=(()=>{ try{return JSON.parse(root.dataset.events||'[]');}catch(_){return[];} })();
     let view=new Date(); view.setDate(1);
 
-    function openEventModalFromCal(e){ openEventModal({title:e.title,date:e.date,type:e.type}); }
-
     function addDayCell(n,muted=false,evs=[]){
       const d=document.createElement('div'); d.className='day'+(muted?' muted':'');
       const num=document.createElement('span'); num.className='day-num'; num.textContent=n; d.appendChild(num);
       (evs||[]).slice(0,2).forEach(e=>{
         const b=document.createElement('div'); b.className='evt'; b.textContent=e.title||'';
-        b.addEventListener('click',()=>openEventModalFromCal(e));
+        b.addEventListener('click',()=>window.openEventModal({title:e.title,date:e.date,type:e.type}));
         d.appendChild(b);
       });
       grid.appendChild(d);
@@ -1131,20 +1087,112 @@
     });
   })();
 
-  /* Audience %: move numbers outside when bars are short (mobile readability) */
+  /* Audience % label placement for narrow bars */
   (function(){
-    document.querySelectorAll('.ld-age-fill').forEach(fill=>{
-      const w = parseFloat(getComputedStyle(fill).width);
-      const parentW = parseFloat(getComputedStyle(fill.parentElement).width);
-      if(parentW && (w/parentW) < 0.22){ fill.classList.add('tiny'); }
-    });
-    window.addEventListener('resize', ()=>{
+    function adjust(){
       document.querySelectorAll('.ld-age-fill').forEach(fill=>{
         fill.classList.remove('tiny');
         const w = parseFloat(getComputedStyle(fill).width);
         const parentW = parseFloat(getComputedStyle(fill.parentElement).width);
         if(parentW && (w/parentW) < 0.22){ fill.classList.add('tiny'); }
       });
+    }
+    adjust(); window.addEventListener('resize', adjust);
+  })();
+
+  /* MIX builder data (from inventory) + anchored qty bubble from the price + button */
+  (function(){
+    const openBtn = document.getElementById('mixOpen');
+    const modal = document.getElementById('mixModal');
+    if(!openBtn || !modal) return;
+
+    const listEl = document.getElementById('mixList');
+    const sumEl  = document.getElementById('mixSum');
+    const addBtn = document.getElementById('mixAddBtn');
+
+    // Inventory -> simple price map (fallback €100 each if none)
+    const priceMap = {};
+    {% if item.inventory %}
+      {% for group, items in item.inventory.items() %}
+        {% for it in items %}
+          priceMap["{{ it.name }}"] = Number(("{{ it.price|default('0') }}").toString().replace(/[^\d.]/g,'')) || 100;
+        {% endfor %}
+      {% endfor %}
+    {% endif %}
+
+    let rows = [];
+
+    function render(){
+      listEl.innerHTML='';
+      rows.forEach((r,idx)=>{
+        const row=document.createElement('div'); row.className='mix-row';
+        const toggle=document.createElement('input'); toggle.type='checkbox'; toggle.checked=r.qty>0; toggle.className='form-check-input'; toggle.style.marginRight='4px';
+        const name=document.createElement('div'); name.className='mix-name'; name.textContent=r.name;
+        const price=document.createElement('div'); price.className='mix-price'; price.textContent=`€${r.price}`;
+        const plus=document.createElement('button'); plus.type='button'; plus.className='mix-plus'; plus.innerHTML='<i class="bi bi-plus-lg"></i>'; plus.setAttribute('aria-label','Upraviť počet');
+
+        toggle.addEventListener('change',()=>{ r.qty = toggle.checked ? Math.max(1,r.qty||1) : 0; recalc(); });
+        plus.addEventListener('click',(ev)=>openQtyBubble(ev.currentTarget, r));
+
+        row.append(toggle,name,price,plus); listEl.appendChild(row);
+      });
+      recalc();
+    }
+
+    function recalc(){
+      let s=0; rows.forEach(r=>{ s += (r.qty||0) * r.price; });
+      sumEl.textContent = '€'+s.toLocaleString('sk-SK');
+    }
+
+    let bubble;
+    function openQtyBubble(anchor, rec){
+      closeQtyBubble();
+      const rect=anchor.getBoundingClientRect();
+      bubble=document.createElement('div'); bubble.className='qty-bubble';
+      bubble.style.left=(rect.left + window.scrollX - 4)+'px';
+      bubble.style.top =(rect.top  + window.scrollY - 44)+'px';
+      bubble.innerHTML='<button type="button" data-op="-">−</button><div class="cnt">1</div><button type="button" data-op="+">+</button>';
+      document.body.appendChild(bubble);
+      const cnt=bubble.querySelector('.cnt');
+      rec.qty = Math.max(1, rec.qty||1); cnt.textContent=rec.qty;
+      bubble.addEventListener('click', (e)=>{
+        const op = e.target?.dataset?.op;
+        if(!op) return;
+        rec.qty = Math.max(0, rec.qty + (op==='+'?1:-1));
+        cnt.textContent = rec.qty;
+        recalc();
+      });
+      document.addEventListener('click', clickAway, {once:true});
+      function clickAway(){ closeQtyBubble(); }
+    }
+    function closeQtyBubble(){ if(bubble){ bubble.remove(); bubble=null; } }
+
+    function openModal(){
+      // seed rows from inventory chips order
+      rows = [];
+      document.querySelectorAll('#invGrid .inv-chip').forEach(ch=>{
+        const name = ch.dataset.inv || ch.textContent.trim();
+        rows.push({name, price: priceMap[name] || 100, qty: 0});
+      });
+      render();
+      modal.classList.add('is-open'); document.body.style.overflow='hidden';
+    }
+    function closeModal(){ modal.classList.remove('is-open'); document.body.style.overflow=''; }
+
+    openBtn.addEventListener('click', openModal);
+    modal.querySelector('.sp-modal__backdrop').addEventListener('click', closeModal);
+    modal.querySelector('.sp-modal__close').addEventListener('click', closeModal);
+    document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
+
+    addBtn.addEventListener('click', ()=>{
+      const chosen = rows.filter(r=>r.qty>0);
+      if(!chosen.length) return closeModal();
+      const label = "{{ item.title }} – kombinovaný balík ("+chosen.map(r=>`${r.name}×${r.qty}`).join(', ')+")";
+      const price = chosen.reduce((a,b)=>a+b.qty*b.price,0);
+      addToPortfolio({kind:"{{ kind }}", slug:"{{ item.slug }}", label, price_from:price, cover:"{{ url_for('static', filename='covers/cover.png') }}"});
+      showToastAdd({label, price:'€'+price.toLocaleString('sk-SK'), logo:CLUB_LOGO_URL, linkHref:'/portfolio'});
+      syncAllAddButtons();
+      closeModal();
     });
   })();
 
