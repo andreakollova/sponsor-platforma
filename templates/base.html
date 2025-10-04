@@ -1,3 +1,52 @@
+{# ======= Shared sports helpers (SK -> icon file) ======= #}
+{% macro sport_icon_file(sport_name) -%}
+  {%- set key = (sport_name or '')|lower|trim -%}
+  {%- set MAP = {
+    'futbal': 'soccerball.svg',
+    'futbal (americký)': 'american football.svg',
+    'americký futbal': 'american football.svg',
+    'americky futbal': 'american football.svg',
+    'basketbal': 'basketball.svg',
+    'volejbal': 'volleyball.svg',
+    'bedminton': 'badminton.svg',
+    'badminton': 'badminton.svg',
+    'baseball': 'baseball.svg',
+    'bejzbal': 'baseball.svg',
+    'tenis': 'tennis ball.svg',
+    'stolný tenis': 'table tennis.svg',
+    'stolny tenis': 'table tennis.svg',
+    'esport': 'esport.svg',
+    'e-sport': 'esport.svg',
+    'fitness': 'fitness.svg',
+    'posilňovňa': 'gym.svg',
+    'posilnovna': 'gym.svg',
+    'gym': 'gym.svg',
+    'korčuľovanie': 'ice skating.svg',
+    'korculovanie': 'ice skating.svg',
+    'ľadový hokej': 'ice hockey.svg',
+    'ladovy hokej': 'ice hockey.svg',
+    'hokej': 'ice hockey.svg',
+    'pozemný hokej': 'ice hockey.svg',
+    'pozemny hokej': 'ice hockey.svg',
+    'box': 'boxing.svg',
+    'boxovanie': 'boxing.svg',
+    'plávanie': 'diving.svg',
+    'plavanie': 'diving.svg',
+    'potápanie': 'diving.svg',
+    'potapanie': 'diving.svg',
+    'beh': 'running.svg',
+    'švihadlo': 'jump rope.svg',
+    'svihadlo': 'jump rope.svg',
+    'pickleball': 'pickleball.svg'
+  } -%}
+  {{ MAP.get(key, 'helmet.svg') }}
+{%- endmacro %}
+
+{# voliteľné: malá pomocná trieda na inline SVG/PNG #}
+<style>
+  .icon-16{width:16px;height:16px;vertical-align:-2px;display:inline-block}
+</style>
+
 <!doctype html>
 <html lang="sk">
   <head>
