@@ -148,7 +148,9 @@
           <!-- Významné úspechy -->
           <div class="mt-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
             <h3 class="h6 mb-0">Významné úspechy</h3>
-            <button id="achToggle" class="btn btn-ghost btn-slim ach-more-btn">Zobraziť viac</button>
+             <button id="achToggle" class="btn btn-ghost btn-slim ach-more-btn fw-light">
+              Zobraziť viac
+            </button>
           </div>
           <div id="achList" class="mt-2">
             <div class="row g-2">
@@ -201,7 +203,7 @@
 
           {% if item.inventory %}
           <div class="ld-inv-block mb-3">
-            <div class="text-secondary small mb-1">Inventár</div>
+            <div class="text-secondary small mb-1">Ponuka</div>
             <div class="ld-inv-grid" id="invGrid">
               {% for group, items in item.inventory.items() %}
                 {% for it in items %}
@@ -261,6 +263,7 @@
         </div>
 
         <!-- ========== EVENTY ========== -->
+        <!-- ========== EVENTY ========== -->
         {% set key_events = item.key_events|default([
           {'date':'2025-11-20','title':'Derby zápas vs. Spartak','type':'Zápas'},
           {'date':'2026-01-05','title':'Zápas pod holým nebom','type':'Špeciálny event'}
@@ -288,6 +291,7 @@
                     <div class="fw-semibold">{{ u.title }}</div>
                     <div class="text-secondary small"><i class="bi bi-calendar-event"></i> {{ u.date }} • {{ u.type }}</div>
                   </div>
+
                   <div class="ld-actions">
                     <button class="btn btn-outline-brand btn-compact"
                             data-cta="add"
@@ -347,6 +351,41 @@
             {% endfor %}
           </div>
 
+          <!-- Najvýznamnejšie eventy sezóny (TOP) -->
+          <h3 class="h6 mt-4 mb-2">Najvýznamnejšie eventy sezóny</h3>
+          <div class="ld-timeline">
+            {% for u in key_events %}
+            {% set ds = u.date or '' %}
+            {% set dday = ds[8:10] %}
+            {% set dmon = ds[5:7] %}
+            <div class="ld-tl-row">
+              <div class="ld-datepill">
+                <div class="ld-day">{{ dday }}</div>
+                <div class="ld-month">{{ dmon }}</div>
+              </div>
+              <div class="ld-tl-card flex-grow-1">
+                <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                  <div class="me-2">
+                    <div class="fw-semibold">{{ u.title }} <span class="ld-key-tag">TOP</span></div>
+                    <div class="text-secondary small"><i class="bi bi-calendar-event"></i> {{ u.date }} • {{ u.type }}</div>
+                  </div>
+                  <div class="ld-actions">
+                    <button class="btn btn-outline-brand btn-compact"
+                            data-cta="add"
+                            data-kind="{{ kind }}"
+                            data-slug="{{ item.slug }}"
+                            data-label="{{ item.title }} – {{ u.title }}"
+                            data-price=""
+                            data-cover="{{ url_for('static', filename='covers/cover.png') }}">
+                      <i class="bi bi-plus-circle"></i> Pridať do portfólia
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+
           <!-- Mini kalendár -->
           <div id="calendar" class="ld-cal mt-3"
                data-events='{{ (item.upcoming|default([]) + key_events)|tojson }}'>
@@ -357,11 +396,9 @@
             </div>
             <div class="ld-cal-grid">
               <div class="wday">Po</div><div class="wday">Ut</div><div class="wday">St</div><div class="wday">Št</div><div class="wday">Pi</div><div class="wday">So</div><div class="wday">Ne</div>
-              <!-- days injected by JS -->
             </div>
           </div>
         </div>
-
         <!-- ========== EXTRA: Ďalšie dôležité štatistiky ========== -->
         <div id="more-stats" class="card rounded-4 p-3 p-md-4 ld-card mb-4">
           <h2 class="h5 mb-3">Ďalšie dôležité štatistiky</h2>
@@ -452,11 +489,7 @@
           </div>
           {% endif %}
 
-          {% if item.tags %}
-          <div class="mt-3 d-flex flex-wrap gap-2">
-            {% for t in item.tags %}<span class="sp-tag small">{{ t }}</span>{% endfor %}
-          </div>
-          {% endif %}
+
 
           {% if item.inventory %}
           <div class="mt-3">

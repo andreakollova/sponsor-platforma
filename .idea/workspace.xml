@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3181f2f1-3932-4293-9313-326727c45049" name="Changes" comment="detail almost finished uz iba mobilna">
+    <list default="true" id="3181f2f1-3932-4293-9313-326727c45049" name="Changes" comment="v pohode ale nejde pridanie a kombinuj divne">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/detail.html" afterDir="false" />
     </list>
@@ -135,7 +135,15 @@
       <option name="project" value="LOCAL" />
       <updated>1759553710108</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="v pohode ale nejde pridanie a kombinuj divne">
+      <option name="closed" value="true" />
+      <created>1759569734342</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1759569734342</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -144,6 +152,7 @@
     <MESSAGE value="footer" />
     <MESSAGE value="index" />
     <MESSAGE value="detail almost finished uz iba mobilna" />
-    <option name="LAST_COMMIT_MESSAGE" value="detail almost finished uz iba mobilna" />
+    <MESSAGE value="v pohode ale nejde pridanie a kombinuj divne" />
+    <option name="LAST_COMMIT_MESSAGE" value="v pohode ale nejde pridanie a kombinuj divne" />
   </component>
 </project>
