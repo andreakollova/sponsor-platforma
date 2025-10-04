@@ -148,7 +148,7 @@
           <!-- Významné úspechy -->
           <div class="mt-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
             <h3 class="h6 mb-0">Významné úspechy</h3>
-             <button id="achToggle" class="btn btn-ghost btn-slim ach-more-btn fw-light">
+             <button id="achToggle" class="btn btn-ghost btn-slim ach-more-btn fw-normal">
               Zobraziť viac
             </button>
           </div>
@@ -244,17 +244,19 @@
             </div>
             {% endfor %}
 
-            {# ---- Kombinuj ponuku tile (kept as you had it) ---- #}
+            {# ---- Kombinuj ponuku tile (gradient like screenshot) ---- #}
             <div class="col-12 col-md-6">
-              <div class="ld-pack h-100 ld-pack--mix">
+              <div class="ld-pack h-100 ld-pack--combo">
                 <div class="ld-pack-head">
                   <div class="ld-pack-name">Kombinuj ponuku</div>
                   <div class="ld-price">od €{{ item.price_from }}</div>
                 </div>
-                <div class="text-secondary">Naklikaj položky z ponuky a vytvor si vlastný balík.</div>
+                <ul class="ld-pack-list">
+                  <li>Naklikaj položky z ponuky a vytvor si vlastný balík.</li>
+                </ul>
                 <div class="ld-actions mt-2">
-                  <button id="mixOpen" class="btn btn-outline-brand btn-compact">
-                    <i class="bi bi-sliders2"></i> Vybrať
+                  <button id="openCombo" class="btn btn-outline-brand btn-compact">
+                    <i class="bi bi-sliders"></i> Vybrať
                   </button>
                 </div>
               </div>
@@ -262,7 +264,84 @@
           </div>
         </div>
 
-        <!-- ========== EVENTY ========== -->
+<!-- ========== PROJEKTY ========== -->
+<div id="projects" class="card rounded-4 p-3 p-md-4 ld-card mb-4">
+  <h2 class="h5 mb-3">Projekty klubu</h2>
+
+  <div class="row g-3">
+    {% for p in item.projects|default([]) %}
+    <div class="col-12">
+      <div class="ld-proj">
+        <div class="ld-proj-media">
+          <img src="{{ url_for('static', filename='covers/cover.png') }}" alt="{{ p.title }}">
+        </div>
+        <div class="ld-proj-body">
+          <div class="d-flex align-items-start justify-content-between gap-2">
+            <div>
+              <div class="ld-proj-title">{{ p.title }}</div>
+              <div class="text-secondary small mb-2">{{ p.desc }}</div>
+              {% if p.tags %}
+              <div class="d-flex flex-wrap gap-2 mb-2">
+                {% for t in p.tags %}<span class="sp-tag small">{{ t }}</span>{% endfor %}
+              </div>
+              {% endif %}
+            </div>
+            {% if p.budget %}
+            <div class="ld-price">{{ p.budget }}</div>
+            {% endif %}
+          </div>
+          <div class="ld-actions">
+            <button class="btn btn-outline-brand btn-compact"
+                    data-cta="add"
+                    data-kind="{{ kind }}"
+                    data-slug="{{ item.slug }}"
+                    data-label="{{ item.title }} – projekt: {{ p.title }}"
+                    data-price="{{ p.budget|default('') }}"
+                    data-cover="{{ url_for('static', filename='covers/cover.png') }}">
+              <i class="bi bi-plus-circle"></i> Pridať do portfólia
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% else %}
+    <div class="col-12">
+      <div class="ld-proj">
+        <div class="ld-proj-media">
+          <img src="{{ url_for('static', filename='covers/cover.png') }}" alt="Projekt klubu">
+        </div>
+        <div class="ld-proj-body">
+          <div class="d-flex align-items-start justify-content-between gap-2">
+            <div>
+              <div class="ld-proj-title">Nové dresy – mládež U15</div>
+              <div class="text-secondary small mb-2">
+                Kompletná sada domácich/hostujúcich dresov pre mládežnícke tímy vrátane trenérok. Branding na rukáve a social vďaka.
+              </div>
+              <div class="d-flex flex-wrap gap-2 mb-2">
+                <span class="sp-tag small">Logo na drese</span>
+                <span class="sp-tag small">Logo na sociálnych sieťach</span>
+              </div>
+            </div>
+            <div class="ld-price">€2 500</div>
+          </div>
+          <div class="ld-actions">
+            <button class="btn btn-outline-brand btn-compact"
+                    data-cta="add"
+                    data-kind="{{ kind }}"
+                    data-slug="{{ item.slug }}"
+                    data-label="{{ item.title }} – projekt: Nové dresy U15 }}"
+                    data-price="2500"
+                    data-cover="{{ url_for('static', filename='covers/cover.png') }}">
+              <i class="bi bi-plus-circle"></i> Pridať do portfólia
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
         <!-- ========== EVENTY ========== -->
         {% set key_events = item.key_events|default([
           {'date':'2025-11-20','title':'Derby zápas vs. Spartak','type':'Zápas'},
@@ -550,30 +629,87 @@
   </div>
 </div>
 
-<!-- ========= MIX MODAL (builder) ========= -->
-<div id="mixModal" class="sp-modal" aria-hidden="true">
+<!-- ========= KOMBINUJ PONUKU – MODAL (compact + sticky footer) ========= -->
+<div id="comboModal" class="sp-modal" aria-hidden="true">
   <div class="sp-modal__backdrop"></div>
-  <div class="sp-modal__card" role="dialog" aria-modal="true" aria-labelledby="mixTitle" style="max-width:860px">
+  <div class="sp-modal__card sp-modal__card--combo" role="dialog" aria-modal="true" aria-labelledby="comboTitle" style="max-width:860px">
     <button class="sp-modal__close" aria-label="Zavrieť">&times;</button>
-    <div class="sp-modal__content">
-      <div id="mixTitle" class="spm-title" style="font-weight:700">Kombinuj ponuku</div>
-      <div class="text-secondary" style="margin:.25rem 0 1rem">Vyber položky a uprav počty. Vybrané položky sa sčítajú nižšie.</div>
 
-      <div id="mixList" class="mix-list"></div>
+    <div class="sp-modal__content sp-modal__content--combo">
+      <div id="comboTitle" class="spm-title" style="font-weight:700; margin-bottom:.25rem">Kombinuj ponuku</div>
+      <div class="text-secondary" style="margin:0 0 .75rem">Vyber položky a uprav počty. Vybrané položky sa sčítajú nižšie.</div>
 
-      <div class="d-flex align-items-center justify-content-between mt-3">
-        <div class="fw-semibold">Spolu</div>
-        <div id="mixSum" class="fw-bold">€0</div>
+      <div class="cmb-list" role="list">
+        {% if item.inventory %}
+        {% set SAMPLE = {
+          'Logo na drese': 2500,
+          'Banner v hale': 1200,
+          'Livestream overlay': 700,
+          'IG Reels': 300,
+          'YouTube highlights': 400,
+          'TikTok klipy': 300,
+          'Mládežnícky deň': 900,
+          'CSR aktivácia': 1500
+        } %}
+          {% for group, items in item.inventory.items() %}
+            {% for it in items %}
+
+              {# pick the first price-like field that exists; adjust the list if your data uses other names #}
+              {# 1. skús zobrať cenu z dát, ak existuje #}
+              {% set rp0 = (
+                it.price if it.price is defined and it.price else
+                it.price_from if it.price_from is defined and it.price_from else
+                it.budget if it.budget is defined and it.budget else
+                it.amount if it.amount is defined and it.amount else
+                it.value  if it.value  is defined and it.value  else
+                it.cost   if it.cost   is defined and it.cost   else
+                it.fee    if it.fee    is defined and it.fee    else
+                0
+              ) %}
+
+              {# 2. ak je to 0/nič, použi vzorovú cenu podľa názvu položky #}
+              {% set rp = rp0 if rp0 else SAMPLE.get(it.name, 0) %}
+
+
+              <div class="cmb-row" role="listitem" data-name="{{ it.name }}" data-price="{{ rp }}">
+                <label class="sw-wrap">
+                  <input type="checkbox" class="cmb-check" aria-label="Vybrať {{ it.name }}">
+                  <span class="sw"></span>
+                </label>
+
+                <span class="cmb-icon"><i class="bi {{ it.icon }}"></i></span>
+                <span class="cmb-name">{{ it.name }}</span>
+                {# JS will reformat this to €X — we keep it numeric so it parses reliably #}
+                <span class="cmb-price" aria-label="Cena položky">{{ rp }}</span>
+
+                <button type="button" class="qty-trigger" aria-label="Počet">
+                  <i class="bi bi-plus-lg"></i>
+                </button>
+                <div class="qty-popover" role="dialog" aria-label="Upraviť počet">
+                  <button type="button" class="qbtn qminus" aria-label="Menej">−</button>
+                  <input type="number" min="0" value="0" class="qty-input" inputmode="numeric" aria-label="Počet kusov">
+                  <button type="button" class="qbtn qplus" aria-label="Viac">+</button>
+                </div>
+              </div>
+            {% endfor %}
+          {% endfor %}
+        {% endif %}
       </div>
 
-      <div class="ld-actions mt-3">
-        <button id="mixAddBtn" class="btn btn-outline-brand btn-compact">
+      <!-- sticky footer (always visible) -->
+      <div class="spm-footer">
+        <div class="spm-total">
+          <span class="fw-semibold">Spolu</span>
+          <span class="cmb-sum fw-bold">€0</span>
+        </div>
+        <button id="cmbAdd" class="btn btn-outline-brand btn-compact" disabled>
           <i class="bi bi-plus-circle"></i> Pridať do portfólia
         </button>
       </div>
     </div>
   </div>
 </div>
+
 
 <!-- ===================== PAGE-LOCAL CSS ===================== -->
 <style>
@@ -702,7 +838,12 @@
   .ld-pack-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:.35rem; }
   .ld-pack-name{ font-weight:700; }
   .ld-price{ display:inline-flex; align-items:center; padding:.24rem .55rem; border-radius:999px; background:linear-gradient(135deg, rgba(119,75,251,.12), rgba(119,75,251,.06)), #fff; border:1px solid #e6ddff; color:#3b2a85; font-weight:600; font-size:.9rem; white-space:nowrap; }
-  .ld-pack--mix{ background:linear-gradient(180deg,#fafaff, #fff); }
+  .ld-pack--combo{
+    background:
+      radial-gradient(800px 360px at 100% -20%, rgba(119,75,251,.12), transparent 60%),
+      linear-gradient(180deg, #fafaff 0%, #ffffff 58%);
+    border-color:#e6ddff;
+  }
 
   /* Timeline / events */
   .ld-timeline{ display:grid; gap:12px; }
@@ -711,7 +852,7 @@
   .ld-datepill{ width:60px; border-radius:16px; background:#f8f7ff; border:1px solid #e6ddff; color:#3b2a85; display:flex; flex-direction:column; align-items:center; justify-content:center; line-height:1; gap:4px; }
   .ld-day{ font-size:24px; font-weight:800; }
   .ld-month{ font-size:13px; opacity:.85; }
-  .ld-key-tag{ font-size:.72rem; padding:.12rem .35rem; border-radius:999px; border:1px solid #e6ddff; color:#3b2a85; background:#f6f0ff; margin-left:.35rem; vertical-align:middle; }
+  .ld-key-tag{ font-size:.72rem; padding:.12rem .35rem; border-radius:999px; border:1px solid #e6ddff; color:#3b2a85; background:#f6f0ff; margin-left:.35rem; }
 
   /* Calendar */
   .ld-cal{ border:1px solid var(--border); border-radius:16px; background:#fff; overflow:hidden; }
@@ -744,7 +885,6 @@
   /* Audience */
   .ld-aud-box{ border:1px solid var(--border); border-radius:16px; background:#fff; padding:.9rem; }
   .aud-chip{ display:inline-flex; align-items:center; gap:.35rem; padding:.36rem .7rem; border:1px solid var(--border); border-radius:999px; font-weight:700; background:#fff; color:#111827; font-size:.95rem; }
-  .aud-chip i{ opacity:.9; }
   .ld-aud-ages .ld-age-row{ display:flex; align-items:center; gap:12px; margin:.4rem 0; }
   .ld-age-label{ width:72px; color:#4b5563; font-weight:600; }
   .ld-age-bar{ flex:1; height:16px; background:#eff2f6; border-radius:999px; overflow:hidden; position:relative; }
@@ -784,19 +924,36 @@
   .sp-modal__content{ padding:18px 18px 20px; }
   .spm-title{ font-size:1.25rem; font-weight:800; color:#0e1116; }
 
-  /* Builder list */
-  .mix-list{ display:grid; gap:10px; }
-  .mix-row{ display:flex; align-items:center; gap:12px; border:1px solid #eef0f5; background:#fafbff; border-radius:14px; padding:10px 12px; }
-  .mix-name{ flex:1; font-weight:600; }
-  .mix-price{ font-weight:700; padding:.2rem .55rem; border:1px solid #e6ddff; border-radius:999px; background:#fff; color:#3b2a85; }
-  .mix-plus{ border:1px solid #e6ddff; background:#fff; border-radius:10px; width:36px; height:36px; display:grid; place-items:center; }
-  .mix-plus:focus{ outline:2px solid #b8a9ff; outline-offset:2px; }
+  /* Builder list (combo modal) */
+  .cmb-list{ display:grid; gap:10px; }
+  .cmb-row{
+    position:relative;
+    display:grid; grid-template-columns:auto auto 1fr auto auto; align-items:center; gap:12px;
+    border:1px solid var(--border); background:#fafbff; border-radius:14px; padding:10px 12px;
+  }
+  .cmb-icon i{ color:#6b5afc; font-size:18px; }
+  .cmb-name{ font-weight:600; }
+  .cmb-price{ font-weight:700; padding:.2rem .55rem; border:1px solid #e6ddff; border-radius:999px; background:#fff; color:#3b2a85; }
+  .qty-trigger{
+    width:36px; height:36px; display:grid; place-items:center; border:1px solid #e6ddff; background:#fff; border-radius:10px;
+  }
 
-  /* Quantity bubble anchored to + */
-  .qty-bubble{ position:fixed; z-index:10001; background:#fff; border:1px solid #e6ddff; border-radius:14px; display:flex; align-items:center; gap:8px; padding:6px 8px; box-shadow:0 12px 30px rgba(10,20,30,.2); }
-  .qty-bubble button{ width:36px; height:36px; border-radius:10px; border:1px solid #e6ddff; background:#fff; font-size:18px; }
-  .qty-bubble .cnt{ min-width:24px; text-align:center; font-weight:700; }
-  .qty-bubble.hide{ display:none; }
+  /* Toggle switch */
+  .sw-wrap{ display:inline-block; }
+  .sw-wrap input{ display:none; }
+  .sw{ width:36px; height:20px; display:inline-block; background:#e9ecf5; border-radius:999px; position:relative; transition:.15s; }
+  .sw::after{ content:""; position:absolute; left:2px; top:2px; width:16px; height:16px; border-radius:50%; background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.12); transition:.15s; }
+  .sw-wrap input:checked + .sw{ background:#6b5afc22; }
+  .sw-wrap input:checked + .sw::after{ transform:translateX(16px); background:#6b5afc; }
+
+  /* Qty popover */
+  .qty-popover{
+    position:absolute; right:10px; top:44px; display:none;
+    background:#fff; border:1px solid #e6e8f0; border-radius:10px; padding:6px; box-shadow:0 16px 32px rgba(0,0,0,.12); z-index:3;
+  }
+  .qty-popover.open{ display:flex; align-items:center; gap:6px; }
+  .qbtn{ width:26px; height:26px; border:0; border-radius:8px; background:#eef1fb; }
+  .qty-input{ width:52px; text-align:center; border:1px solid #e6e8f0; border-radius:8px; padding:2px 6px; }
 
   /* Mobile tweaks */
   .ld-breadcrumb,.ld-hero{
@@ -820,6 +977,50 @@
     .ld-age-bar{ height:14px; }
     .ld-age-label{ width:64px; }
   }
+
+  /* ==== KOMBINUJ PONUKU – fit screen, scroll list, sticky footer, tighter spacing ==== */
+#comboModal .sp-modal__card--combo{
+  max-height:88vh;
+  display:flex; flex-direction:column;
+}
+#comboModal .sp-modal__content--combo{
+  display:flex; flex-direction:column; min-height:0;
+  padding:14px 14px 0; gap:8px;
+}
+#comboModal .cmb-list{
+  flex:1 1 auto; min-height:0;
+  overflow:auto; padding-bottom:8px;  /* scroll just the list */
+}
+#comboModal .spm-footer{
+  position:sticky; bottom:0; z-index:2;
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  padding:10px 12px;
+  background:linear-gradient(180deg, rgba(255,255,255,.88), #fff);
+  border-top:1px solid #e6ddff;
+  backdrop-filter:saturate(120%) blur(6px);
+}
+#comboModal .spm-total{ display:flex; align-items:center; gap:.6rem; font-size:1rem; }
+#comboModal .cmb-sum{ font-weight:800; }
+
+/* compact rows */
+#comboModal .cmb-row{
+  grid-template-columns:auto auto 1fr auto auto;
+  gap:10px; padding:8px 10px; border-radius:12px; background:#fff;
+}
+#comboModal .cmb-icon i{ font-size:16px; }
+#comboModal .cmb-name{ font-weight:600; font-size:.95rem; }
+#comboModal .cmb-price{
+  font-weight:700; font-size:.9rem;
+  padding:.18rem .5rem; border:1px solid #e6ddff; border-radius:999px; background:#faf8ff; color:#3b2a85;
+}
+#comboModal .qty-trigger{ width:32px; height:32px; border-radius:10px; }
+#comboModal .qty-popover{ top:40px; }
+
+/* smaller switch for tighter layout */
+#comboModal .sw{ width:34px; height:18px; }
+#comboModal .sw::after{ width:14px; height:14px; }
+#comboModal .sw-wrap input:checked + .sw::after{ transform:translateX(16px); }
+
 </style>
 
 <!-- ===================== PAGE-LOCAL JS ===================== -->
@@ -949,7 +1150,7 @@
   }
 
   /* Add-to-portfolio CTAs (exclude modal button) */
-  document.querySelectorAll('[data-cta="add"]:not(#calAddBtn):not(#mixAddBtn)').forEach(btn=>{
+  document.querySelectorAll('[data-cta="add"]:not(#calAddBtn)').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       const label = btn.dataset.label||'';
       const payload = {
@@ -1133,100 +1334,137 @@
     adjust(); window.addEventListener('resize', adjust);
   })();
 
-  /* MIX builder data (from inventory) + anchored qty bubble from the price + button */
+  /* ====== Combine Offer modal (compact + sticky footer) — fixed price parsing ====== */
   (function(){
-    const openBtn = document.getElementById('mixOpen');
-    const modal = document.getElementById('mixModal');
+    const openBtn = document.getElementById('openCombo');
+    const modal   = document.getElementById('comboModal');
     if(!openBtn || !modal) return;
 
-    const listEl = document.getElementById('mixList');
-    const sumEl  = document.getElementById('mixSum');
-    const addBtn = document.getElementById('mixAddBtn');
+    const sumEl  = modal.querySelector('.cmb-sum');
+    const addBtn = document.getElementById('cmbAdd');
 
-    // Inventory -> simple price map (fallback €100 each if none)
-    const priceMap = {};
-    {% if item.inventory %}
-      {% for group, items in item.inventory.items() %}
-        {% for it in items %}
-          priceMap["{{ it.name }}"] = Number(("{{ it.price|default('0') }}").toString().replace(/[^\d.]/g,'')) || 100;
-        {% endfor %}
-      {% endfor %}
-    {% endif %}
+    function open(){ modal.classList.add('is-open'); document.body.style.overflow='hidden'; }
+    function close(){ modal.classList.remove('is-open'); document.body.style.overflow=''; }
 
-    let rows = [];
+    openBtn.addEventListener('click', open);
+    modal.querySelector('.sp-modal__backdrop').addEventListener('click', close);
+    modal.querySelector('.sp-modal__close').addEventListener('click', close);
+    document.addEventListener('keydown', e=>{ if(e.key==='Escape') close(); });
 
-    function render(){
-      listEl.innerHTML='';
-      rows.forEach((r,idx)=>{
-        const row=document.createElement('div'); row.className='mix-row';
-        const toggle=document.createElement('input'); toggle.type='checkbox'; toggle.checked=r.qty>0; toggle.className='form-check-input'; toggle.style.marginRight='4px';
-        const name=document.createElement('div'); name.className='mix-name'; name.textContent=r.name;
-        const price=document.createElement('div'); price.className='mix-price'; price.textContent=`€${r.price}`;
-        const plus=document.createElement('button'); plus.type='button'; plus.className='mix-plus'; plus.innerHTML='<i class="bi bi-plus-lg"></i>'; plus.setAttribute('aria-label','Upraviť počet');
+    function fmtEUR(n){ return '€' + Number(n||0).toLocaleString('sk-SK', {maximumFractionDigits:0}); }
 
-        toggle.addEventListener('change',()=>{ r.qty = toggle.checked ? Math.max(1,r.qty||1) : 0; recalc(); });
-        plus.addEventListener('click',(ev)=>openQtyBubble(ev.currentTarget, r));
+    // ➜ NEW: tolerant parser for strings like "€2 500", "2,500", "1.234,56", etc.
+    function parsePrice(v){
+      const s = String(v ?? '')
+        .replace(/\s/g,'')                // remove spaces
+        .replace(/[^\d.,-]/g,'');         // keep only digits and separators
 
-        row.append(toggle,name,price,plus); listEl.appendChild(row);
-      });
-      recalc();
+      if(!s) return 0;
+
+      // If both '.' and ',' are present, assume European: 1.234,56 -> 1234.56
+      let t = s;
+      if (t.includes('.') && t.includes(',')){
+        t = t.replace(/\./g,'').replace(',', '.');
+      } else if (t.includes(',')) {
+        // Only comma present -> treat as decimal comma
+        // If it's thousands (e.g., "2,500"), this also works because we cap to 0 decimals in fmt
+        t = t.replace(',', '.');
+      }
+      const n = parseFloat(t);
+      return isNaN(n) ? 0 : n;
+    }
+
+    function getRowPrice(row){
+      // prefer data-price; if formatted, parse; otherwise fall back to pill text
+      const fromData = row.dataset.price;
+      if (fromData && fromData !== '0') return parsePrice(fromData);
+      const fromText = row.querySelector('.cmb-price')?.textContent || '0';
+      return parsePrice(fromText);
     }
 
     function recalc(){
-      let s=0; rows.forEach(r=>{ s += (r.qty||0) * r.price; });
-      sumEl.textContent = '€'+s.toLocaleString('sk-SK');
+      let total = 0;
+      modal.querySelectorAll('.cmb-row').forEach(row=>{
+        const price = row._price ?? 0;
+        const qty   = Number(row.querySelector('.qty-input').value||0);
+        total += price * qty;
+      });
+      sumEl.textContent = fmtEUR(total);
+      addBtn.disabled = total <= 0;
+      addBtn.classList.toggle('btn-added', total > 0);
+      addBtn.classList.toggle('btn-outline-brand', total <= 0);
     }
 
-    let bubble;
-    function openQtyBubble(anchor, rec){
-      closeQtyBubble();
-      const rect=anchor.getBoundingClientRect();
-      bubble=document.createElement('div'); bubble.className='qty-bubble';
-      bubble.style.left=(rect.left + window.scrollX - 4)+'px';
-      bubble.style.top =(rect.top  + window.scrollY - 44)+'px';
-      bubble.innerHTML='<button type="button" data-op="-">−</button><div class="cnt">1</div><button type="button" data-op="+">+</button>';
-      document.body.appendChild(bubble);
-      const cnt=bubble.querySelector('.cnt');
-      rec.qty = Math.max(1, rec.qty||1); cnt.textContent=rec.qty;
-      bubble.addEventListener('click', (e)=>{
-        const op = e.target?.dataset?.op;
-        if(!op) return;
-        rec.qty = Math.max(0, rec.qty + (op==='+'?1:-1));
-        cnt.textContent = rec.qty;
+    // close any open qty popovers on outside click
+    document.addEventListener('click', (e)=>{
+      modal.querySelectorAll('.qty-popover.open').forEach(p=>{
+        if(!p.contains(e.target) && !p.previousElementSibling.contains(e.target)){
+          p.classList.remove('open');
+        }
+      });
+    });
+
+    // init rows
+    modal.querySelectorAll('.cmb-row').forEach(row=>{
+      const chk     = row.querySelector('.cmb-check');
+      const qty     = row.querySelector('.qty-input');
+      const pop     = row.querySelector('.qty-popover');
+      const trigger = row.querySelector('.qty-trigger');
+      const plus    = row.querySelector('.qplus');
+      const minus   = row.querySelector('.qminus');
+      const priceEl = row.querySelector('.cmb-price');
+
+      // ➜ NEW: compute a clean numeric price once, and show it nicely
+      row._price = getRowPrice(row);
+      priceEl.textContent = fmtEUR(row._price);
+
+      chk.addEventListener('change', ()=>{
+        if(chk.checked && Number(qty.value||0)===0){ qty.value = 1; }
+        if(!chk.checked){ qty.value = 0; }
         recalc();
       });
-      document.addEventListener('click', clickAway, {once:true});
-      function clickAway(){ closeQtyBubble(); }
-    }
-    function closeQtyBubble(){ if(bubble){ bubble.remove(); bubble=null; } }
 
-    function openModal(){
-      // seed rows from inventory chips order
-      rows = [];
-      document.querySelectorAll('#invGrid .inv-chip').forEach(ch=>{
-        const name = ch.dataset.inv || ch.textContent.trim();
-        rows.push({name, price: priceMap[name] || 100, qty: 0});
+      trigger.addEventListener('click', (e)=>{
+        e.stopPropagation();
+        pop.classList.toggle('open');
+        if(!chk.checked && Number(qty.value||0)===0){
+          chk.checked = true; qty.value = 1; recalc();
+        }
       });
-      render();
-      modal.classList.add('is-open'); document.body.style.overflow='hidden';
-    }
-    function closeModal(){ modal.classList.remove('is-open'); document.body.style.overflow=''; }
 
-    openBtn.addEventListener('click', openModal);
-    modal.querySelector('.sp-modal__backdrop').addEventListener('click', closeModal);
-    modal.querySelector('.sp-modal__close').addEventListener('click', closeModal);
-    document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
+      plus.addEventListener('click', (e)=>{ e.stopPropagation(); chk.checked = true; qty.value = Number(qty.value||0)+1; recalc(); });
+      minus.addEventListener('click', (e)=>{ e.stopPropagation(); const v=Math.max(0, Number(qty.value||0)-1); qty.value=v; if(v===0) chk.checked=false; recalc(); });
+      qty.addEventListener('input', ()=>{ const v=Math.max(0, Number(qty.value||0)); qty.value=v; if(v>0) chk.checked=true; else chk.checked=false; recalc(); });
+    });
 
     addBtn.addEventListener('click', ()=>{
-      const chosen = rows.filter(r=>r.qty>0);
-      if(!chosen.length) return closeModal();
-      const label = "{{ item.title }} – kombinovaný balík ("+chosen.map(r=>`${r.name}×${r.qty}`).join(', ')+")";
-      const price = chosen.reduce((a,b)=>a+b.qty*b.price,0);
-      addToPortfolio({kind:"{{ kind }}", slug:"{{ item.slug }}", label, price_from:price, cover:"{{ url_for('static', filename='covers/cover.png') }}"});
-      showToastAdd({label, price:'€'+price.toLocaleString('sk-SK'), logo:CLUB_LOGO_URL, linkHref:'/portfolio'});
+      const picked=[];
+      modal.querySelectorAll('.cmb-row').forEach(row=>{
+        const name=row.dataset.name||'';
+        const price=row._price||0;
+        const qty=Number(row.querySelector('.qty-input').value||0);
+        if(qty>0) picked.push({name, price, qty});
+      });
+      if(!picked.length){ return; }
+
+      const total = picked.reduce((s,x)=>s+x.price*x.qty,0);
+      const label = "{{ item.title }} – Kombinovaný balík ("+picked.map(x=>`${x.qty}× ${x.name}`).join(', ')+")";
+
+      addToPortfolio({
+        kind:"{{ kind }}",
+        slug:"{{ item.slug }}",
+        label,
+        price_from: total,
+        cover:"{{ url_for('static', filename='covers/cover.png') }}"
+      });
+      markAddedUI(label);
+      showToastAdd({label, price: fmtEUR(total), logo:"{{ url_for('static', filename=item.avatar) }}", linkHref:'/portfolio'});
+
+      if(window.syncInvChips){ window.syncInvChips(); }
       syncAllAddButtons();
-      closeModal();
     });
+
+    recalc(); // initial state
   })();
 
   /* Initial sync */
