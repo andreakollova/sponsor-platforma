@@ -702,7 +702,15 @@
           <span class="fw-semibold">Spolu</span>
           <span class="cmb-sum fw-bold">€0</span>
         </div>
-        <button id="cmbAdd" class="btn btn-outline-brand btn-compact" disabled>
+        <button id="cmbAdd"
+                class="btn btn-outline-brand btn-compact"
+                data-cta="add"
+                data-kind="{{ kind }}"
+                data-slug="{{ item.slug }}"
+                data-label=""
+                data-price=""
+                data-cover="{{ url_for('static', filename='covers/cover.png') }}"
+                disabled>
           <i class="bi bi-plus-circle"></i> Pridať do portfólia
         </button>
       </div>
@@ -1150,7 +1158,7 @@
   }
 
   /* Add-to-portfolio CTAs (exclude modal button) */
-  document.querySelectorAll('[data-cta="add"]:not(#calAddBtn)').forEach(btn=>{
+  document.querySelectorAll('[data-cta="add"]:not(#calAddBtn):not(#cmbAdd)').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       const label = btn.dataset.label||'';
       const payload = {
@@ -1382,18 +1390,84 @@
       return parsePrice(fromText);
     }
 
+    addBtn.addEventListener('click', ()=>{
+      if(addBtn.disabled) return;
+      const label = addBtn.dataset.label || '';
+      if(!label) return;
+
+      const priceNum = parsePrice(addBtn.dataset.price || '0'); // využijeme už definovaný parsePrice
+
+      const payload = {
+        kind: addBtn.dataset.kind,
+        slug: addBtn.dataset.slug,
+        label,
+        price_from: priceNum,
+        cover: addBtn.dataset.cover
+      };
+
+      if (isInPortfolio(label)) {
+        // toggle remove
+        removeFromPortfolio(label);
+        addBtn.dataset.addedLabel = '';
+        addBtn.classList.remove('btn-added');
+        addBtn.classList.add('btn-outline-brand');
+        addBtn.innerHTML = '<i class="bi bi-plus-circle"></i> Pridať do portfólia';
+        showToastRemove({label, logo:CLUB_LOGO_URL, linkHref:'/portfolio'});
+      } else {
+        // add
+        addToPortfolio(payload);
+        addBtn.dataset.addedLabel = label;          // zapamätaj si, že práve tento label je manuálne pridaný
+        addBtn.classList.add('btn-added');
+        addBtn.classList.remove('btn-outline-brand');
+        addBtn.innerHTML = '<i class="bi bi-check2-circle"></i> Pridané';
+        showToastAdd({label, price:addBtn.dataset.price, logo:CLUB_LOGO_URL, linkHref:'/portfolio'});
+      }
+    });
     function recalc(){
       let total = 0;
+      const pickedParts = [];
+
       modal.querySelectorAll('.cmb-row').forEach(row=>{
-        const price = row._price ?? 0;
-        const qty   = Number(row.querySelector('.qty-input').value||0);
-        total += price * qty;
+        const price = row._price || 0;
+        const qty   = Number(row.querySelector('.qty-input').value || 0);
+        if(qty > 0){
+          total += price * qty;
+          pickedParts.push(`${qty}× ${row.dataset.name || ''}`);
+        }
       });
+
+      // suma vo footeri
       sumEl.textContent = fmtEUR(total);
-      addBtn.disabled = total <= 0;
-      addBtn.classList.toggle('btn-added', total > 0);
-      addBtn.classList.toggle('btn-outline-brand', total <= 0);
+
+      // nič vybraté -> default plus
+      if(total <= 0){
+        addBtn.disabled = true;
+        addBtn.dataset.label = '';
+        addBtn.dataset.price = '';
+        addBtn.classList.remove('btn-added');
+        addBtn.classList.add('btn-outline-brand');
+        addBtn.innerHTML = '<i class="bi bi-plus-circle"></i> Pridať do portfólia';
+        return;
+      }
+
+      // vybraté -> priprav label/price, ale NEprepínaj na Pridané automaticky
+      addBtn.disabled = false;
+      const label = "{{ item.title }} – Kombinovaný balík (" + pickedParts.join(', ') + ")";
+      addBtn.dataset.label = label;
+      addBtn.dataset.price = fmtEUR(total);
+
+      // default vzhľad je plus; necháme „Pridané“ len ak sme ho už manuálne klikli na tento istý label
+      if (addBtn.dataset.addedLabel === label){
+        addBtn.classList.add('btn-added');
+        addBtn.classList.remove('btn-outline-brand');
+        addBtn.innerHTML = '<i class="bi bi-check2-circle"></i> Pridané';
+      } else {
+        addBtn.classList.remove('btn-added');
+        addBtn.classList.add('btn-outline-brand');
+        addBtn.innerHTML = '<i class="bi bi-plus-circle"></i> Pridať do portfólia';
+      }
     }
+
 
     // close any open qty popovers on outside click
     document.addEventListener('click', (e)=>{
@@ -1437,32 +1511,6 @@
       qty.addEventListener('input', ()=>{ const v=Math.max(0, Number(qty.value||0)); qty.value=v; if(v>0) chk.checked=true; else chk.checked=false; recalc(); });
     });
 
-    addBtn.addEventListener('click', ()=>{
-      const picked=[];
-      modal.querySelectorAll('.cmb-row').forEach(row=>{
-        const name=row.dataset.name||'';
-        const price=row._price||0;
-        const qty=Number(row.querySelector('.qty-input').value||0);
-        if(qty>0) picked.push({name, price, qty});
-      });
-      if(!picked.length){ return; }
-
-      const total = picked.reduce((s,x)=>s+x.price*x.qty,0);
-      const label = "{{ item.title }} – Kombinovaný balík ("+picked.map(x=>`${x.qty}× ${x.name}`).join(', ')+")";
-
-      addToPortfolio({
-        kind:"{{ kind }}",
-        slug:"{{ item.slug }}",
-        label,
-        price_from: total,
-        cover:"{{ url_for('static', filename='covers/cover.png') }}"
-      });
-      markAddedUI(label);
-      showToastAdd({label, price: fmtEUR(total), logo:"{{ url_for('static', filename=item.avatar) }}", linkHref:'/portfolio'});
-
-      if(window.syncInvChips){ window.syncInvChips(); }
-      syncAllAddButtons();
-    });
 
     recalc(); // initial state
   })();

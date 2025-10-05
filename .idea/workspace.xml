@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3181f2f1-3932-4293-9313-326727c45049" name="Changes" comment="v pohode ale chyba projekty a nefunguje spravne kombinuj">
+    <list default="true" id="3181f2f1-3932-4293-9313-326727c45049" name="Changes" comment="v pohode iba button v kombinuj">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/detail.html" afterDir="false" />
     </list>
@@ -151,7 +151,15 @@
       <option name="project" value="LOCAL" />
       <updated>1759573491760</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="v pohode iba button v kombinuj">
+      <option name="closed" value="true" />
+      <created>1759596148184</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1759596148184</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -162,6 +170,7 @@
     <MESSAGE value="detail almost finished uz iba mobilna" />
     <MESSAGE value="v pohode ale nejde pridanie a kombinuj divne" />
     <MESSAGE value="v pohode ale chyba projekty a nefunguje spravne kombinuj" />
-    <option name="LAST_COMMIT_MESSAGE" value="v pohode ale chyba projekty a nefunguje spravne kombinuj" />
+    <MESSAGE value="v pohode iba button v kombinuj" />
+    <option name="LAST_COMMIT_MESSAGE" value="v pohode iba button v kombinuj" />
   </component>
 </project>
