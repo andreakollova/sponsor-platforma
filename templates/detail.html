@@ -311,25 +311,28 @@
           <img src="{{ url_for('static', filename='covers/cover.png') }}" alt="Projekt klubu">
         </div>
         <div class="ld-proj-body">
-          <div class="d-flex align-items-start justify-content-between gap-2">
-            <div>
-              <div class="ld-proj-title">Nové dresy – mládež U15</div>
-              <div class="text-secondary small mb-2">
-                Kompletná sada domácich/hostujúcich dresov pre mládežnícke tímy vrátane trenérok. Branding na rukáve a social vďaka.
-              </div>
-              <div class="d-flex flex-wrap gap-2 mb-2">
-                <span class="sp-tag small">Logo na drese</span>
-                <span class="sp-tag small">Logo na sociálnych sieťach</span>
-              </div>
-            </div>
+          <!-- header row: title + price in one line -->
+          <div class="ld-proj-head d-flex align-items-start justify-content-between gap-2">
+            <div class="ld-proj-title">Nové dresy – mládež U15</div>
             <div class="ld-price">€2 500</div>
           </div>
+
+          <!-- description now its own block so it can go full width on mobile -->
+          <div class="ld-proj-desc text-secondary small mb-2">
+            Kompletná sada domácich/hostujúcich dresov pre mládežnícke tímy vrátane trenérok. Branding na rukáve a social vďaka.
+          </div>
+
+          <div class="ld-proj-tags d-flex flex-wrap gap-2 mb-2">
+            <span class="sp-tag small">Logo na drese</span>
+            <span class="sp-tag small">Logo na sociálnych sieťach</span>
+          </div>
+
           <div class="ld-actions">
             <button class="btn btn-outline-brand btn-compact"
                     data-cta="add"
                     data-kind="{{ kind }}"
                     data-slug="{{ item.slug }}"
-                    data-label="{{ item.title }} – projekt: Nové dresy U15 }}"
+                    data-label="{{ item.title }} – projekt: Nové dresy U15"
                     data-price="2500"
                     data-cover="{{ url_for('static', filename='covers/cover.png') }}">
               <i class="bi bi-plus-circle"></i> Pridať do portfólia
@@ -1247,6 +1250,29 @@
     overflow: hidden;                   /* avoid wrapping issues */
     text-overflow: ellipsis;            /* safe truncation if ever needed */
     letter-spacing: -.01em;
+  }
+}
+
+/* Mobile: title + price on one line; description full width under it */
+@media (max-width: 576px){
+  .ld-proj-body .ld-proj-head{
+    display: grid;                   /* override the d-flex feel on phones */
+    grid-template-columns: 1fr auto; /* title grows, price hugs right */
+    align-items: center;
+    column-gap: 8px;
+    margin-bottom: .15rem;
+  }
+  .ld-proj-body .ld-proj-title{
+    margin: 0;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .ld-proj-body .ld-price{ justify-self: end; }
+  .ld-proj-body .ld-proj-desc,
+  .ld-proj-body .ld-proj-tags{
+    grid-column: 1 / -1;             /* span full width below header */
   }
 }
 
