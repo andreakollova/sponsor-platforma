@@ -42,6 +42,16 @@
   {{ MAP.get(key, 'helmet.svg') }}
 {%- endmacro %}
 
+{# ===== Fallbacky pre selecty (ak view nepodá cities/countries) ===== #}
+{% set cities =
+  (cities if cities is defined and cities|length > 0
+   else ['Bratislava','Košice','Žilina','Trnava','Nitra','Banská Bystrica','Prešov'])
+%}
+{% set countries =
+  (countries if countries is defined and countries|length > 0
+   else ['Slovensko','Česko','Poľsko','Rakúsko','Maďarsko'])
+%}
+
 {# voliteľné: malá pomocná trieda na inline SVG/PNG #}
 <style>
   .icon-16{width:16px;height:16px;vertical-align:-2px;display:inline-block}
@@ -85,28 +95,29 @@
             <li class="nav-item"><a class="nav-link" href="#why">Prečo my</a></li>
           </ul>
 
-          <form class="d-none d-lg-flex align-items-center me-lg-3 gap-2 ms-auto">
-            <div class="input-group input-group-sm selector">
-              <span class="input-group-text bg-transparent"><i class="bi bi-geo-alt"></i></span>
-              <select id="citySelect" class="form-select border-start-0">
-                {% for c in (cities or []) %}
-                  <option value="{{ c }}" {% if loop.first %}selected{% endif %}>{{ c }}</option>
-                {% endfor %}
-              </select>
+          <!-- Location selectors -->
+          <div class="nav-right d-none d-lg-flex align-items-center ms-auto gap-2">
+            <div class="d-flex align-items-center gap-2 me-2">
+              <div class="input-group input-group-sm selector">
+                <span class="input-group-text bg-white"><i class="bi bi-geo-alt"></i></span>
+                <select id="citySelect" class="form-select selector-select" aria-label="Mesto">
+                  {% for c in cities %}
+                    <option value="{{ c }}" {% if loop.first %}selected{% endif %}>{{ c }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="input-group input-group-sm selector">
+                <span class="input-group-text bg-white"><i class="bi bi-globe2"></i></span>
+                <select id="countrySelect" class="form-select selector-select" aria-label="Krajina">
+                  {% for c in countries %}
+                    <option value="{{ c }}" {% if c == 'Slovensko' %}selected{% endif %}>{{ c }}</option>
+                  {% endfor %}
+                </select>
+              </div>
             </div>
-            <div class="input-group input-group-sm selector">
-              <span class="input-group-text bg-transparent"><i class="bi bi-globe2"></i></span>
-              <select id="countrySelect" class="form-select border-start-0">
-                {% for c in (countries or []) %}
-                  <option value="{{ c }}" {% if c == 'Slovensko' %}selected{% endif %}>{{ c }}</option>
-                {% endfor %}
-              </select>
-            </div>
-          </form>
 
-          <div class="d-none d-lg-flex gap-2">
-            <a href="#" class="btn btn-ghost rounded-pill btn-slim">Prihlásiť</a>
-            <a href="#" class="btn btn-brand rounded-pill btn-slim">Zaregistrovať sa</a>
+            <a href="#" class="btn btn-ghost nav-btn">Prihlásiť</a>
+            <a href="#" class="btn btn-brand nav-btn">Zaregistrovať sa</a>
           </div>
         </div>
       </div>
@@ -181,14 +192,26 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script>
+      // Persistované výbery + doplnenie chýbajúcej option pri detaile
       const citySel = document.getElementById('citySelect');
       const countrySel = document.getElementById('countrySelect');
-      if (citySel && countrySel){
-        citySel.value = localStorage.getItem('selectedCity') || citySel.value;
-        countrySel.value = localStorage.getItem('selectedCountry') || countrySel.value;
-        citySel.addEventListener('change', () => localStorage.setItem('selectedCity', citySel.value));
-        countrySel.addEventListener('change', () => localStorage.setItem('selectedCountry', countrySel.value));
+
+      function setFromStorage(sel, key){
+        if(!sel) return;
+        const saved = localStorage.getItem(key);
+        if(saved){
+          // ak taká možnosť neexistuje, doplníme ju
+          const has = Array.from(sel.options).some(o => o.value === saved);
+          if(!has){
+            sel.add(new Option(saved, saved, true, true), 0);
+          }
+          sel.value = saved;
+        }
+        sel.addEventListener('change', () => localStorage.setItem(key, sel.value));
       }
+
+      setFromStorage(citySel, 'selectedCity');
+      setFromStorage(countrySel, 'selectedCountry');
     </script>
   </body>
 </html>

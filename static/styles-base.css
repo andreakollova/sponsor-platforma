@@ -20,6 +20,27 @@ body{
 }
 .brand-logo{ height:28px; width:auto; display:block; }
 
+/* ==== Location selectors – jednotná výška & zarovnanie ==== */
+.selector{ --sel-h: 36px; }
+.selector .input-group-text{
+  height:var(--sel-h);
+  padding:0 .55rem;
+  border:1px solid var(--border);
+  border-right:0;
+  border-radius:999px 0 0 999px;
+  display:grid; place-items:center;
+}
+.selector .selector-select{
+  height:var(--sel-h);
+  padding:.2rem 1.8rem .2rem .5rem;
+  border:1px solid var(--border);
+  border-left:0;
+  border-radius:0 999px 999px 0;
+  min-width:160px;
+  background-color:#fff;
+}
+.selector .selector-select:focus{ box-shadow:none; border-color:var(--border); }
+
 /* ========= Buttons ========= */
 .btn-xlg{ padding:.85rem 1.1rem; border-radius:var(--btn-radius); font-weight:600; }
 .btn-slim{ padding:.45rem .9rem; border-radius:var(--btn-radius); font-weight:600; }
