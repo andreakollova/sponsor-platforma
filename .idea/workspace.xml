@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3181f2f1-3932-4293-9313-326727c45049" name="Changes" comment="pred mobilom">
+    <list default="true" id="3181f2f1-3932-4293-9313-326727c45049" name="Changes" comment="mobile header">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/detail.html" afterDir="false" />
     </list>
@@ -191,7 +191,15 @@
       <option name="project" value="LOCAL" />
       <updated>1759922992101</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="mobile header">
+      <option name="closed" value="true" />
+      <created>1759928480369</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1759928480369</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -206,6 +214,7 @@
     <MESSAGE value="final kombinuj ponuku" />
     <MESSAGE value="final detial kluby" />
     <MESSAGE value="pred mobilom" />
-    <option name="LAST_COMMIT_MESSAGE" value="pred mobilom" />
+    <MESSAGE value="mobile header" />
+    <option name="LAST_COMMIT_MESSAGE" value="mobile header" />
   </component>
 </project>

@@ -146,9 +146,9 @@
           </p>
 
           <!-- Významné úspechy -->
-          <div class="mt-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
+          <div class="mt-3 d-flex align-items-center justify-content-between flex-wrap gap-2 ach-head">
             <h3 class="h6 mb-0">Významné úspechy</h3>
-             <button id="achToggle" class="btn btn-ghost btn-slim ach-more-btn fw-normal">
+            <button id="achToggle" class="btn btn-ghost btn-slim ach-more-btn fw-normal">
               Zobraziť viac
             </button>
           </div>
@@ -196,9 +196,9 @@
 
         <!-- ========== SEZÓNA ========== -->
         <div id="season" class="card rounded-4 p-3 p-md-4 ld-card mb-4">
-          <div class="d-flex align-items-center justify-content-between mb-2">
-            <h2 class="h5 mb-0">Sponzoring na sezónu</h2>
-            <span class="text-secondary small">Vyber balík alebo kombinuj inventár</span>
+          <div class="d-flex align-items-center justify-content-between mb-2 season-head">
+            <h2 class="h5 mb-0 season-title">Sponzoring na sezónu</h2>
+            <span class="text-secondary small season-sub">Vyber balík alebo kombinuj inventár</span>
           </div>
 
           {% if item.inventory %}
@@ -1221,6 +1221,35 @@
     padding-top: .75rem;           /* default BS py-3 je 1rem; zjemní to pre mobil */
   }
 }
+
+@media (max-width: 576px){
+  /* keep the title + button on one row and push the button to the right */
+  .ach-head{
+    flex-wrap: nowrap;              /* stop wrapping */
+    gap: 8px;
+  }
+
+  /* make THIS button not full-width on mobile */
+  .ach-head .ach-more-btn{
+    width: auto !important;         /* override your .btn-ghost { width:100% } */
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+}
+
+/* Mobile: hide subtitle + keep title on one line */
+@media (max-width: 576px){
+  #season .season-sub{
+    display: none !important;          /* hide “Vyber balík…” */
+  }
+  #season .season-title{
+    white-space: nowrap;                /* keep in one row */
+    overflow: hidden;                   /* avoid wrapping issues */
+    text-overflow: ellipsis;            /* safe truncation if ever needed */
+    letter-spacing: -.01em;
+  }
+}
+
 </style>
 
 <!-- ===================== PAGE-LOCAL JS ===================== -->
