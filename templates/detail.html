@@ -997,18 +997,113 @@
   .ld-mobile-nav{ position:sticky; top:64px; z-index:10; margin:.6rem 0 0; display:flex; gap:8px; overflow:auto; padding-bottom:6px; }
   .ld-mobile-nav .mnav{ border:1px solid var(--border); background:#fff; border-radius:999px; padding:.45rem .7rem; font-size:.95rem; white-space:nowrap; }
 
+  /* ======== Mobile polish (app-like) – safely additive ======== */
+
+  /* --- Small tablets & phones (≤768px) --- */
+  @media (max-width:768px){
+
+    /* Page breathing room */
+    .container { padding-left:14px; padding-right:14px; }
+
+    /* Hero: tighter, readable, wraps cleanly */
+    .ld-hero{ padding:.25rem 0 .4rem; }
+    .ld-title{ font-size:clamp(20px,5.6vw,28px); line-height:1.15; }
+    .ld-avatar{ width:48px; height:48px; }
+    .ld-meta{ gap:6px !important; }
+
+    /* Chips slightly smaller for wrap density */
+    .sp-tag,
+    .sp-stat-chip{ font-size:.78rem; padding:.34rem .52rem; }
+
+    /* “Sport pill” on cover – compact + safe edge insets */
+    .sport-pill{
+      top:8px; right:8px;
+      font-size:.78rem; padding:.28rem .52rem;
+      box-shadow:0 8px 18px rgba(0,0,0,.08), 0 1px 0 rgba(119,75,251,.06) inset;
+    }
+
+    /* Gallery thumbs – bigger swipe targets */
+    .ld-thumbs-row{ gap:8px; padding:6px; }
+    .ld-thumb{ width:66vw; height:38vw; border-radius:12px; }
+
+    /* Cards: gentle compaction */
+    .ld-card{ border-radius:14px; }
+    .ld-pack{ padding:12px; }
+    .ld-pack-head{ gap:8px; }
+    .ld-price{ font-size:.86rem; padding:.22rem .52rem; }
+
+    /* Actions: full-width buttons like an app */
+    .ld-actions{ flex-wrap:wrap; gap:8px; }
+    .btn-compact,
+    .btn-ghost,
+    .btn-outline-brand{ width:100%; }
+
+    /* Achievements list – 1 column on small screens */
+    .ach-pill{ font-size:.92rem; }
+
+    /* Timeline/event rows: slightly smaller date pill */
+    .ld-tl-row{ align-items:stretch; }
+    .ld-datepill{ width:54px; }
+    .ld-tl-card{ padding:.6rem .6rem; }
+
+    /* Calendar: compact grid */
+    .ld-cal-grid{ gap:4px; }
+    .day{ min-height:70px; padding:.36rem .42rem; }
+    .day-num{ right:6px; }
+
+    /* Projects: responsive media height */
+    .ld-proj-media{ height:46vw; }
+
+    /* Sidebar stops being sticky; buttons go full width */
+    .ld-side{ position:static; top:auto; }
+    .ld-side .btn-compact{ width:100%; }
+
+    /* Quick mobile nav – more “app” feel */
+    .ld-mobile-nav{
+      top:64px;
+      padding:6px;
+      background:rgba(255,255,255,.9);
+      border:1px solid var(--border);
+      border-radius:12px;
+      box-shadow:0 10px 24px rgba(0,0,0,.06);
+      backdrop-filter:saturate(120%) blur(6px);
+    }
+    .ld-mobile-nav .mnav{
+      flex:1 1 auto;
+      text-align:center;
+      padding:.55rem .7rem;
+      font-weight:600;
+    }
+
+    /* Breadcrumb: scrollable if long, no crowding */
+    .ld-breadcrumb{ margin-top:-64px !important; padding:6px 0 10px; }
+    .ld-breadcrumb .bc-list{ gap:.25rem; overflow:auto; -webkit-overflow-scrolling:touch; }
+    .ld-breadcrumb .bc-list li,
+    .ld-breadcrumb .bc-list li a{ font-size:13px; white-space:nowrap; }
+  }
+
+  /* --- Phones (≤576px) – fine-grain tweaks --- */
   @media (max-width:576px){
+    /* keep your originals */
     .day{ min-height:64px; padding:.35rem .4rem; }
     .ld-day{ font-size:20px; }
     .evt{ font-size:.68rem; }
     .ld-age-bar{ height:14px; }
     .ld-age-label{ width:64px; }
+
+    /* + additional compacting */
+    .ld-statgrid{ grid-template-columns:1fr; }
+    .ld-proj-body{ padding:12px; }
+    .ld-overview-text{ font-size:.95rem; }
+    .seg-btn{ width:40px; height:40px; }
   }
+
 
   /* ==== (pôvodný) modal layout basics ostávajú ==== */
   #comboModal .sp-modal__card--combo{ max-height:88vh; display:flex; flex-direction:column; }
   #comboModal .sp-modal__content--combo{ display:flex; flex-direction:column; min-height:0; padding:14px 14px 0; gap:8px; }
   #comboModal .cmb-list{ flex:1 1 auto; min-height:0; overflow:auto; padding-bottom:8px; }
+
 </style>
 
 <!-- ===================== PAGE-LOCAL JS ===================== -->
