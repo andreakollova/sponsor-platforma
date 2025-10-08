@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3181f2f1-3932-4293-9313-326727c45049" name="Changes" comment="final detial kluby">
+    <list default="true" id="3181f2f1-3932-4293-9313-326727c45049" name="Changes" comment="pred mobilom">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/detail.html" afterDir="false" />
     </list>
@@ -183,7 +183,15 @@
       <option name="project" value="LOCAL" />
       <updated>1759914877930</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="pred mobilom">
+      <option name="closed" value="true" />
+      <created>1759922992101</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1759922992101</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -197,6 +205,7 @@
     <MESSAGE value="v pohode iba button v kombinuj" />
     <MESSAGE value="final kombinuj ponuku" />
     <MESSAGE value="final detial kluby" />
-    <option name="LAST_COMMIT_MESSAGE" value="final detial kluby" />
+    <MESSAGE value="pred mobilom" />
+    <option name="LAST_COMMIT_MESSAGE" value="pred mobilom" />
   </component>
 </project>

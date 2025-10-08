@@ -38,7 +38,7 @@
                 {{ item.sport }}
               </span>
             </div>
-            <div class="ld-meta text-secondary mt-2 d-flex align-items-center gap-2 flex-wrap">
+            <div class="ld-meta ld-metrics text-secondary mt-2 d-flex align-items-center gap-2 flex-wrap">
               <span class="sp-stat-chip small"><i class="bi bi-people"></i> Dosah {{ item.reach }}</span>
               <span class="sp-stat-chip small"><i class="bi bi-emoji-smile"></i> ER {{ '%.1f'|format(item.er) }}%</span>
               <span class="sp-stat-chip small"><i class="bi bi-cash-coin"></i> od €{{ item.price_from }}</span>
@@ -717,11 +717,38 @@
 
   .ld-breadcrumb{ border-bottom:none; margin:0; padding:10px 0 14px; }
   .ld-breadcrumb{ margin-top:-72px !important; }
-  .ld-breadcrumb .bc-list{ font-size:14px !important; line-height:1 !important; }
-  .ld-breadcrumb .bc-list li,
-  .ld-breadcrumb .bc-list li a{ font-size:inherit !important; }
-  .ld-breadcrumb .bc-list li+li::before{ content:"/"; margin:0 .25rem; font-size:inherit !important; }
-  @media (max-width:991px){ .ld-breadcrumb{ padding:8px 0 12px; } }
+/* desktop / default */
+.ld-breadcrumb .bc-list{
+  font-size:14px !important;
+  line-height:1 !important;
+}
+.ld-breadcrumb .bc-list li,
+.ld-breadcrumb .bc-list li a{ font-size:inherit !important; }
+.ld-breadcrumb .bc-list li+li::before{
+  content:"/";
+  margin:0 .25rem;
+  font-size:inherit !important;
+}
+
+/* ===== Mobile-only breadcrumb sizing & spacing tweak ===== */
+@media (max-width: 576px){
+  /* breadcrumbs (unchanged) */
+  .ld-breadcrumb{ margin-top:-64px !important; padding:6px 0 8px; }
+  .ld-breadcrumb .bc-list{ font-size:12px !important; }
+  .ld-breadcrumb .bc-list li+li::before{ margin:0 .2rem; }
+
+  /* tighten space under the pills */
+  .ld-hero{ padding-bottom:10 !important; }                 /* kill hero's bottom padding */
+  .ld-hero .row.g-3{ --bs-gutter-y: .25rem; }             /* shrink Bootstrap vertical gutter inside hero */
+  .ld-metrics{ padding-bottom:0 !important; margin-bottom:0 !important; }
+
+  /* also shrink the next section’s top padding (this is where the rest of the gap comes from) */
+  section.py-3{ padding-top:.25rem !important; }          /* was ~1rem */
+
+  /* optional: if you still see a hairline gap, use this tiny pull-up */
+  .ld-hero{ margin-bottom:-2px; }
+}
+
 
   /* Hero */
   .ld-hero{
@@ -1104,6 +1131,96 @@
   #comboModal .sp-modal__content--combo{ display:flex; flex-direction:column; min-height:0; padding:14px 14px 0; gap:8px; }
   #comboModal .cmb-list{ flex:1 1 auto; min-height:0; overflow:auto; padding-bottom:8px; }
 
+@media (max-width: 576px){
+  .ld-metrics{
+    display: flex;
+    /* override Bootstrap's .flex-wrap on the element (uses !important) */
+    flex-wrap: nowrap !important;
+    /* one horizontal row with swipe */
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+
+    /* spacing */
+    gap: 10px;
+    row-gap: 0; /* avoid extra height from multi-row gap */
+
+    /* make it start under the avatar, edge-to-edge with the container */
+    margin-left: -72px;   /* 56 avatar + 16 gap */
+    margin-right: -14px;  /* match your .container side padding */
+    padding-left: 14px;
+    padding-right: 14px;
+    padding-bottom: 6px;
+
+    /* prevent accidental vertical growth */
+    align-items: stretch;
+  }
+
+  .ld-metrics .sp-stat-chip{
+    flex: 0 0 auto;           /* chips don't shrink */
+    scroll-snap-align: start; /* nice snap on swipe */
+    white-space: nowrap;
+  }
+
+  /* hide scrollbar on mobile */
+  .ld-metrics::-webkit-scrollbar{ display:none; }
+  .ld-metrics{ scrollbar-width: none; }
+}
+
+/* Mobile: hide only the sport chip ("Pozemný hokej") in the hero */
+@media (max-width: 576px){
+  .ld-hero .ld-meta .sp-tag{
+    display: none !important;
+  }
+}
+
+/* Mobile: container for socials when placed inside #overview */
+@media (max-width: 576px){
+  .ld-overview-social{
+    display:flex;
+    gap:8px;
+    margin-top:.75rem;          /* breathing room below the Prehľad text */
+    flex-wrap:wrap;             /* just in case there are many icons */
+  }
+  .ld-overview-social .seg-btn{
+    width:42px;                 /* same look & touch target */
+    height:42px;
+  }
+}
+
+/* Hide the quick nav on phones */
+@media (max-width: 576px){
+  .ld-mobile-nav{
+    display: none !important;
+  }
+}
+
+@media (max-width: 991.98px){
+  .ld-mobile-nav{ display:none !important; }
+}
+
+/* ===== Mobile-only breadcrumb sizing & spacing tweak ===== */
+@media (max-width: 576px){
+  /* menšie breadcrumbs */
+  .ld-breadcrumb .bc-list{
+    font-size: 12px !important;   /* z 14px -> 12px */
+  }
+
+  /* menší „odskok“ pod radou s metrikami */
+  .ld-hero{
+    padding-bottom: .2rem;         /* jemne skráti spodný padding hero sekcie */
+  }
+  .ld-metrics{
+    padding-bottom: 2px;           /* menší vnútorný spodný odstup */
+    margin-bottom: 4px;            /* menší vonkajší odstup pod pillmi */
+  }
+
+  /* voliteľné: ak chceš úplne minimálny rozstup nad ďalšou sekciou */
+  section.py-3{
+    padding-top: .75rem;           /* default BS py-3 je 1rem; zjemní to pre mobil */
+  }
+}
 </style>
 
 <!-- ===================== PAGE-LOCAL JS ===================== -->
@@ -1556,6 +1673,45 @@
       }
     });
   })();
+
+/* Move social icons under Prehľad (mobile only) */
+(function(){
+  const MOBILE_W = 576;
+  const seg = document.querySelector('.ld-hero .ld-seg');   // current socials
+  const overview = document.getElementById('overview');
+  if(!seg || !overview) return;
+
+  // We'll insert socials right before the "Významné úspechy" header row.
+  const achToggle = overview.querySelector('#achToggle');
+  const anchorRow = achToggle ? achToggle.closest('div') : overview.lastElementChild;
+
+  // Create a slot inside #overview where socials will live on mobile
+  const slot = document.createElement('div');
+  slot.className = 'ld-overview-social';
+
+  // Remember original place to restore on desktop
+  const home = { parent: seg.parentNode, next: seg.nextSibling };
+
+  function toMobile(){
+    if (window.innerWidth <= MOBILE_W && seg.parentNode !== slot){
+      // ensure slot is inserted before achievements section
+      if (!slot.parentNode) overview.insertBefore(slot, anchorRow);
+      slot.appendChild(seg);
+    }
+  }
+  function toDesktop(){
+    if (window.innerWidth > MOBILE_W && seg.parentNode !== home.parent){
+      home.parent.insertBefore(seg, home.next);
+      slot.remove(); // clean up the temporary slot
+    }
+  }
+  function handle(){
+    if (window.innerWidth <= MOBILE_W) toMobile(); else toDesktop();
+  }
+
+  handle();
+  window.addEventListener('resize', handle);
+})();
 
   /* Initial sync */
   syncAllAddButtons();
