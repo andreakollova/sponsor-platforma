@@ -354,7 +354,7 @@
         <div id="events" class="card rounded-4 p-3 p-md-4 ld-card mb-4">
           <div class="d-flex align-items-center justify-content-between">
             <h2 class="h5 mb-0">Najbližšie eventy</h2>
-            <button id="allToggle" class="btn btn-ghost btn-slim"><i class="bi bi-list-ul"></i> Zobraziť všetky zápasy</button>
+            <button id="allToggle" class="btn btn-ghost btn-slim"><i class="bi bi-list-ul"></i> Všetky zápasy</button>
           </div>
 
           <div class="ld-timeline mt-3">
@@ -1253,26 +1253,65 @@
   }
 }
 
-/* Mobile: title + price on one line; description full width under it */
+/* MOBILE — projekty: title + cena v jednej línii, opis nižšie */
 @media (max-width: 576px){
-  .ld-proj-body .ld-proj-head{
-    display: grid;                   /* override the d-flex feel on phones */
-    grid-template-columns: 1fr auto; /* title grows, price hugs right */
-    align-items: center;
-    column-gap: 8px;
-    margin-bottom: .15rem;
+  /* hlavička karty (ľavá časť + cena) */
+  .ld-proj-body > .d-flex{
+    align-items: center !important;  /* zarovnaj vertikálne */
+    gap: 8px;
   }
+  .ld-proj-body > .d-flex > div:first-child{
+    flex: 1 1 auto;                  /* nech ľavý stĺpec zaberie šírku */
+    min-width: 0;                     /* povolí skrátenie titulku */
+  }
+  .ld-proj-body .ld-price{
+    flex: 0 0 auto;
+    align-self: center;
+  }
+
+  /* posun titulku o 2px dolu, aby lícoval s cenou */
   .ld-proj-body .ld-proj-title{
     margin: 0;
-    min-width: 0;
+    position: relative;
+    top: 2px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  .ld-proj-body .ld-price{ justify-self: end; }
-  .ld-proj-body .ld-proj-desc,
-  .ld-proj-body .ld-proj-tags{
-    grid-column: 1 / -1;             /* span full width below header */
+
+  /* posuň opis nižšie (väčší odstup NAD textom) */
+  .ld-proj-body .ld-proj-title + .text-secondary{
+    margin-top: 18px !important;      /* uprav na 6–10px podľa oka */
+    display: block;
+    line-height: 1.55;
+  }
+}
+
+/* MOBILE: keep title + price on one line, nudge title 2px down,
+   and give the description a small top margin */
+@media (max-width: 576px){
+  .ld-proj-body .ld-proj-head{
+    /* override the d-flex on phones for reliable alignment */
+    display: grid;
+    grid-template-columns: 1fr auto;  /* title grows, price hugs right */
+    align-items: center;
+    column-gap: 8px;
+    margin-bottom: 0;
+  }
+
+  .ld-proj-body .ld-proj-title{
+    position: relative;
+    top: 2px;           /* ← move title down by 2px */
+    margin: 0;          /* avoid extra top spacing from utilities */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .ld-proj-body .ld-proj-desc{
+    margin-top: 8px !important;  /* ← small gap above the text */
+    display: block;
+    line-height: 1.55;           /* readability (optional) */
   }
 }
 
@@ -1562,7 +1601,7 @@
     window.syncInvChips=syncInvChips; syncInvChips();
   })();
 
-  /* Toggle "Zobraziť všetky zápasy" */
+  /* Toggle "Všetky zápasy" */
   (function(){
     const btn = document.getElementById('allToggle');
     const wrap = document.getElementById('allEvents');
@@ -1571,7 +1610,7 @@
       const wasHidden = wrap.classList.contains('d-none');
       wrap.classList.toggle('d-none');
       btn.innerHTML = wasHidden ? '<i class="bi bi-list-ul"></i> Skryť všetky zápasy'
-                                : '<i class="bi bi-list-ul"></i> Zobraziť všetky zápasy';
+                                : '<i class="bi bi-list-ul"></i> Všetky zápasy';
       if(!wasHidden) window.scrollTo({ top:btn.getBoundingClientRect().top + window.scrollY - 96, behavior:'smooth' });
     });
   })();
