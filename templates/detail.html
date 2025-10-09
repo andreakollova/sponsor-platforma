@@ -352,9 +352,13 @@
         ]) %}
 
         <div id="events" class="card rounded-4 p-3 p-md-4 ld-card mb-4">
-          <div class="d-flex align-items-center justify-content-between">
+          <div class="events-head d-flex align-items-center justify-content-between">
             <h2 class="h5 mb-0">Najbližšie eventy</h2>
-            <button id="allToggle" class="btn btn-ghost btn-slim"><i class="bi bi-list-ul"></i> Všetky zápasy</button>
+            <button id="allToggle" class="btn btn-ghost btn-slim">
+              <i class="bi bi-list-ul"></i>
+              <span class="lab-long">Zobraziť všetky zápasy</span>
+              <span class="lab-short">Všetky zápasy</span>
+            </button>
           </div>
 
           <div class="ld-timeline mt-3">
@@ -1313,6 +1317,51 @@
     display: block;
     line-height: 1.55;           /* readability (optional) */
   }
+}
+
+/* --- Events header: mobil --- */
+@media (max-width: 576px){
+  /* rozloženie: názov vľavo (1fr), malé tlačidlo vpravo (auto) */
+  #events .events-head{
+    display: grid;                 /* prebijeme d-flex */
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    column-gap: 8px;
+  }
+
+  /* menšie písmo nadpisu, nech sa zmestí do jedného riadku */
+  #events .events-head h2{
+    margin: 0;
+    font-size: 1.125rem;           /* cca 18px, uprav podľa potreby */
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;                   /* dôležité kvôli ellipsis */
+  }
+
+  #allToggle{
+    width: auto !important;
+    flex: 0 0 auto;
+    padding: .18rem .48rem;     /* ↓ smaller padding */
+    font-size: .78rem;          /* ↓ smaller text */
+    line-height: 1.1;           /* tighter height */
+    white-space: nowrap;
+  }
+  #allToggle i{
+    margin-right: .30rem;       /* a bit tighter */
+    font-size: .95em;           /* slightly smaller icon */
+  }
+
+  /* skrátený text tlačidla iba na mobile */
+  #allToggle .lab-long{ display: none; }
+  #allToggle .lab-short{ display: inline; }
+}
+
+/* na väčších obrazovkách nech ostane pôvodný dlhý text */
+@media (min-width: 577px){
+  #allToggle .lab-long{ display: inline; }
+  #allToggle .lab-short{ display: none; }
 }
 
 </style>
