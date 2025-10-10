@@ -1140,39 +1140,46 @@
 
 @media (max-width: 576px){
   .ld-metrics{
-    display: flex;
-    /* override Bootstrap's .flex-wrap on the element (uses !important) */
-    flex-wrap: nowrap !important;
-    /* one horizontal row with swipe */
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    scroll-snap-type: x mandatory;
+    display:flex;
+    flex-wrap: nowrap !important; /* keep one line */
+    justify-content: center !important; /* ⟵ center the chips */
+    overflow: hidden;
+    gap: 6px;
 
-    /* spacing */
-    gap: 10px;
-    row-gap: 0; /* avoid extra height from multi-row gap */
-
-    /* make it start under the avatar, edge-to-edge with the container */
-    margin-left: -72px;   /* 56 avatar + 16 gap */
-    margin-right: -14px;  /* match your .container side padding */
-    padding-left: 14px;
-    padding-right: 14px;
-    padding-bottom: 6px;
-
-    /* prevent accidental vertical growth */
-    align-items: stretch;
+    /* make the row itself center within the container */
+    width: 100%;
+    margin: 4px auto 8px; /* top + bottom spacing; auto centers horizontally */
+    padding: 0;
   }
 
   .ld-metrics .sp-stat-chip{
-    flex: 0 0 auto;           /* chips don't shrink */
-    scroll-snap-align: start; /* nice snap on swipe */
+    flex: 0 0 auto;
     white-space: nowrap;
+    font-size: .72rem;
+    padding: .26rem .44rem;
+    border-radius: 12px;
   }
+}
 
-  /* hide scrollbar on mobile */
-  .ld-metrics::-webkit-scrollbar{ display:none; }
-  .ld-metrics{ scrollbar-width: none; }
+/* extra squeeze for very small phones (optional) */
+@media (max-width: 360px){
+  .ld-metrics .sp-stat-chip{ font-size:.68rem; padding:.22rem .38rem; }
+}
+
+@media (max-width: 576px){
+  /* smaller “Trenčiansky kraj” line */
+  .ld-hero .ld-meta{
+    font-size: clamp(12px, 3.6vw, 14px);
+  }
+  .ld-hero .ld-meta .bi{ transform: translateY(-.5px); } /* tiny icon alignment */
+}
+
+@media (max-width: 576px){
+  /* smaller “Trenčiansky kraj” line */
+  .ld-hero .ld-meta{
+    font-size: clamp(12px, 3.6vw, 14px);
+  }
+  .ld-hero .ld-meta .bi{ transform: translateY(-.5px); } /* tiny icon alignment */
 }
 
 /* Mobile: hide only the sport chip ("Pozemný hokej") in the hero */
@@ -1282,12 +1289,30 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
+}
 
-  /* posuň opis nižšie (väčší odstup NAD textom) */
-  .ld-proj-body .ld-proj-title + .text-secondary{
-    margin-top: 18px !important;      /* uprav na 6–10px podľa oka */
-    display: block;
-    line-height: 1.55;
+/* AFTER – hit the real element */
+@media (max-width:576px){
+  /* keep title and price aligned */
+  .ld-proj-body .ld-proj-head{ align-items:center !important; }
+  .ld-proj-body .ld-proj-head .ld-proj-title{
+    position:relative; top:2px; margin:0;  /* 2px down */
+  }
+  .ld-proj-body .ld-price{ align-self:center; }
+
+  /* push the description LOWER */
+  .ld-proj-body .ld-proj-desc{
+    margin-top:10px !important;   /* tweak 6–14px to taste */
+    line-height:1.55;
+    display:block;
+  }
+}
+
+@media (max-width:576px){
+  .ld-proj-body .ld-proj-head + .text-secondary{
+    margin-top:10px !important;
+    line-height:1.55;
+    display:block;
   }
 }
 
