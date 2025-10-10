@@ -1056,9 +1056,23 @@
       box-shadow:0 8px 18px rgba(0,0,0,.08), 0 1px 0 rgba(119,75,251,.06) inset;
     }
 
-    /* Gallery thumbs – bigger swipe targets */
-    .ld-thumbs-row{ gap:8px; padding:6px; }
-    .ld-thumb{ width:66vw; height:38vw; border-radius:12px; }
+/* --- Phones (≤576px) — smaller gallery thumbs --- */
+@media (max-width:576px){
+  .ld-thumbs-row{ gap:6px; padding:6px; }
+
+  /* smaller thumbnails (keep ~16:9 ratio) */
+  .ld-thumb{
+    width:24vw;
+    height:calc(24vw * 9/16);
+    border-radius:12px; /* keep your rounded look */
+  }
+
+  /* optional: smaller play badge on video thumb */
+  .ld-thumb-video .yt-badge{
+    width:28px;
+    height:28px;
+  }
+}
 
     /* Cards: gentle compaction */
     .ld-card{ border-radius:14px; }
@@ -1139,20 +1153,24 @@
   #comboModal .cmb-list{ flex:1 1 auto; min-height:0; overflow:auto; padding-bottom:8px; }
 
 @media (max-width: 576px){
-  .ld-metrics{
-    display:flex;
-    flex-wrap: nowrap !important; /* keep one line */
-    justify-content: center !important; /* ⟵ center the chips */
-    overflow: hidden;
+  .ld-hero .ld-metrics{
+    display:flex !important;
+    flex-wrap: nowrap !important;          /* keep one row */
+    justify-content: flex-start !important;/* ← LEFT */
+    align-items: center;
     gap: 6px;
 
-    /* make the row itself center within the container */
-    width: 100%;
-    margin: 4px auto 8px; /* top + bottom spacing; auto centers horizontally */
+    overflow-x: auto !important;           /* allow swipe if it overflows */
+    overflow-y: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+
+    width: 100% !important;
+    margin: 4px 0 8px !important;          /* remove auto-centering */
     padding: 0;
   }
-
-  .ld-metrics .sp-stat-chip{
+  .ld-hero .ld-metrics::-webkit-scrollbar{ display:none; }
+  .ld-hero .ld-metrics .sp-stat-chip{
     flex: 0 0 auto;
     white-space: nowrap;
     font-size: .72rem;
@@ -1389,6 +1407,47 @@
   #allToggle .lab-short{ display: none; }
 }
 
+/* Mobile-only: hide CPM chip in the hero metrics row */
+@media (max-width: 576px){
+  .ld-hero .ld-metrics .sp-stat-chip:has(.bi-bar-chart){
+    display: none !important;
+  }
+}
+
+/* (Optional) Also hide the CPM row in the right sidebar on mobile */
+@media (max-width: 576px){
+  .ld-side-facts > div:has(.mini-i[data-tip^="Cost per Mille"]){
+    display: none !important;
+  }
+}
+
+/* --- Jednotná výrazná farba pre všetky `Pridať do portfólia` --- */
+:root { --add-cta: #3a2a85; }   /* môžeš zmeniť podľa chuti */
+
+/* default stav (kým ešte nie je pridané) */
+button[data-cta="add"]:not(.btn-added),
+a[data-cta="add"]:not(.btn-added){
+  background: var(--add-cta) !important;
+  border-color: var(--add-cta) !important;
+  color:#fff !important;
+  box-shadow: 0 2px 14px rgba(118,74,251,.22);
+}
+
+/* ikonka nech je biela rovnako ako text */
+[data-cta="add"] i{ color: currentColor !important; }
+
+/* interakcie */
+[data-cta="add"]:not(.btn-added):hover{ filter: brightness(0.95); }
+[data-cta="add"]:not(.btn-added):active{ filter: brightness(0.90); transform: translateY(0); }
+[data-cta="add"]:focus-visible{ outline: 2px solid var(--add-cta); outline-offset: 2px; }
+
+/* stav po pridaní nech ostáva tak, ako máš (tmavofialová) */
+[data-cta="add"].btn-added{
+  background:#122633 !important;
+  border-color:#122633 !important;
+  color:#fff !important;
+}
+[data-cta="add"].btn-added i{ color:#fff !important; }
 </style>
 
 <!-- ===================== PAGE-LOCAL JS ===================== -->
