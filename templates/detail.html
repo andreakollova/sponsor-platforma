@@ -6,7 +6,22 @@
 
 {# ---- one source of truth for the video url (for gallery thumb) ---- #}
 {% set yt_fallback = 'https://www.youtube.com/watch?v=fTvPYdKZqO0' %}
-{% set yt_url = (item.video_url if item is defined and item.video_url is defined and item.video_url else yt_fallback) %}
+
+{# default video podľa klubu (tu: HKM Nová Dubnica) #}
+{% set yt_default_by_slug = {
+  'hkm-nova-dubnica': 'https://www.youtube.com/watch?v=fTvPYdKZqO0'
+} %}
+
+{# výsledná URL – preferuj item.video_url, potom klubový default, inak fallback #}
+{% set yt_url = (
+  item.video_url if item is defined and item.video_url is defined and item.video_url
+  else yt_default_by_slug.get(item.slug, yt_fallback)
+) %}
+
+{# či zobrazovať video thumb (pravda, ak je v iteme alebo máme klubový default) #}
+{% set has_video = (
+  (item is defined and item.video_url is defined and item.video_url) or yt_default_by_slug.get(item.slug)
+) %}
 
 <!-- ===================== BREADCRUMB ===================== -->
 <nav class="ld-breadcrumb">
@@ -115,27 +130,46 @@
           </div>
         </div>
 
+        {# Pomocné cesty #}
+        {% set COVER1 = url_for('static', filename='covers/cover.png') %}
+        {% set COVER2 = url_for('static', filename='covers/cover2.png') %}
+        {% set COVER3 = url_for('static', filename='covers/cover3.png') %}
+        {% set COVER4 = url_for('static', filename='covers/cover4.png') %}
+
         <!-- Thumbnails (drag/swipe scroll; žiadne overlay/šípky) -->
         <div class="card rounded-4 ld-card p-2 mb-4">
           <div class="ld-thumbs-row">
-            <button class="ld-thumb is-active" data-src="{{ url_for('static', filename='covers/cover.png') }}">
-              <img src="{{ url_for('static', filename='covers/cover.png') }}" alt="thumb">
+
+            {# 1) cover2 #}
+            <button type="button" class="ld-thumb" data-src="{{ COVER2 }}">
+              <img src="{{ COVER2 }}" alt="thumb cover2">
             </button>
 
-            <!-- video thumb; JS swapne thumbnail na YT preview -->
-            <button class="ld-thumb ld-thumb-video" data-video="{{ yt_url }}">
-              <img src="{{ url_for('static', filename='covers/cover.png') }}" alt="video thumb">
-              <span class="yt-badge"><i class="bi bi-play-fill"></i></span>
+            {# 2) VIDEO #}
+            {% if has_video %}
+              <button type="button" class="ld-thumb ld-thumb-video" data-video="{{ yt_url }}">
+                <img src="{{ COVER1 }}" alt="video thumb">
+                <span class="yt-badge"><i class="bi bi-play-fill"></i></span>
+              </button>
+            {% endif %}
+
+            {# 3) cover3 #}
+            <button type="button" class="ld-thumb" data-src="{{ COVER3 }}">
+              <img src="{{ COVER3 }}" alt="thumb cover3">
             </button>
 
-            <button class="ld-thumb" data-src="{{ url_for('static', filename='covers/cover.png') }}">
-              <img src="{{ url_for('static', filename='covers/cover.png') }}" alt="thumb">
+            {# 4) cover4 #}
+            <button type="button" class="ld-thumb" data-src="{{ COVER4 }}">
+              <img src="{{ COVER4 }}" alt="thumb cover4">
             </button>
-            <button class="ld-thumb" data-src="{{ url_for('static', filename='covers/cover.png') }}">
-              <img src="{{ url_for('static', filename='covers/cover.png') }}" alt="thumb">
+
+            {# 5) cover1 default #}
+            <button type="button" class="ld-thumb is-active" data-src="{{ COVER1 }}">
+              <img src="{{ COVER1 }}" alt="thumb cover (default)">
             </button>
           </div>
         </div>
+
 
         <!-- PREHĽAD -->
         <div id="overview" class="card rounded-4 p-3 p-md-4 ld-card mb-4">
@@ -1430,7 +1464,7 @@ a[data-cta="add"]:not(.btn-added){
   background: var(--add-cta) !important;
   border-color: var(--add-cta) !important;
   color:#fff !important;
-  box-shadow: 0 2px 14px rgba(118,74,251,.22);
+  box-shadow: 0 2px 2px rgba(118,74,251,.22);
 }
 
 /* ikonka nech je biela rovnako ako text */
@@ -1466,58 +1500,112 @@ a[data-cta="add"]:not(.btn-added){
     });
   });
 
-  /* Main image/video switch */
-  (function(){
+  /* Thumbs: drag-to-scroll + NOT-drag click on pointerup */
+  document.addEventListener('DOMContentLoaded', function(){
     const wrap = document.getElementById('ldMainWrap');
-    if(!wrap) return;
-    const img = document.getElementById('ldMain');
-    const iframe = Object.assign(document.createElement('iframe'), {
-      className:'ld-video', allow:'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share', allowFullscreen:true
-    });
+    const img  = document.getElementById('ldMain');
+    const row  = document.querySelector('.ld-thumbs-row');
+    if(!wrap || !img || !row) return;
+
+    // create (hidden) iframe once
+    const iframe = document.createElement('iframe');
+    iframe.className = 'ld-video';
+    iframe.setAttribute('allowfullscreen', '');
+    iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
     wrap.appendChild(iframe);
 
+    // parse yt id from data-yt (already set in your Jinja)
     const ytUrl = wrap.getAttribute('data-yt') || '';
-    const ytId = (()=>{ try{
-      const u = new URL(ytUrl);
-      if(u.hostname.includes('youtu.be')) return u.pathname.replace('/','');
-      if(u.searchParams.get('v')) return u.searchParams.get('v');
-      const p=u.pathname.split('/'); return p[p.length-1]||'';
-    }catch(_){ return ''; }})();
+    const ytId = (function(u){
+      try{
+        const url = new URL(u);
+        if (url.hostname.includes('youtu.be')) return url.pathname.replace('/','');
+        if (url.searchParams.get('v')) return url.searchParams.get('v');
+        const parts = url.pathname.split('/'); return parts[parts.length-1] || '';
+      }catch(_){ return ''; }
+    })(ytUrl);
 
-    const videoThumb = document.querySelector('.ld-thumb-video');
-    if(videoThumb && ytId){
+    // show correct YT preview on the video thumb
+    const videoThumb = row.querySelector('.ld-thumb-video');
+    if (videoThumb && ytId){
       const imgEl = videoThumb.querySelector('img');
-      if(imgEl) imgEl.src = `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
-      videoThumb.dataset.video = ytUrl;
+      if (imgEl) imgEl.src = `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
+      videoThumb.dataset.video = ytUrl; // ensure it's present
     }
 
-    const showImage = src => { iframe.style.display='none'; iframe.src=''; img.style.display='block'; if(src) img.src=src; };
-    const showVideo = () => { if(!ytId) return; img.style.display='none'; iframe.src=`https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0`; iframe.style.display='block'; };
+    function showImage(src){
+      if(!src) return;
+      iframe.style.display = 'none';
+      iframe.src = '';
+      img.style.display = 'block';
+      if (img.src !== src) img.src = src;
+    }
+    function showVideo(){
+      if(!ytId) return;
+      img.style.display = 'none';
+      iframe.src = `https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0`;
+      iframe.style.display = 'block';
+    }
+    function activate(btn){
+      if(!btn) return;
+      row.querySelectorAll('.ld-thumb.is-active').forEach(b=>b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      if (btn.hasAttribute('data-video')) showVideo();
+      else showImage(btn.getAttribute('data-src'));
+    }
 
-    document.querySelectorAll('.ld-thumb').forEach(btn=>{
-      btn.addEventListener('click', (ev)=>{
-        if(btn.closest('.ld-thumbs-row')?.dataset.dragged === '1'){ ev.preventDefault(); return; }
-        document.querySelectorAll('.ld-thumb').forEach(b=>b.classList.remove('is-active'));
-        btn.classList.add('is-active');
-        if(btn.hasAttribute('data-video')) showVideo(); else showImage(btn.getAttribute('data-src'));
+    // ---- Drag + click-on-pointerup (no timing race with click) ----
+    let isDown=false, startX=0, scrollStart=0, moved=false, downTarget=null;
+
+    row.addEventListener('pointerdown', (e)=>{
+      isDown=true; moved=false; downTarget = e.target.closest('.ld-thumb');
+      startX=e.clientX; scrollStart=row.scrollLeft;
+      row.classList.add('grabbing');
+      if(e.pointerType==='mouse') e.preventDefault();
+      row.setPointerCapture?.(e.pointerId);
+    });
+
+    row.addEventListener('pointermove', (e)=>{
+      if(!isDown) return;
+      const dx=e.clientX-startX;
+      if(Math.abs(dx)>5) moved=true;
+      row.scrollLeft = scrollStart - dx;
+    });
+
+    function endDrag(e){
+      if(!isDown) return;
+      isDown=false;
+      row.classList.remove('grabbing');
+      row.releasePointerCapture?.(e.pointerId);
+
+      // if we *didn't* drag, treat as click on the thumb we pressed
+      if(!moved){
+        const upTarget = e.target.closest('.ld-thumb');
+        // require press & release on the same thumb (prevents weirdness)
+        if (upTarget && upTarget === downTarget){
+          e.preventDefault();
+          activate(upTarget);
+        }
+      }
+      downTarget=null;
+    }
+
+    row.addEventListener('pointerup', endDrag);
+    row.addEventListener('pointercancel', endDrag);
+    row.addEventListener('mouseleave', endDrag);
+
+    // keyboard access
+    row.querySelectorAll('.ld-thumb').forEach(b=>{
+      b.setAttribute('type','button');
+      b.setAttribute('tabindex','0');
+      b.addEventListener('keydown', (e)=>{
+        if(e.key === 'Enter' || e.key === ' '){
+          e.preventDefault();
+          activate(b);
+        }
       });
     });
-  })();
-
-  /* Drag-to-scroll for thumbs */
-  (function(){
-    const rows = document.querySelectorAll('.ld-thumbs-row');
-    if(!rows.length) return;
-    rows.forEach(row=>{
-      let isDown=false, startX=0, scrollStart=0, moved=false;
-      row.addEventListener('pointerdown', (e)=>{ isDown=true; moved=false; startX=e.clientX; scrollStart=row.scrollLeft; row.classList.add('grabbing'); if(e.pointerType==='mouse'){ e.preventDefault(); } row.setPointerCapture?.(e.pointerId);});
-      row.addEventListener('pointermove', (e)=>{ if(!isDown) return; const dx=e.clientX-startX; if(Math.abs(dx)>5) moved=true; row.scrollLeft = scrollStart - dx;});
-      function endDrag(e){ if(!isDown) return; isDown=false; row.classList.remove('grabbing'); row.releasePointerCapture?.(e.pointerId); row.dataset.dragged = moved ? '1':'0'; setTimeout(()=>{ row.dataset.dragged='0'; }, 40); }
-      row.addEventListener('pointerup', endDrag);
-      row.addEventListener('pointercancel', endDrag);
-      row.addEventListener('mouseleave', endDrag);
-    });
-  })();
+  });
 
   /* Achievements toggle */
   (function(){
@@ -1943,6 +2031,8 @@ a[data-cta="add"]:not(.btn-added){
   /* Initial sync */
   syncAllAddButtons();
   if(window.syncInvChips){ window.syncInvChips(); }
+
+
 </script>
 
 {% endblock %}
